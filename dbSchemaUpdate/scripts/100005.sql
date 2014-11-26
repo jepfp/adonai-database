@@ -1,0 +1,2 @@
+ALTER TABLE `liederbuch` 
+CHANGE COLUMN `locked` `locked` TINYINT(1) NOT NULL DEFAULT 0 ;

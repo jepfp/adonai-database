@@ -1,0 +1,11 @@
+Philipp 08/2013
+
+In here the script can be found which migrates the Sqlite database to the new MySQL database schema.
+It needs to be adjusted so that at the end (when the sqlite database will be replaced by the MySQL database) we can migrate all the data and remove the sqlite database as a first source of data.
+
+How is it done:
+
+This script just exports the data and prepares SQL insert statements.
+Make sure the insert statements which are prepared in 'exportCommands.sql' fit the new schema (Maybe you need to use more NULL values as it is done already).
+
+After the export you can run the "export/merged.sql" in the desired database.

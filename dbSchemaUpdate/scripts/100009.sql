@@ -1,0 +1,2 @@
+ALTER TABLE `refrain` 
+CHANGE COLUMN `RefrainNr` `Reihenfolge` INT(11) NULL DEFAULT NULL;

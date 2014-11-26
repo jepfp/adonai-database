@@ -1,0 +1,301 @@
+/**
+ * View and edit the attributes of one single song. This panel goes into the
+ * Song panel. Philipp Jenni
+ */
+Ext.namespace('Songserver.view');
+
+Ext.define('Songserver.view.SongPropertiesPanel', {
+    extend : 'Ext.form.Panel',
+    requires : [ 'Songserver.model.Lied', 'Ext.form.FieldContainer' ],
+    alias : 'widget.songserver-songPropertiesPanel',
+
+    // The song object that we want to edit
+    song : null,
+    // The grid with the associated and available songbooks
+    songbookGrid : null,
+
+    constructor : function(config) {
+	this.callParent(arguments);
+	this.addEvents([
+	/* Will be fired the first time after the song has been loaded. */
+	"songLoaded" ]);
+    },
+
+    initComponent : function() {
+	// console.log("Song öffnen. Id: " + this.songId);
+
+	Ext.apply(this, {
+	    title : 'Details zum Lied',
+	    url : '',
+	    bodyStyle : 'padding:5px; background-color: #DFE8F6; border: none;',
+	    preventHeader : true,
+	    layout : {
+		type : 'hbox',
+		clearInnerCtOnLayout : true
+	    },
+	    defaults : {
+	    // layout : 'fit'
+	    },
+	    items : [ {
+		xtype : 'fieldcontainer',
+		width : 450,
+		fieldDefaults : {
+		    msgTarget : 'side',
+		    labelWidth : 75
+		},
+		defaultType : 'textfield',
+		layout : 'anchor',
+		defaults : {
+		    anchor : '100%'
+		},
+		items : [ {
+		    fieldLabel : 'Titel',
+		    name : 'Titel',
+		    allowBlank : false,
+		    enableKeyEvents : true
+		}, {
+		    fieldLabel : 'Rubrik',
+		    name : 'rubrik_id',
+		    xtype : 'combobox',
+		    valueField : 'id',
+		    displayField : 'Rubrik',
+		    emptyText : 'Kategorie wählen...',
+		    forceSelection : true,
+		    editable : false,
+		    queryMode : 'local',
+		    allowBlank : false,
+		    store : {
+			model : 'Songserver.model.Rubrik',
+			autoLoad : true,
+			storeId : 'categoryChoice',
+			listeners : {
+			    load : function(store, records, successful, operation, eOpts) {
+				// Load the song after all rubriks have
+				// been loaded
+				this.loadOrCreateSong();
+			    },
+			    scope : this
+			}
+		    }
+		}, {
+		    fieldLabel : 'Erstellt',
+		    name : 'created_at',
+		    readOnly : true
+		}, {
+		    fieldLabel : 'Geändert',
+		    name : 'updated_at',
+		    readOnly : true
+		} ]
+	    } ],
+
+	    dockedItems : [ {
+		xtype : 'toolbar',
+		itemId : 'footerBar',
+		dock : 'bottom',
+		ui : 'footer',
+		hidden : true,
+		autoRender : true,
+		style : {
+		    margin : '0px',
+		    paddingBottom : '5px',
+		    backgroundColor : "#DFE8F6"
+		},
+
+		items : [ {
+		    text : 'Speichern',
+		    formBind : true,
+		    // only enabled once the form is valid
+		    disabled : true,
+		    handler : this.saveChanges,
+		    scope : this
+		}, {
+		    text : 'Änderungen verwerfen',
+		    width : 150,
+		    handler : this.resetChanges,
+		    scope : this
+		} ]
+	    } ]
+	});
+
+	this.callParent(arguments);
+    },
+
+    loadOrCreateSong : function() {
+	if (this.songId) {
+	    Songserver.model.Lied.load(this.songId, {
+		scope : this,
+		failure : function(record, operation) {
+		    Ext.Msg.alert("Fehler beim Laden", "Das Lied konnte nicht geladen werden. "
+			    + "Bitte informiere den Website-Verantwortlichen über diesen Fehler.");
+		},
+		success : function(record, operation) {
+		    this.onSongLoaded(record);
+		},
+		callback : function(record, operation) {
+		    // do something whether the load succeeded or failed
+		}
+	    });
+	} else {
+	    this.onSongLoaded(new Songserver.model.Lied());
+	}
+    },
+
+    /**
+     * Takes the given song and prepares the GUI according to this song.
+     * 
+     * @param {Songserver.model.Song}
+     *                song
+     */
+    onSongLoaded : function(song) {
+	this.song = song;
+	this.loadRecord(this.song);
+	this.createAndAddSongbookGrid();
+	this.addChangeListeners();
+	this.fireEvent("songLoaded", this.song);
+    },
+
+    createAndAddSongbookGrid : function() {
+	var bookentriesStore = this.song.bookentries();
+	theStore = bookentriesStore;
+	this.songbookGrid = Ext.create('Ext.grid.Panel', {
+	    preventHeader : true,
+	    store : bookentriesStore,
+	    columns : [ {
+		header : 'Kürzel',
+		dataIndex : 'mnemonic'
+	    }, {
+		header : 'Nummer',
+		dataIndex : 'Liednr',
+		editor : {}
+	    }, {
+		header : 'Liederbuch',
+		dataIndex : 'Buchname',
+		flex : 1
+	    } ],
+	    height : 120,
+	    flex : 1,
+	    padding : '0px 0px 0px 5px',
+	    plugins : Ext.create('Ext.grid.plugin.CellEditing', {
+		clicksToEdit : 1,
+		listeners : {
+		    beforeedit : function(editor, e, eOpts) {
+			this.showToolbarItems();
+		    },
+		    scope : this
+		}
+	    })
+	});
+
+	this.add(this.songbookGrid);
+    },
+
+    // this function adds change listeners to the form and the grid
+    // in order to show the fbar so that the user can see the hidden buttons
+    // "save" and "discard changes"
+    addChangeListeners : function() {
+	this.getForm().addListener("dirtychange", function(form, dirty, eOpts) {
+	    if (dirty) {
+		this.showToolbarItems();
+	    }
+	}, this);
+
+    },
+
+    saveChanges : function() {
+	var form = this.getForm();
+	// var record = form.getRecord();
+	this.song.set(form.getValues());
+
+	this.up("songserver-songPanel").displayInfoMessage("Änderungen werden gespeichert. Bitte warten...");
+
+	this.up("songserver-songPanel").displayInfoMessage("Änderungen am Lied gespeichert. Speichere Liedernummern...");
+
+	this.saveNumberInSongbookEntries();
+
+	// this.song.save({
+	// success : function(record, operation) {
+	// this.loadRecord(this.song);
+	// this.up("songserver-songPanel").displayInfoMessage("Änderungen am
+	// Lied
+	// gespeichert. Speichere Liedernummern...");
+	//
+	// this.saveNumberInSongbookEntries();
+	// },
+	// failure : function(record, operation) {
+	// this.up("songserver-songPanel").displayErrorMessage("Fehler beim
+	// Speichern.");
+	// Ext.Msg.show({
+	// title : 'Fehler beim Speichern',
+	// msg : 'Fehler beim Speichern. Wenn du eine Liednummer hinzugefügt
+	// oder
+	// geändert hast, '
+	// + 'musst du sicher sein, dass die Nummer nicht bereits für ein
+	// anderes Lied '
+	// + 'in diesem Liederbuch verwendet wird.',
+	// buttons : Ext.Msg.OK,
+	// icon : Ext.Msg.ERROR,
+	// scope : this
+	// });
+	//
+	// },
+	// scope : this
+	// });
+    },
+
+    saveNumberInSongbookEntries : function() {
+	var modifiedRecords = this.song.bookentries().getUpdatedRecords();
+	if (modifiedRecords.length > 0) {
+	    modifiedRecords[0].save({
+		success : function(record, operation) {
+		    this.saveNumberInSongbookEntries();
+		},
+		failure : function(record, operation) {
+		    this.handleSaveError('Fehler beim Speichern. Prüfe, ob die Liednummer ' //
+			    + record.get("Liednr") + ' nicht bereits im Liederbuch ' //
+			    + record.get("Buchname") + ' verwendet wird.');
+		},
+		scope : this
+	    });
+	} else {
+	    this.up("songserver-songPanel").displayInfoMessage("Änderungen am Lied gespeichert.");
+	    this.up("songserver-songPanel").switchFromNewToEditMode(this.song);
+	    this.hideToolbarItems();
+	}
+	// Ext.Array.each(modifiedRecords, function(value) {
+	// value.commit();
+	// });
+    },
+
+    handleSaveError : function(message) {
+	this.up("songserver-songPanel").displayErrorMessage("Fehler beim Speichern.");
+	Ext.Msg.show({
+	    title : 'Fehler beim Speichern',
+	    msg : message,
+	    buttons : Ext.Msg.OK,
+	    icon : Ext.Msg.ERROR,
+	    scope : this
+	});
+    },
+
+    resetChanges : function() {
+	this.getForm().reset();
+
+	// reject the changes in all grid records
+	var modifiedRecords = this.song.bookentries().getUpdatedRecords();
+	Ext.Array.each(modifiedRecords, function(value) {
+	    value.reject();
+	});
+
+	this.hideToolbarItems();
+    },
+
+    showToolbarItems : function() {
+	var toolbar = this.child("#footerBar");
+	toolbar.show();
+    },
+
+    hideToolbarItems : function() {
+	var toolbar = this.child("#footerBar");
+	toolbar.hide();
+    }
+});

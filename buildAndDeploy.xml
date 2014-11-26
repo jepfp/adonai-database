@@ -1,0 +1,156 @@
+<project name="Build and Deploy of Adoray Songserver" default="deploy">
+	<description>Different deployment and build tasks</description>
+	<!-- Load property file -->
+	<property file="buildAndDeploy.properties" />
+
+	<!-- The following properties can be overridden by buildAndDeploy.properties -->
+	<property name="sencha-exe" value="C:\Users\Philipp\bin\Sencha\Cmd\4.0.4.84/sencha.exe" />
+	<property name="buildMode" value="production" />
+	<property name="buildDir" value="build" />
+	<property name="zipLocation" value="${buildDir}/zip.zip" />
+	<property name="server" value="adonai.philippjenni.ch" />
+	<property name="phpUnzipScriptLocation" value="/unzipper.php" />
+	<property name="serverUserId" value="adonaiDeploy@philippjenni.ch" />
+	<property name="serverPassword" value="THIS PASSWORD WON'T WORK" />
+
+
+	<target name="help">
+		<echo>This build file is designed to build and deploy the Songserver project.</echo>
+		<echo>The current build and deploy configuration is:</echo>
+		<echo>sencha-exe:     ${sencha-exe}</echo>
+		<echo>buildDir:       ${buildDir}</echo>
+		<echo>zipLocation:    ${zipLocation}</echo>
+		<echo>server:         ${server}</echo>
+		<echo>serverUserId:   ${serverUserId}</echo>
+		<echo>serverPassword: (See property file...)</echo>
+	</target>
+
+	<target name="cleanBuildFolder">
+		<echo>Deleting the build folder (${buildDir})...</echo>
+		<delete dir="${buildDir}" />
+		<echo>Creating the build folder structure (${buildDir})...</echo>
+		<mkdir dir="${buildDir}" />
+		<mkdir dir="${buildDir}/log" />
+	</target>
+
+	<target name="deploy" depends="help, cleanBuildFolder, buildSenchaApp, build, zip, copyToWebServer, runUnzipPhpScript, overwriteConfiguration">
+		<echo>Deploying to ${server} finished.</echo>
+	</target>
+
+	<target name="deployLocalTesting" depends="cleanBuildFolder, buildSenchaApp, build, overwriteBuildConfiguration">
+		<echo>Local deploy finished.</echo>
+		<echo>You can start http://localhost/AdoraySongserver/build/all/</echo>
+	</target>
+
+	<!-- In order to get that thing working, the windows firewall needs this: netsh advfirewall set global StatefulFtp disable
+				See: http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=7077696 for details -->
+	<target name="copyToWebServer">
+		<echo>Deploying to ${server}</echo>
+		<ftp server="${server}" userid="${serverUserId}" password="${serverPassword}" remotedir="" passive="no" binary="yes" verbose="yes" depends="yes">
+			<fileset file="${zipLocation}" />
+		</ftp>
+	</target>
+
+	<target name="zip" depends="cleanDatabaseFolderInBuild">
+		<echo>Zipping ${buildDir}/all to ${zipLocation}.</echo>
+		<zip destfile="${zipLocation}" basedir="${buildDir}/all" />
+	</target>
+
+	<!-- In order to get that thing working, the windows firewall needs this: netsh advfirewall set global StatefulFtp disable
+					See: http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=7077696 for details -->
+	<target name="updateUnzipPhpScript">
+		<echo>Updating PHP unzipper script: </echo>
+		<!-- depends = "yes" is not set because we always overwrite -->
+		<ftp server="${server}" userid="${serverUserId}" password="${serverPassword}" remotedir="" passive="yes" binary="no" verbose="yes">
+			<fileset file="./${phpUnzipScriptLocation}" />
+		</ftp>
+	</target>
+
+	<target name="runUnzipPhpScript" depends="updateUnzipPhpScript">
+		<echo>Unzipping by calling the following php script: </echo>
+		<get src="http://${server}${phpUnzipScriptLocation}" dest="${buildDir}/log/unzipperResult.txt" />
+	</target>
+
+	<target name="cleanDatabaseFolderInBuild" description="Removes and creates the database folder to make sure, the productive database will not be overwritten." depends="">
+		<echo>Removing the database folder (${buildDir}/all/database)</echo>
+		<delete dir="${buildDir}/all/database" />
+		<!-- <mkdir dir="${buildDir}/all/database" /> -->
+	</target>
+
+	<target name="build">
+		<echo>Creating build folder (${buildDir}/all)...</echo>
+		<echo>Copy symfony part...</echo>
+		<copy todir="${buildDir}/all/symfony">
+			<fileset dir="symfony">
+				<exclude name="cache/**" />
+				<exclude name="log/**" />
+			</fileset>
+		</copy>
+		<copy todir="${buildDir}/all/webView">
+			<fileset dir="webView" />
+		</copy>
+		<copy todir="${buildDir}/all/sfWeb">
+			<fileset dir="sfWeb" />
+		</copy>
+		<copy todir="${buildDir}/all/lib">
+			<fileset dir="lib">
+				<exclude name="lib/symfony/test/**" />
+			</fileset>
+		</copy>
+		<echo>Copy ext-js part...</echo>
+		<copy todir="${buildDir}/all/resources">
+			<fileset dir="build/${buildMode}/Songserver/resources" />
+		</copy>
+		<copy todir="${buildDir}/all/content">
+			<fileset dir="content" />
+		</copy>
+		<copy todir="${buildDir}/all">
+			<fileset file="build/${buildMode}/Songserver/app.js" />
+		</copy>
+		<copy todir="${buildDir}/all/resources">
+			<fileset file="build/${buildMode}/Songserver/resources/Songserver-all.css" />
+		</copy>
+		<echo>Scotty source files...</echo>
+		<copy todir="${buildDir}/all/src">
+			<fileset dir="src" />
+		</copy>
+		<copy todir="${buildDir}/all">
+			<fileset file="_index.html" />
+			<fileset file="index.php" />
+		</copy>
+		<copy todir="${buildDir}/all/integration-testing">
+			<fileset dir="integration-testing" />
+		</copy>
+		<!--<echo>Database folder (without database)...</echo>
+		<copy todir="${buildDir}/all/database">
+			<fileset file="database/dir.php" />
+		</copy>-->
+	</target>
+
+	<!-- In order to get that thing working, the windows firewall needs this: netsh advfirewall set global StatefulFtp disable
+	See: http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=7077696 for details -->
+	<target name="overwriteConfiguration" description="Overwrites the build with a specific configuration.">
+		<echo>Updating the configuration on ${server}</echo>
+		<echo>Configuration source deploy/configurations/${server}</echo>
+		<!-- depends = "yes" is not set because we always overwrite -->
+		<ftp server="${server}" userid="${serverUserId}" password="${serverPassword}" remotedir="" passive="yes" binary="no" verbose="yes">
+			<fileset dir="deploy/configurations/${server}" />
+		</ftp>
+	</target>
+
+	<target name="overwriteBuildConfiguration" description="Overwrites the LOCAL build with it's configuration so that we can test directly.">
+		<echo>Updating the local build with it's configuration</echo>
+		<echo>Configuration source deploy/configurations/localBuild</echo>
+		<copy todir="${buildDir}/all" overwrite="true">
+			<fileset dir="deploy/configurations/localBuild" />
+		</copy>
+	</target>
+
+	<target name="buildSenchaApp" description="Builds the JS-Code">
+		<echo>Building Sencha App</echo>
+		<echo>IMPORTANT: Make sure sencha Cmd 4.0.4.84 and Ruby 1.9.3 are installed and that ruby is available through the systems path.</echo>
+		<exec executable="${sencha-exe}">
+			<arg line="app build ${buildMode}" />
+		</exec>
+	</target>
+</project>

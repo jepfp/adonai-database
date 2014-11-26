@@ -1,0 +1,78 @@
+<project name="Schema Update for Adoray Songserver" default="determineScriptFileSet">
+	<description>Upgrades the given schema to the latest version.</description>
+	<property file="schemas.properties" />
+	<property file="${credentialsPath}" />
+
+	<property name="db.driver" value="org.gjt.mm.mysql.Driver" />
+	<!--<property name="db.host" value="localhost" />
+	<property name="db.schema" value="scottyinttest" />
+	<property name="db.user" value="scottyinttest" />
+	<property name="db.password" value="scottyinttest" />-->
+	<property name="db.url" value="jdbc:mysql://${db.host}/${db.schema}" />
+	<property name="jar" value="mysql-connector-java-3.0.17-ga-bin.jar" />
+
+	<target name="readProperties">
+		<echo>The following properties were read:</echo>
+		<echo>credentialsPath=${credentialsPath}</echo>
+		<echo>db.host=${db.host}</echo>
+		<echo>db.schema=${db.schema}</echo>
+		<echo>db.user=${db.user}</echo>
+		<echo>db.password=${db.password}</echo>
+	</target>
+
+	<target name="determineCurrentDatabaseVersion" description="Determines the version of the current schema">
+		<echo>Determining the current verison of the database ${db.schema}</echo>
+		<sql driver="${db.driver}" url="${db.url}" userid="${db.user}" password="${db.password}" print="yes" output="tempDbVersion.properties" showheaders="false" showtrailers="false">
+			<classpath>
+				<pathelement location="${jar}" />
+			</classpath>
+			<![CDATA[
+				select '#Current database.schema.version of database ${db.schema}';
+				select CONCAT('#Timestamp: ', now());
+		        select CONCAT('databaseSchemaVersion=', value) from settings where settings.key='database.schema.version';
+		        ]]>
+		</sql>
+		<property file="tempDbVersion.properties" />
+		<echo>The current verison of the database ${db.schema} is ${databaseSchemaVersion}.</echo>
+	</target>
+
+	<target name="determineScriptFileSet" depends="determineCurrentDatabaseVersion">
+		<path id="scriptFileSet">
+			<fileset dir="scripts">
+				<scriptselector language="javascript">
+					<![CDATA[
+							scriptNumber = parseInt(filename.replace(".sql", ""));
+							self.setSelected(scriptNumber>databaseSchemaVersion);
+						]]>
+					</scriptselector>
+			</fileset>
+		</path>
+
+		<pathconvert pathsep="${line.separator}" property="scripts" refid="scriptFileSet" />
+		<echo>Found the following script files:${line.separator}${scripts}</echo>
+	</target>
+
+	<target name="determineNewDatabaseVersion" depends="determineScriptFileSet">
+		<resourcecount property="amountOfScriptFiles" refid="scriptFileSet" />
+		<script language="javascript">
+			<![CDATA[
+				newDatabaseVersion = parseInt(databaseSchemaVersion) + parseInt(amountOfScriptFiles);
+				project.setProperty("newDatabaseVersion", newDatabaseVersion);
+			]]>
+		</script>
+		<echo>The new database schema version will be ${newDatabaseVersion}.</echo>
+	</target>
+
+	<target name="updateSchema" depends="determineNewDatabaseVersion">
+		<sql driver="${db.driver}" url="${db.url}" userid="${db.user}" password="${db.password}" print="yes">
+			<classpath>
+				<pathelement location="${jar}" />
+			</classpath>
+			<path refid="scriptFileSet" />
+			<transaction>
+			    update settings set settings.value = ${newDatabaseVersion} where settings.key = 'database.schema.version';
+			  </transaction>
+		</sql>
+		<echo>Schema update completed. New databaseSchemaVersion ${newDatabaseVersion}.</echo>
+	</target>
+</project>

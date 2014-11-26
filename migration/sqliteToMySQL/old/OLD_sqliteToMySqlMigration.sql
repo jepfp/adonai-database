@@ -1,0 +1,26 @@
+drop database adonai;
+create database adonai;
+use adonai;
+CREATE TABLE Rubrik ( ID INTEGER PRIMARY KEY AUTO_INCREMENT, Rubrik TEXT, Reihenfolge INTEGER );
+
+
+CREATE TABLE Lied ( ID INTEGER PRIMARY KEY AUTO_INCREMENT, Titel TEXT, rubrik_id INTEGER REFERENCES Rubrik(ID) ON DELETE NO ACTION ON UPDATE CASCADE, Stichwoerter TEXT, Bemerkungen TEXT, created_at DATETIME, updated_at DATETIME );
+
+
+CREATE TABLE Liederbuch ( ID INTEGER PRIMARY KEY  AUTO_INCREMENT  NOT NULL , Buchname TEXT, Beschreibung TEXT );
+
+
+CREATE TABLE fkLiederbuchLied (
+  ID INTEGER PRIMARY KEY AUTO_INCREMENT, 
+  liederbuch_id INTEGER REFERENCES Liederbuch(ID) ON DELETE CASCADE ON UPDATE CASCADE, 
+  lied_id INTEGER REFERENCES Lied(ID) ON DELETE CASCADE ON UPDATE CASCADE, 
+  Liednr VARCHAR(20), 
+  CONSTRAINT PreventFromHavingTheSameLiedNrTwiceInOneSongbook UNIQUE(liederbuch_id, Liednr),
+  CONSTRAINT PreventFromDifferentLiedNrForTheSameSongInASongbook UNIQUE(liederbuch_id, lied_id));
+
+
+CREATE TABLE Refrain ( ID INTEGER PRIMARY KEY AUTO_INCREMENT, lied_id INTEGER REFERENCES Lied( ID ) ON DELETE CASCADE ON UPDATE CASCADE, RefrainNr INTEGER, Refrain TEXT );
+
+
+CREATE TABLE Liedtext (  ID INTEGER PRIMARY KEY AUTO_INCREMENT, lied_id INTEGER REFERENCES Lied( ID ) ON DELETE CASCADE ON UPDATE CASCADE, Ueberschrift TEXT, UeberschriftTyp TEXT, Strophe TEXT, refrain_id INTEGER REFERENCES Refrain( ID ) ON DELETE NO ACTION ON UPDATE CASCADE,Reihenfolge INTEGER );
+

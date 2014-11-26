@@ -1,0 +1,7 @@
+<configuration xmlns="http://logging.apache.org/log4php/">
+    <appender name="default" class="LoggerAppenderConsole" />
+    <logger name="foo" additivity="false">
+        <level value="warn" />
+        <appender_ref ref="default" />
+    </logger>
+</configuration>
