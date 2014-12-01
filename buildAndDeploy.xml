@@ -39,7 +39,7 @@
 
 	<target name="deployLocalTesting" depends="cleanBuildFolder, buildSenchaApp, build, overwriteBuildConfiguration">
 		<echo>Local deploy finished.</echo>
-		<echo>You can start http://localhost/AdoraySongserver/build/all/</echo>
+		<echo>You can start http://localhost/adonai-database/build/all/</echo>
 	</target>
 
 	<!-- In order to get that thing working, the windows firewall needs this: netsh advfirewall set global StatefulFtp disable
