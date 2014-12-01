@@ -7,6 +7,11 @@ try {
     $request = Scotty\restinterface\Request::createFromHttpRequest();
     $dao = DAOFactory::createDAO($request->controller);
     $response = $dao->dispatch($request);
+    if($response->type == "exception"){
+        //Internal Server Error
+        //TODO: Clean implementation of Responses with status codes and client side errors
+        http_response_code(500);
+    }
     echo $response->to_json();
 } catch (Exception $ex) {
     $logger->error("Allgemeiner Fehler in rest-interface: " . $ex->getMessage());

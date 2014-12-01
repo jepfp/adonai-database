@@ -284,7 +284,7 @@ Ext.define('Songserver.view.Song', {
      * @param {Songserver.model.Song}
      *                song The new created song.
      */
-    switchFromNewToEditMode : function(song) {
+    switchToEditMode : function(song) {
 	this.songId = song.get("id");
 	this.down("#displayRefrains").setDisabled(false);
 	this.down("#addVerse").setDisabled(false);

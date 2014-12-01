@@ -51,7 +51,7 @@ Ext.define('Songserver.model.NumberInBook', {
 	if (this.get("id") < 1) {
 	    this.phantom = true;
 	}
-	this.callParent(options);
+	this.callParent(arguments);
     }
 
 });

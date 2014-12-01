@@ -156,7 +156,6 @@ Ext.define('Songserver.view.SongPropertiesPanel', {
 
     createAndAddSongbookGrid : function() {
 	var bookentriesStore = this.song.bookentries();
-	theStore = bookentriesStore;
 	this.songbookGrid = Ext.create('Ext.grid.Panel', {
 	    preventHeader : true,
 	    store : bookentriesStore,
@@ -210,44 +209,21 @@ Ext.define('Songserver.view.SongPropertiesPanel', {
 
 	this.up("songserver-songPanel").displayInfoMessage("Änderungen am Lied gespeichert. Speichere Liedernummern...");
 
-	this.saveNumberInSongbookEntries();
-
-	// this.song.save({
-	// success : function(record, operation) {
-	// this.loadRecord(this.song);
-	// this.up("songserver-songPanel").displayInfoMessage("Änderungen am
-	// Lied
-	// gespeichert. Speichere Liedernummern...");
-	//
-	// this.saveNumberInSongbookEntries();
-	// },
-	// failure : function(record, operation) {
-	// this.up("songserver-songPanel").displayErrorMessage("Fehler beim
-	// Speichern.");
-	// Ext.Msg.show({
-	// title : 'Fehler beim Speichern',
-	// msg : 'Fehler beim Speichern. Wenn du eine Liednummer hinzugefügt
-	// oder
-	// geändert hast, '
-	// + 'musst du sicher sein, dass die Nummer nicht bereits für ein
-	// anderes Lied '
-	// + 'in diesem Liederbuch verwendet wird.',
-	// buttons : Ext.Msg.OK,
-	// icon : Ext.Msg.ERROR,
-	// scope : this
-	// });
-	//
-	// },
-	// scope : this
-	// });
+	this.saveNumberInBookEntries();
     },
 
-    saveNumberInSongbookEntries : function() {
-	var modifiedRecords = this.song.bookentries().getUpdatedRecords();
+    saveNumberInBookEntries : function() {
+	var modifiedRecords = this.getDirtyNumberInBookEntries();
 	if (modifiedRecords.length > 0) {
 	    modifiedRecords[0].save({
 		success : function(record, operation) {
-		    this.saveNumberInSongbookEntries();
+		    // Hack: The commit call is necessary in case of a create
+		    // operation. The triangle flag (markDirty)
+		    // does not disappear because internally the framework calls
+		    // it with modifiedFieldNames empty which
+		    // is not as we would expect it.
+		    record.commit();
+		    this.saveNumberInBookEntries();
 		},
 		failure : function(record, operation) {
 		    this.handleSaveError('Fehler beim Speichern. Prüfe, ob die Liednummer ' //
@@ -258,12 +234,15 @@ Ext.define('Songserver.view.SongPropertiesPanel', {
 	    });
 	} else {
 	    this.up("songserver-songPanel").displayInfoMessage("Änderungen am Lied gespeichert.");
-	    this.up("songserver-songPanel").switchFromNewToEditMode(this.song);
+	    this.up("songserver-songPanel").switchToEditMode(this.song);
 	    this.hideToolbarItems();
 	}
-	// Ext.Array.each(modifiedRecords, function(value) {
-	// value.commit();
-	// });
+    },
+
+    getDirtyNumberInBookEntries : function() {
+	return this.songbookGrid.getStore().data.filterBy(function(item) {
+	    return item.dirty === true;
+	}).items;
     },
 
     handleSaveError : function(message) {
@@ -281,7 +260,7 @@ Ext.define('Songserver.view.SongPropertiesPanel', {
 	this.getForm().reset();
 
 	// reject the changes in all grid records
-	var modifiedRecords = this.song.bookentries().getUpdatedRecords();
+	var modifiedRecords = this.getDirtyNumberInBookEntries();
 	Ext.Array.each(modifiedRecords, function(value) {
 	    value.reject();
 	});

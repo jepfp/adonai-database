@@ -45,8 +45,8 @@ class AbstractCreateQueryBuilder extends AbstractQueryBuilder
         $query = "INSERT INTO " . $this->table . " (" . implode(", ", $fields) . ") VALUES (?" . str_repeat(", ?", count($fields) - 1) . ")";
         $this->buildValues();
         $statement = $db->prepare($query);
-        DbHelper::bindParams($statement, $this->bindParam);
         DbHelper::throwExceptionOnError($statement, $db, $query);
+        DbHelper::bindParams($statement, $this->bindParam);
         $this->logStatement($query, $this->bindParam->get());
         return $statement;
     }
