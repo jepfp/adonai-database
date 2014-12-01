@@ -202,14 +202,37 @@ Ext.define('Songserver.view.SongPropertiesPanel', {
 
     saveChanges : function() {
 	var form = this.getForm();
-	// var record = form.getRecord();
+	var record = form.getRecord();
 	this.song.set(form.getValues());
 
 	this.up("songserver-songPanel").displayInfoMessage("Änderungen werden gespeichert. Bitte warten...");
 
-	this.up("songserver-songPanel").displayInfoMessage("Änderungen am Lied gespeichert. Speichere Liedernummern...");
+	this.song.save({
+	    success : function(record, operation) {
+		this.loadRecord(this.song);
+		this.up("songserver-songPanel").displayInfoMessage("Änderungen am Lied gespeichert. Speichere Liedernummern...");
 
-	this.saveNumberInBookEntries();
+		// https://trello.com/c/WtjY4hle Ablegen der neuen
+		// NumberInSongbook-Einträge schlächt fehl bei neuem Lied
+		this.setLiedIdOnAllNumberInBookEntries(record.get("id"));
+
+		this.saveNumberInBookEntries();
+	    },
+	    failure : function(record, operation) {
+		this.handleSaveError('Fehler beim Speichern der Lied-Eigenschaften.');
+	    },
+	    scope : this
+	});
+
+    },
+
+    setLiedIdOnAllNumberInBookEntries : function(lied_id) {
+	this.songbookGrid.getStore().data.each(function(record) {
+	    var currentIsDirtyState = record.dirty;
+	    record.set("lied_id", lied_id);
+	    // We don't mark the record as dirty if it isn't yet.
+	    record.dirty = currentIsDirtyState;
+	});
     },
 
     saveNumberInBookEntries : function() {
