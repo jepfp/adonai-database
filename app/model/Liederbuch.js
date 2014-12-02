@@ -4,9 +4,6 @@ Ext.define('Songserver.model.Liederbuch', {
     extend : 'Ext.data.Model',
 
     fields : [ {
-	name : 'id',
-	type : 'int'
-    }, {
 	name : 'Buchname',
 	type : 'string'
     }, {

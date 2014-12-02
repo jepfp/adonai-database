@@ -7,9 +7,6 @@ Ext.define('Songserver.model.LiedView', {
 	extend : 'Ext.data.Model',
 
 	fields : [ {
-		name : 'id',
-		type : 'int'
-	}, {
 		name : 'Liednr',
 		type : 'string'
 	}, {

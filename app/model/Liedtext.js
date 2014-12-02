@@ -4,9 +4,6 @@ Ext.define('Songserver.model.Liedtext', {
     extend : 'Ext.data.Model',
 
     fields : [ {
-	name : 'id',
-	type : 'int'
-    }, {
 	name : 'Strophe',
 	type : 'string'
     }, {
@@ -32,7 +29,7 @@ Ext.define('Songserver.model.Liedtext', {
     // the reference to the correct refrain here.
     refrainInRefrainStore : null,
 
-    //TODO: Noch nicht zu Ende gedacht. Was passiert beim Ändern des Refrains?
+    // TODO: Noch nicht zu Ende gedacht. Was passiert beim Ändern des Refrains?
     setRefrainInStore : function(refrain) {
 	this.refrainInRefrainStore = refrain;
     },

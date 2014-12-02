@@ -4,9 +4,6 @@ Ext.define('Songserver.model.Refrain', {
     extend : 'Ext.data.Model',
 
     fields : [ {
-	name : 'id',
-	type : 'int'
-    }, {
 	name : 'Refrain',
 	type : 'string'
     }, {

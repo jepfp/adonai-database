@@ -7,10 +7,7 @@ Ext.namespace('Songserver.model');
 Ext.define('Songserver.model.Lied', {
     extend : 'Ext.data.Model',
 
-    fields : [ /*{
-	name : 'id',
-	type : 'int'
-    },*/ {
+    fields : [ {
 	name : 'Titel',
 	type : 'string'
     }, {
