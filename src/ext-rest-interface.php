@@ -14,6 +14,6 @@ try {
     }
     echo $response->to_json();
 } catch (Exception $ex) {
-    $logger->error("Allgemeiner Fehler in rest-interface: " . $ex->getMessage());
+    $logger->error("Allgemeiner Fehler in rest-interface: " . $ex->getMessage(), $ex);
     echo '{"success": false, "message" : "Allgemeiner Fehler in rest-interface."}';
 }
