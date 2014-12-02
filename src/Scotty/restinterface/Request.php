@@ -76,10 +76,10 @@ class Request
             case JSON_ERROR_SYNTAX:
                 throw new \RuntimeException("JSON parse error: Syntax error.");
                 break;
-            case JSON_ERROR_NONE:
-                break;
             case JSON_ERROR_UTF8:
                 throw new \RuntimeException("JSON parse error: UTF8 error.");
+                break;
+            case JSON_ERROR_NONE:
                 break;
             default:
                 throw new \RuntimeException("JSON parse error: Unknown error.");
