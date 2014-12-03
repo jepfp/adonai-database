@@ -38,24 +38,24 @@ class Request
             parse_str($raw, $params);
             
             if (isset($params['data'])) {
-                $this->params = json_decode(stripslashes($params['data']));
+                $this->params = json_decode($params['data']);
             } else {
                 $params = json_decode(stripslashes($raw));
                 $this->params = $params;
             }
         } else {
             // grab JSON data if there...
-            $this->params = (isset($_REQUEST['data'])) ? json_decode(stripslashes($_REQUEST['data'])) : null;
+            $this->params = (isset($_REQUEST['data'])) ? json_decode($_REQUEST['data']) : null;
             
             if (isset($_REQUEST['data'])) {
-                $this->params = json_decode(stripslashes($_REQUEST['data']));
+                $this->params = json_decode($_REQUEST['data']);
             } else {
                 $raw = '';
                 $httpContent = fopen('php://input', 'r');
                 while ($kb = fread($httpContent, 1024)) {
                     $raw .= $kb;
                 }
-                $params = json_decode(stripslashes($raw));
+                $params = json_decode($raw);
                 if ($params) {
                     $this->params = $params;
                 }
