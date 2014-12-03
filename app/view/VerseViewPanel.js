@@ -45,8 +45,8 @@ Ext.define('Songserver.view.VerseViewPanel', {
 	// this.callParent(arguments); don't do this. It's not needed.
 
 	this.switchToShowMode();
-	this.domainObjectId = songtext.get("id");
-	this.onVerseLoaded(songtext, null);
+	this.songtext = songtext;
+	this.loadData();
     },
 
     /**

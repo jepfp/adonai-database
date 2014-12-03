@@ -52,7 +52,6 @@ Ext.define('Songserver.view.SongtextViewPanel', {
 	this.callParent(arguments);
 
 	// check if a new songtext should be created.
-	// This is the case when domainObjectId is null.
 	if (this.songtext == null) {
 	    this.prepareForNewSongtext();
 	} else {
@@ -284,7 +283,6 @@ Ext.define('Songserver.view.SongtextViewPanel', {
      */
     onUpdatedSongtext : function(songtext) {
 	this.songtext = songtext;
-	this.domainObjectId = songtext.get("id");
 	this.switchToShowMode();
 	this.displaySongcontentOnPanel();
     },
@@ -309,7 +307,7 @@ Ext.define('Songserver.view.SongtextViewPanel', {
      */
     prepareForNewSongtext : function() {
 	this.songtext = this.getNewModel();
-	this.songtext.set("songId", this.songPanel.getSong().get("id"));
+	this.songtext.set("lied_id", this.songPanel.getSong().get("id"));
 	this.edit();
     }
 });

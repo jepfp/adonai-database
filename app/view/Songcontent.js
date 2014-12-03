@@ -109,7 +109,6 @@ Ext.define('Songserver.view.Songcontent', {
      */
     createVerse : function() {
 	var p = Ext.create("Songserver.view.VerseViewPanel", {
-	    domainObjectId : null, // we want a new object
 	    songPanel : this.songPanel
 	});
 
