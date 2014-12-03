@@ -24,7 +24,7 @@ class StandardTransformers
     {
         return function ($input)
         {
-            if ($input === 0) {
+            if ($input == 0) {
                 return null;
             } else {
                 return $input;

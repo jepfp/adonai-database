@@ -46,8 +46,10 @@ class Field
     private function performTransformations()
     {
         $this->transformedValue = $this->originalValue;
-        foreach ($this->transformers as $t) {
-            $this->transformedValue = $t($this->transformedValue);
+        if ($this->transformers) {
+            foreach ($this->transformers as $t) {
+                $this->transformedValue = $t($this->transformedValue);
+            }
         }
     }
 
