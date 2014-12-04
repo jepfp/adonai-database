@@ -46,42 +46,40 @@ Ext.define('Songserver.view.RefrainCardPanel', {
 		    },
 		    scope : this
 		}
-	    } ]
+	    } ],
+	    items : [ {
+		border : false,
+		html : '<b>Kein Refrain ausgewählt / zugewiesen</b><br>' + "Klicke auf 'Weiter', um einen zu wählen.",
+		refrain : null
+	    } ]	    
 	});
 
 	this.callParent();
-
+	
 	this.addCards();
     },
 
     addCards : function() {
-	// A no refrain card first
-	var panel = Ext.create("Ext.panel.Panel", {
-	    border : false,
-	    html : '<b>Kein Refrain ausgewählt / zugewiesen</b><br>' + "Klicke auf 'Weiter', um einen zu wählen.",
-	    refrainId : null
-	});
-	this.add(panel);
-	
 	var store = this.songPanel.refrainStore;
-	
+
 	store.each(function(record, index, allRecords) {
 	    var panel = Ext.create("Ext.panel.Panel", {
 		border : false,
 		html : record.get("Refrain"),
-		refrainId : record.get("id")
+		refrain : record
 	    });
 	    this.add(panel);
 	}, this);
-	
+
 	this.selectRefrainById(this.selectedRefrainId);
     },
 
     navigate : function(direction) {
 	var layout = this.getLayout();
 	layout[direction]();
-	this.selectedRefrainId = layout.getActiveItem().refrainId;
-	this.fireEvent("selectionChanged", this.selectedRefrainId);
+	var activeItem = layout.getActiveItem();
+	this.selectedRefrainId = activeItem.refrain ? activeItem.refrain.get("id") : null;
+	this.fireEvent("selectionChanged", activeItem.refrain);
 	this.enableDisableNavButtons();
     },
 
@@ -92,7 +90,7 @@ Ext.define('Songserver.view.RefrainCardPanel', {
     enableDisableNavButtons : function() {
 	var layout = this.getLayout();
 	this.down("#move-prev").setDisabled(!layout.getPrev());
-	this.down("#move-next").setDisabled(!layout.getNext());
+	this.down("#move-next").setDisabled(!layout.getNext() || this.items.length < 2);
     },
 
     /**
@@ -105,11 +103,9 @@ Ext.define('Songserver.view.RefrainCardPanel', {
      */
     selectRefrainById : function(refId) {
 	Ext.each(this.items.items, function(item, index, allItems) {
-	    if (item.refrainId !== undefined) {
-		if (item.refrainId == refId) {
-		    this.getLayout().setActiveItem(item);
-		    return false;
-		}
+	    if (item.refrain && item.refrain.get("id") == refId) {
+		this.getLayout().setActiveItem(item);
+		return false;
 	    }
 	}, this);
 

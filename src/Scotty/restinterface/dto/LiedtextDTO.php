@@ -7,9 +7,7 @@ class LiedtextDTO extends AbstractDTO
     public function __construct($requestParams)
     {
         $this->fields = array(
-            Field::create("Strophe", array(), array(
-                $this->notNullOrEmpty()
-            )),
+            Field::create("Strophe", array(), array()),
             Field::create("refrain_id", array(
                 StandardTransformers::number0ToNull()
             ), array()),

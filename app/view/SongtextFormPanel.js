@@ -87,9 +87,8 @@ Ext.define('Songserver.view.SongtextFormPanel', {
     },
 
     saveChanges : function() {
+	this.songPanel.setLoading(true);
 	var form = this.getForm();
-	var f = form.findField(this.songtextFieldName);
-	f.hide();
 	this.formatFields();
 	this.songtext.set(form.getValues());
 
@@ -104,10 +103,12 @@ Ext.define('Songserver.view.SongtextFormPanel', {
 		this.songtext = record;
 
 		this.fireEvent("updatedSongtext", record);
+		this.songPanel.setLoading(false);
 	    },
 	    failure : function(record, operation) {
 		this.up("songserver-songPanel").displayErrorMessage(
 			"Fehler beim Speichern! Bitte versuche es nochmals oder melde den Fehler dem Website-Verantwortlichen.");
+		this.songPanel.setLoading(false);
 	    },
 	    scope : this
 	});

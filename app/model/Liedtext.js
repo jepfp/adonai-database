@@ -18,20 +18,28 @@ Ext.define('Songserver.model.Liedtext', {
     } ],
 
     // not needed for now as the refrains are loaded over a seperate store
-    associations : [ {
-	type : 'belongsTo',
-	model : 'Songserver.model.Refrain',
-	foreignKey : 'refrain_id',
-	getterName : 'getRefrain'
-    } ],
+    // associations : [ {
+    // type : 'belongsTo',
+    // model : 'Songserver.model.Refrain',
+    // foreignKey : 'refrain_id',
+    // getterName : 'getRefrain'
+    // } ],
 
     // We have a separate store with all refrains inside the Song view. We hold
     // the reference to the correct refrain here.
     refrainInRefrainStore : null,
 
-    // TODO: Noch nicht zu Ende gedacht. Was passiert beim Ändern des Refrains?
     setRefrainInStore : function(refrain) {
+	var refrainId = 0;
+	if (refrain != null) {
+	    refrainId = refrain.get("id");
+	}
 	this.refrainInRefrainStore = refrain;
+	if (refrainId !== this.get("refrain_id")) {
+	    // only update if not equals in order to prevent from setting it to
+	    // dirty without need
+	    this.set("refrain_id", refrainId);
+	}
     },
 
     getRefrainInStore : function() {

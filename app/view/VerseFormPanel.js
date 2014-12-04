@@ -23,12 +23,6 @@ Ext.define('Songserver.view.VerseFormPanel', {
 	this.addRefrainCardPanel();
     },
 
-    saveChanges : function() {
-	this.child("songserver-refrainCardPanel").hide();
-
-	this.callParent();
-    },
-
     /**
      * Adds a new RefrainCardPanel and configures it accordingly.
      */
@@ -57,9 +51,9 @@ Ext.define('Songserver.view.VerseFormPanel', {
      * RefrainCardPanel.
      * 
      * @param {int}
-     *                selectedRefrainId The new selected refrainId
+     *                selectedRefrain The new selected refrain
      */
-    onRefrainSelectionChanged : function(selectedRefrainId) {
-	this.songtext.set("refrain_id", selectedRefrainId);
+    onRefrainSelectionChanged : function(selectedRefrain) {
+	this.songtext.setRefrainInStore(selectedRefrain);
     }
 });

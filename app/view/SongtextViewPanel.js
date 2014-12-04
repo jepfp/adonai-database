@@ -146,12 +146,12 @@ Ext.define('Songserver.view.SongtextViewPanel', {
 
     cancelEdit : function() {
 	this.songtext.reject();
-	if (this.songtext.get("id") == 0) {
-	    this.songPanel.freeEditLock();
-	    this.removeThisPanel();
-	} else {
+	if (this.songtext.get("id")) {
 	    this.switchToShowMode();
 	    this.loadData();
+	} else {
+	    this.songPanel.freeEditLock();
+	    this.removeThisPanel();
 	}
     },
 
@@ -227,7 +227,6 @@ Ext.define('Songserver.view.SongtextViewPanel', {
     },
 
     save : function() {
-	this.child("#tbar").child('button[name="save"]').disable();
 	this.formPanel.saveChanges();
     },
 
