@@ -13,7 +13,10 @@ class LiedtextDTO extends AbstractDTO
             ), array()),
             Field::create("lied_id", array(), array(
                 $this->notNullOrEmpty()
-            ))
+            )),
+            Field::create("Reihenfolge", array(
+                StandardTransformers::timeInSecondsSinceFirstOfYear1970()
+            ), array())
         );
         parent::__construct($requestParams);
     }
