@@ -36,20 +36,6 @@ Ext.define('Songserver.view.VerseViewPanel', {
     },
 
     /**
-     * To be called after the songtext of this panel has been updated.
-     * 
-     * @param {Songserver.model.Liedtext /
-     *                Songserver.model.Refrain} songtext
-     */
-    onUpdatedSongtext : function(songtext) {
-	// this.callParent(arguments); don't do this. It's not needed.
-
-	this.switchToShowMode();
-	this.songtext = songtext;
-	this.loadData();
-    },
-
-    /**
      * Creates a new panel which allows editing this verse.
      * 
      * @return {Songserver.view.VerseFormPanel} The editing form panel.
@@ -74,7 +60,10 @@ Ext.define('Songserver.view.VerseViewPanel', {
      *                refrain
      */
     updateRefrain : function(refrain) {
-	if (refrain.get("id") != this.songtext.getRefrainInStore().get("id")){
+	if (!refrain || !this.songtext.getRefrainInStore()) {
+	    return;
+	}
+	if (refrain.get("id") != this.songtext.getRefrainInStore().get("id")) {
 	    return;
 	}
 

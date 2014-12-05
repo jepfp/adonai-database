@@ -91,17 +91,17 @@ Ext.define('Songserver.view.Songcontent', {
 	return Ext.Array.merge(this.down('#verses').items.getRange(), this.down('#refrains').items.getRange());
     },
 
-    /**
-     * Updates the refrain references inside the verse panels.
-     * 
-     * @param {Songserver.model.Refrain}
-     *                refrain
-     */
     onRefrainChanged : function(refrain) {
-	var panels = this.down('#verses').items.getRange();
-	Ext.Array.each(panels, function(aPanel, index, allPanels) {
-	    aPanel.updateRefrain(refrain);
-	});
+	var store = this.songPanel.refrainStore;
+	var refrainInStore = store.getById(refrain.get("id"));
+	if (refrainInStore == null) {
+	    store.add(refrain);
+	} else {
+	    var panels = this.down('#verses').items.getRange();
+	    Ext.Array.each(panels, function(aPanel, index, allPanels) {
+		aPanel.updateRefrain(refrain);
+	    });
+	}
     },
 
     /**

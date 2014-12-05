@@ -281,9 +281,9 @@ Ext.define('Songserver.view.SongtextViewPanel', {
      *                Songserver.model.Refrain} songtext
      */
     onUpdatedSongtext : function(songtext) {
-	this.songtext = songtext;
 	this.switchToShowMode();
-	this.displaySongcontentOnPanel();
+	this.songtext = songtext;
+	this.loadData();
     },
 
     disableEditing : function() {
