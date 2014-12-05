@@ -50,7 +50,7 @@ Ext.define('Songserver.view.RefrainCardPanel', {
 	    items : [ {
 		border : false,
 		html : '<b>Kein Refrain ausgewählt / zugewiesen</b><br>' + "Klicke auf 'Weiter', um einen zu wählen.",
-		refrain : null
+		refrainId : null
 	    } ]	    
 	});
 
@@ -66,7 +66,7 @@ Ext.define('Songserver.view.RefrainCardPanel', {
 	    var panel = Ext.create("Ext.panel.Panel", {
 		border : false,
 		html : record.get("Refrain"),
-		refrain : record
+		refrainId : record.get("id")
 	    });
 	    this.add(panel);
 	}, this);
@@ -78,8 +78,8 @@ Ext.define('Songserver.view.RefrainCardPanel', {
 	var layout = this.getLayout();
 	layout[direction]();
 	var activeItem = layout.getActiveItem();
-	this.selectedRefrainId = activeItem.refrain ? activeItem.refrain.get("id") : null;
-	this.fireEvent("selectionChanged", activeItem.refrain);
+	this.selectedRefrainId = activeItem.refrainId;
+	this.fireEvent("selectionChanged", this.selectedRefrainId);
 	this.enableDisableNavButtons();
     },
 
@@ -103,7 +103,7 @@ Ext.define('Songserver.view.RefrainCardPanel', {
      */
     selectRefrainById : function(refId) {
 	Ext.each(this.items.items, function(item, index, allItems) {
-	    if (item.refrain && item.refrain.get("id") == refId) {
+	    if (item.refrainId == refId) {
 		this.getLayout().setActiveItem(item);
 		return false;
 	    }

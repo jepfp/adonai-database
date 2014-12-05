@@ -176,15 +176,7 @@ Ext.define('Songserver.view.Song', {
 	    return;
 	}
 
-	this.setRefrainStoreReferences(this.verseStore);
-
 	this.down("songserver-songcontentPanel").createVersePanels(this.verseStore);
-    },
-
-    setRefrainStoreReferences : function(verseStore) {
-	verseStore.each(function(aVerse, index, allRecords) {
-	    aVerse.setRefrainInStore(this.getRefrainByVerse(aVerse));
-	}, this);
     },
 
     /**

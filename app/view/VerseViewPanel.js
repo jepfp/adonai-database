@@ -23,7 +23,7 @@ Ext.define('Songserver.view.VerseViewPanel', {
     loadData : function() {
 	this.removeAll();
 	var htmlContent = "";
-	var refrain = this.songtext.getRefrainInStore();
+	var refrain = this.getRefrainByIdFromStore(this.songtext.get("refrain_id"));
 	if (refrain != null) {
 	    htmlContent = "<div class='songRefrain'>" + refrain.get("Refrain") + "</div><br>";
 	}
@@ -33,6 +33,10 @@ Ext.define('Songserver.view.VerseViewPanel', {
 	    html : htmlContent
 	});
 	this.add(contentPanel);
+    },
+    
+    getRefrainByIdFromStore : function(refrainId){
+	return this.songPanel.refrainStore.getById(refrainId);
     },
 
     /**
@@ -60,10 +64,10 @@ Ext.define('Songserver.view.VerseViewPanel', {
      *                refrain
      */
     updateRefrain : function(refrain) {
-	if (!refrain || !this.songtext.getRefrainInStore()) {
+	if (!refrain) {
 	    return;
 	}
-	if (refrain.get("id") != this.songtext.getRefrainInStore().get("id")) {
+	if (refrain.get("id") != this.songtext.get("refrain_id")) {
 	    return;
 	}
 

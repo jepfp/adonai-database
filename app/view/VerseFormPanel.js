@@ -53,7 +53,7 @@ Ext.define('Songserver.view.VerseFormPanel', {
      * @param {int}
      *                selectedRefrain The new selected refrain
      */
-    onRefrainSelectionChanged : function(selectedRefrain) {
-	this.songtext.setRefrainInStore(selectedRefrain);
+    onRefrainSelectionChanged : function(selectedRefrainId) {
+	this.songtext.set("refrain_id", selectedRefrainId);
     }
 });
