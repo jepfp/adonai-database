@@ -22,13 +22,11 @@ class NumberInBookDTO extends AbstractDTO
     
     protected function getFieldsToIgnore()
     {
-        $fieldsToIgnore = array(
-            "Beschreibung",
-            "Buchname",
-            "locked",
-            "mnemonic",
-            "id"
-        );
+        $fieldsToIgnore = parent::getFieldsToIgnore();
+        $fieldsToIgnore[] = "Beschreibung";
+        $fieldsToIgnore[] = "Buchname";
+        $fieldsToIgnore[] = "locked";
+        $fieldsToIgnore[] = "mnemonic";
         return $fieldsToIgnore;
     }
 }

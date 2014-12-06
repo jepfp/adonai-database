@@ -30,7 +30,8 @@ abstract class AbstractDAO
 
     /**
      * Dispatch request to appropriate controller-action by convention according to the HTTP method.
-     * @param Request $request
+     * 
+     * @param Request $request            
      */
     public function dispatch($request)
     {
@@ -91,7 +92,7 @@ abstract class AbstractDAO
         $this->logger->debug("New record with id " . $insertedId . " inserted.");
         $res = $this->redirectToGETWithId($insertedId);
     }
-    
+
     private function redirectToGETWithId($id)
     {
         $controller = $this->request->controller;
@@ -100,6 +101,17 @@ abstract class AbstractDAO
         $request = Request::create("GET", $controller, $action, $id);
         $dao = DAOFactory::createDAO($controller);
         return $dao->dispatch($request);
+    }
+
+    private function update(&$res)
+    {
+        $CRUDOperation = "update";
+        $fullyQualifiedQueryBuilderName = $this->determineQueryBuilderName($CRUDOperation);
+        $this->instantiateQueryBuilder($fullyQualifiedQueryBuilderName, $CRUDOperation);
+        $db = $this->executeStatement($this->queryBuilder, $res);
+        $updatedId = $this->request->id;
+        $this->logger->debug("Record with id " . $updatedId . " updated.");
+        $res = $this->redirectToGETWithId($updatedId);
     }
 
     private function delete(&$res)
@@ -181,7 +193,7 @@ abstract class AbstractDAO
         $this->logger->error($userMesssage, $ex);
         return $res;
     }
-    
+
     protected function handleDtoException(DTOException $ex)
     {
         $res = new Response();

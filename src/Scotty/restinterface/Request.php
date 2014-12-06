@@ -40,7 +40,7 @@ class Request
             if (isset($params['data'])) {
                 $this->params = json_decode($params['data']);
             } else {
-                $params = json_decode(stripslashes($raw));
+                $params = json_decode($raw);
                 $this->params = $params;
             }
         } else {

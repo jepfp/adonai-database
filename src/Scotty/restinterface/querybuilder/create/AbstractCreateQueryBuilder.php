@@ -14,9 +14,18 @@ use Scotty\restinterface\querybuilder\AbstractModificationQueryBuilder;
 class AbstractCreateQueryBuilder extends AbstractModificationQueryBuilder
 {
 
-    protected function buildQueryString($fields)
+    protected function buildQueryString()
     {
+        $fields = $this->dto->getAllFieldNames();
         return "INSERT INTO " . $this->table . " (" . implode(", ", $fields) . ") VALUES (?" . str_repeat(", ?", count($fields) - 1) . ")";
+    }
+    
+    protected function buildValues()
+    {
+        $keyValuePairs = $this->dto->getAllKeyValuePairs();
+        foreach ($keyValuePairs as $key => $value) {
+            $this->bindParam->add("s", $value);
+        }
     }
 }
 

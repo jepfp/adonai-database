@@ -23,7 +23,7 @@ abstract class AbstractModificationQueryBuilder extends AbstractQueryBuilder
      *
      * @var AbstractDTO
      */
-    private $dto;
+    protected $dto;
 
     public function __construct($table, $request)
     {
@@ -41,8 +41,7 @@ abstract class AbstractModificationQueryBuilder extends AbstractQueryBuilder
     public function build($db)
     {
         $this->bindParam = new BindParam();
-        $fields = $this->dto->getAllFieldNames();
-        $query = $this->buildQueryString($fields);
+        $query = $this->buildQueryString();
         $this->buildValues();
         $statement = $db->prepare($query);
         DbHelper::throwExceptionOnError($statement, $db, $query);
@@ -51,15 +50,9 @@ abstract class AbstractModificationQueryBuilder extends AbstractQueryBuilder
         return $statement;
     }
     
-    abstract protected function buildQueryString($fields);
+    abstract protected function buildQueryString();
 
-    private function buildValues()
-    {
-        $keyValuePairs = $this->dto->getAllKeyValuePairs();
-        foreach ($keyValuePairs as $key => $value) {
-            $this->bindParam->add("s", $value);
-        }
-    }
+    protected abstract function buildValues();
 
     public function determineTotalCountAndClose($statement)
     {

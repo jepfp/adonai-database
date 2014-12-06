@@ -22,9 +22,8 @@ class RefrainDTO extends AbstractDTO
 
     protected function getFieldsToIgnore()
     {
-        $fieldsToIgnore = array(
-            "language_id"
-        );
+        $fieldsToIgnore = parent::getFieldsToIgnore();
+        $fieldsToIgnore[] = "language_id";
         return $fieldsToIgnore;
     }
 }
