@@ -31,12 +31,24 @@ class StandardTransformers
             }
         };
     }
-    
+
     public static function timeInSecondsSinceFirstOfYear1970()
     {
         return function ($input)
         {
             return time();
+        };
+    }
+
+    public static function emptyToNull()
+    {
+        return function ($input)
+        {
+            if ($input === "") {
+                return null;
+            } else {
+                return $input;
+            }
         };
     }
 }

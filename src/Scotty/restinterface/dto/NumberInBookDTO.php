@@ -7,8 +7,10 @@ class NumberInBookDTO extends AbstractDTO
     public function __construct($requestParams)
     {
         $this->fields = array(
-            Field::create("Liednr", array(), array(
-                $this->notNullOrEmpty()
+            Field::create("Liednr", array(
+                StandardTransformers::emptyToNull()
+        ), array(
+                //$this->notNullOrEmpty() -> It may be null
             )),
             Field::create("lied_id", array(), array(
                 $this->notNullOrEmpty()
