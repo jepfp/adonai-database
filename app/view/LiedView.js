@@ -23,9 +23,9 @@ Ext.define('Songserver.view.LiedView', {
 	    store : this.getSongStore(),
 	    loadMask : true,
 	    disableSelection : false,
-//	    selModel : {
-//		pruneRemoved : false
-//	    },
+	    // selModel : {
+	    // pruneRemoved : false
+	    // },
 	    listeners : {
 		itemdblclick : function(view, record, item, index, e) {
 		    this.editSong(record.get("id"));
@@ -48,6 +48,7 @@ Ext.define('Songserver.view.LiedView', {
 		itemId : "tbar",
 		items : [ {
 		    name : 'quicksearch',
+		    itemId : 'quicksearch',
 		    xtype : 'textfield',
 		    fieldLabel : 'Suche',
 		    labelWidth : 50,
@@ -126,6 +127,15 @@ Ext.define('Songserver.view.LiedView', {
 	this.store.load();
 
 	Songserver.view.LiedView.superclass.initComponent.apply(this, arguments);
+
+	this.setQuicksearchFieldFromCurrentStoreFilter();
+    },
+
+    setQuicksearchFieldFromCurrentStoreFilter : function() {
+	var value = this.store.proxy.extraParams.quicksearch;
+	if (value) {
+	    this.down("#quicksearch").setValue(value);
+	}
     },
 
     /**
@@ -224,6 +234,10 @@ Ext.define('Songserver.view.LiedView', {
     },
 
     delayedSearch : new Ext.util.DelayedTask(function(searchValue) {
+	var currentValue = this.store.proxy.extraParams.quicksearch;
+	if (currentValue == searchValue) {
+	    return;
+	}
 	this.store.proxy.extraParams = {
 	    "quicksearch" : searchValue
 	};
