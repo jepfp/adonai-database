@@ -838,8 +838,6 @@ Ext.ClassManager.addNameAlternateMappings({
   "Songserver.model.NumberInBook": [],
   "Songserver.model.Refrain": [],
   "Songserver.model.Rubrik": [],
-  "Songserver.model.Song": [],
-  "Songserver.model.Songbook": [],
   "Songserver.view.Layout": [],
   "Songserver.view.LiedView": [],
   "Songserver.view.Navigation": [],
@@ -1857,8 +1855,6 @@ Ext.ClassManager.addNameAliasMappings({
   "Songserver.model.NumberInBook": [],
   "Songserver.model.Refrain": [],
   "Songserver.model.Rubrik": [],
-  "Songserver.model.Song": [],
-  "Songserver.model.Songbook": [],
   "Songserver.view.Layout": [],
   "Songserver.view.LiedView": [],
   "Songserver.view.Navigation": [

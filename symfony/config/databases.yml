@@ -1,7 +1,0 @@
-all:
-  doctrine:
-    class: sfDoctrineDatabase
-    param:
-      dsn: 'sqlite:C:\workspace\pdt\AdoraySongserver\database\adonai.sqlite'
-      username: root
-      password: null

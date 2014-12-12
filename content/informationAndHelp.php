@@ -4,7 +4,7 @@
 <table>
 <tr>
 <td>Version:</td>
-<td>3.0.0 / Januar 14</td>
+<td>4.0.0 / Dezember 14</td>
 </tr>
 <tr>
 <td>Entwicklung:</td>
