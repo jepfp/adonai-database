@@ -8,8 +8,7 @@ Ext.Loader.addClassPathMappings({
   "Ext": "ext/src",
   "Ext.Msg": "ext/src/window/MessageBox.js",
   "Ext.rtl.EventObjectImpl": "ext/src/rtl/EventObject.js",
-  "Songserver": "app",
-  "Songserver.view.SongtableOLD": "app/view/Songtable.js"
+  "Songserver": "app"
 });
 Ext.ClassManager.addNameAlternateMappings({
   "Ext.AbstractComponent": [],
@@ -829,7 +828,6 @@ Ext.ClassManager.addNameAlternateMappings({
     "Ext.Window"
   ],
   "Songserver.AppContext": [],
-  "Songserver.SymfonyProxy": [],
   "Songserver.controller.auth.Authenticate": [],
   "Songserver.model.Lied": [],
   "Songserver.model.LiedView": [],
@@ -847,7 +845,6 @@ Ext.ClassManager.addNameAlternateMappings({
   "Songserver.view.Song": [],
   "Songserver.view.SongPropertiesPanel": [],
   "Songserver.view.Songcontent": [],
-  "Songserver.view.SongtableOLD": [],
   "Songserver.view.SongtextFormPanel": [],
   "Songserver.view.SongtextViewPanel": [],
   "Songserver.view.VerseFormPanel": [],
@@ -1844,9 +1841,6 @@ Ext.ClassManager.addNameAliasMappings({
     "widget.window"
   ],
   "Songserver.AppContext": [],
-  "Songserver.SymfonyProxy": [
-    "proxy.symfonyProxy"
-  ],
   "Songserver.controller.auth.Authenticate": [],
   "Songserver.model.Lied": [],
   "Songserver.model.LiedView": [],
@@ -1878,7 +1872,6 @@ Ext.ClassManager.addNameAliasMappings({
   "Songserver.view.Songcontent": [
     "widget.songserver-songcontentPanel"
   ],
-  "Songserver.view.SongtableOLD": [],
   "Songserver.view.SongtextFormPanel": [
     "widget.songserver-songtextFormPanel"
   ],

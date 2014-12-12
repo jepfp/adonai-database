@@ -1,0 +1,17 @@
+#sencha app build mode
+#buildMode=testing
+
+#PRODUCTIVE SYSTEM adonai.philippjenni.ch (adonai.adoray.ch)
+#server=adonai.philippjenni.ch
+#serverUserId=adonaiDeploy@philippjenni.ch
+#serverPassword=THIS WILL NOT WORK
+
+#PRODUCTIVE SYSTEM tarbes.philippjenni.ch (tarbes.adoray.ch)
+#server=tarbes.philippjenni.ch
+#serverUserId=tarbesDeploy@philippjenni.ch
+#serverPassword=THIS WILL NOT WORK
+
+#TEST SYSTEM testonai.philippjenni.ch
+server=testonai.philippjenni.ch
+serverUserId=testonaiDeploy@philippjenni.ch
+serverPassword=THIS WILL NOT WORK

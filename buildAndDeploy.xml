@@ -79,24 +79,6 @@
 
 	<target name="build">
 		<echo>Creating build folder (${buildDir}/all)...</echo>
-		<echo>Copy symfony part...</echo>
-		<copy todir="${buildDir}/all/symfony">
-			<fileset dir="symfony">
-				<exclude name="cache/**" />
-				<exclude name="log/**" />
-			</fileset>
-		</copy>
-		<copy todir="${buildDir}/all/webView">
-			<fileset dir="webView" />
-		</copy>
-		<copy todir="${buildDir}/all/sfWeb">
-			<fileset dir="sfWeb" />
-		</copy>
-		<copy todir="${buildDir}/all/lib">
-			<fileset dir="lib">
-				<exclude name="lib/symfony/test/**" />
-			</fileset>
-		</copy>
 		<echo>Copy ext-js part...</echo>
 		<copy todir="${buildDir}/all/resources">
 			<fileset dir="build/${buildMode}/Songserver/resources" />
