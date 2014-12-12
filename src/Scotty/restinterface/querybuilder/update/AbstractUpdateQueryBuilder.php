@@ -17,7 +17,12 @@ class AbstractUpdateQueryBuilder extends AbstractModificationQueryBuilder
     protected function buildQueryString()
     {
         $fields = $this->dto->getAllFieldNamesInParams();
-        return "UPDATE " . $this->table . " SET " . implode(" = ?, ", $fields) . "= ? WHERE id = ?";
+        return "UPDATE " . $this->table . " SET " . implode(" = ?, ", $fields) . "= ? " . $this->buildWhereQueryString();
+    }
+
+    protected function buildWhereQueryString()
+    {
+        return "WHERE id = ?";
     }
 
     protected function buildValues()
@@ -27,6 +32,11 @@ class AbstractUpdateQueryBuilder extends AbstractModificationQueryBuilder
         foreach ($keyValuePairs as $key => $value) {
             $this->bindParam->add("s", $value);
         }
+        $this->buildWhereValues();
+    }
+
+    protected function buildWhereValues()
+    {
         $this->bindParam->add("s", $this->getIdAndThrowExceptionIfNotValid());
     }
 

@@ -22,10 +22,13 @@ abstract class AbstractDAO
     protected $logger;
 
     protected $queryBuilder;
+    
+    protected $db;
 
     public function __construct()
     {
         $this->logger = \Logger::getLogger("main");
+        $this->db = DatabaseConnector::db();
     }
 
     /**
@@ -36,6 +39,8 @@ abstract class AbstractDAO
     public function dispatch($request)
     {
         $this->request = $request;
+        
+        $this->onBeforeDispatch();
         
         $res = new Response();
         $res->success = true;
@@ -67,6 +72,11 @@ abstract class AbstractDAO
         
         return $res;
     }
+    
+    protected function onBeforeDispatch()
+    {
+        // override if needed
+    }
 
     private function checkIfUserIsLoggedIn()
     {
@@ -93,7 +103,7 @@ abstract class AbstractDAO
         $res = $this->redirectToGETWithId($insertedId);
     }
 
-    private function redirectToGETWithId($id)
+    protected function redirectToGETWithId($id)
     {
         $controller = $this->request->controller;
         $action = $this->request->action;
@@ -149,7 +159,7 @@ abstract class AbstractDAO
 
     private function executeStatement($queryBuilder, $res)
     {
-        $db = DatabaseConnector::db();
+        $db = $this->db;
         $statement = $queryBuilder->build($db);
         if ($statement === false) {
             // false if an error occurred

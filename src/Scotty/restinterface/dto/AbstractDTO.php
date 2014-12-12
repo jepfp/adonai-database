@@ -59,7 +59,7 @@ class AbstractDTO
         return $fieldsToIgnore;
     }
 
-    private function findFieldByKey($key)
+    public function findFieldByKey($key)
     {
         foreach ($this->fields as $aField) {
             if ($aField->getName() == $key) {

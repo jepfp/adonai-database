@@ -16,6 +16,16 @@ class StandardTransformers
         };
     }
 
+    public static function determineCurrentLiederbuchId()
+    {
+        return function ($input)
+        {
+            $sessionInfoProvider = new SessionInfoProvider();
+            $liederbuchId = $sessionInfoProvider->getCurrentLiederbuchId();
+            return $liederbuchId;
+        };
+    }
+
     /**
      * For not mandatory fk fields where ext js submits 0 which means "no reference".
      * For details see int test LiedtextDAOTest#create_noRefrainSelectedWhichMeansRefrainId0_rowCreated

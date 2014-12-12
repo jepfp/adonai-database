@@ -250,7 +250,7 @@ Ext.define('Songserver.view.LiedView', {
 
 	Ext.Msg.show({
 	    title : 'Lied ändern?',
-	    msg : 'Möchtest du die Nummer des Liedes "' + e.record.get("title") + '" wirklich von "' + e.originalValue + '" nach "' + e.value + '" ändern?',
+	    msg : 'Möchtest du die Nummer des Liedes "' + e.record.get("Titel") + '" wirklich von "' + e.originalValue + '" nach "' + e.value + '" ändern?',
 	    buttons : Ext.Msg.YESNO,
 	    icon : Ext.Msg.QUESTION,
 	    editEvent : e,
