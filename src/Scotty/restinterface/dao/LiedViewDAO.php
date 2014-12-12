@@ -2,6 +2,7 @@
 namespace Scotty\restinterface\dao;
 
 use Scotty\session\SessionInfoProvider;
+use Scotty\database\DbHelper;
 
 class LiedViewDAO extends AbstractDAO
 {
@@ -33,7 +34,8 @@ class LiedViewDAO extends AbstractDAO
     private function isfkLiederbuchLiedEntryExistingFor($liederbuchId, $liedId)
     {
         $db = $this->db;
-        $statement = $db->prepare("SELECT id FROM fkLiederbuchLied WHERE liederbuch_id = ? AND lied_id = ?");
+        $statement = $db->prepare("SELECT id FROM fkliederbuchlied WHERE liederbuch_id = ? AND lied_id = ?");
+        DbHelper::throwExceptionOnStatementError($statement, $db);
         $statement->bind_param("ss", $liederbuchId, $liedId);
         $statement->execute();
         $statement->bind_result($id);

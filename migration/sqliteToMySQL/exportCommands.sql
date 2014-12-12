@@ -2,9 +2,10 @@
 .out export/rubrik.sql 
 select id, rubrik, reihenfolge from rubrik;
 
+/* Paramter 9 to the id of lieder@adoray.ch user !!!!!!!!!!!!!!!!!!!!!!*/
 .mode insert lied
 .out export/lied.sql 
-select id, titel, rubrik_id, stichwoerter, bemerkungen, created_at, updated_at, NULL, NULL, NULL from Lied;
+select id, titel, rubrik_id, stichwoerter, bemerkungen, created_at, updated_at, NULL, 8, NULL from Lied;
 
 .mode insert liederbuch
 .out export/liederbuch.sql 
@@ -32,6 +33,6 @@ CHANGE ME!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 This is the version of the schema to which the following insert statements will fit.
 If you update the new database schema you need to adjust this export script and the followin insert statements accordingly.
 */
-select 'database.schema.version', '0.9.2';
+select 'database.schema.version', '100011';
 
 .quit;
