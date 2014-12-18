@@ -198,6 +198,7 @@ class AbstractReadQueryBuilder extends AbstractQueryBuilder
             $statement->close();
             $statement = $this->buildCountIgnoreLimit();
             $statement->execute();
+            DbHelper::throwExceptionOnStatementError($statement);
             $row = array();
             AssocBinder::bind($statement, $row);
             if ($statement->fetch()) {

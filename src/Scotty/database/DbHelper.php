@@ -17,10 +17,9 @@ class DbHelper
     /**
      * Throws an error if the statement has an error.
      * @param mysqli_stmt $statement
-     * @param DatabaseConnector $db
      * @throws DatabaseException
      */
-    public static function throwExceptionOnStatementError($statement, $db)
+    public static function throwExceptionOnStatementError($statement)
     {
         if ($statement->sqlstate != "00000") {
             throw DatabaseException::constructFromStatement($statement);

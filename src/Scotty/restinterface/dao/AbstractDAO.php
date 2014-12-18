@@ -22,7 +22,7 @@ abstract class AbstractDAO
     protected $logger;
 
     protected $queryBuilder;
-    
+
     protected $db;
 
     public function __construct()
@@ -33,7 +33,7 @@ abstract class AbstractDAO
 
     /**
      * Dispatch request to appropriate controller-action by convention according to the HTTP method.
-     * 
+     *
      * @param Request $request            
      */
     public function dispatch($request)
@@ -72,7 +72,7 @@ abstract class AbstractDAO
         
         return $res;
     }
-    
+
     protected function onBeforeDispatch()
     {
         // override if needed
@@ -169,7 +169,11 @@ abstract class AbstractDAO
             throw new DatabaseException($message);
         }
         $statement->execute();
-        DbHelper::throwExceptionOnStatementError($statement, $db);
+        // store_result: http://php.net/manual/de/mysqli-result.num-rows.php#105289
+        // Without store_result, Unaxus server returned 0 for num_rows inside determineTotalCountAndClose. On the
+        // local testing environment it worked always. Buffered queries should actually already be the default setting.
+        $statement->store_result();
+        DbHelper::throwExceptionOnStatementError($statement);
         $res->data = $this->fetchAndTransformResult($statement);
         $res->totalCount = $queryBuilder->determineTotalCountAndClose($statement);
         return $db;

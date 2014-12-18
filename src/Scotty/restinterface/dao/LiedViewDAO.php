@@ -35,7 +35,7 @@ class LiedViewDAO extends AbstractDAO
     {
         $db = $this->db;
         $statement = $db->prepare("SELECT id FROM fkliederbuchlied WHERE liederbuch_id = ? AND lied_id = ?");
-        DbHelper::throwExceptionOnStatementError($statement, $db);
+        DbHelper::throwExceptionOnStatementError($statement);
         $statement->bind_param("ss", $liederbuchId, $liedId);
         $statement->execute();
         $statement->bind_result($id);
