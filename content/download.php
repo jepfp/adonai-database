@@ -7,7 +7,7 @@ Computer verfügbar und kannst mit <i>beamen</i> voll loslegen ;-).
 </a>
 <br><br>
 
-<a href="database/adonai.sqlite">
+<a href="src/sqlite-db.php">
 <h1><img src="resources/images/silk/icons/database.png" class="leftTextImage" />Liederdatenbank</h1>
 Wenn du deinen Computer manuell mit den neusten Lieder von dieser Internetseite aktualisieren willst,
 kannst du hier die Datenbank (für technisch Interessierte: im SQLite-Format) downloaden.

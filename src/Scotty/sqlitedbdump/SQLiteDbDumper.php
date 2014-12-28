@@ -5,6 +5,7 @@ use Scotty\project\ProjectConfiguration;
 use Scotty\filesystem\FsHelper;
 use Scotty\database\DbHelper;
 use Scotty\database\DatabaseConnector;
+use Scotty\utils\StopWatch;
 
 class SQLiteDbDumper
 {
@@ -72,10 +73,13 @@ class SQLiteDbDumper
      */
     public function performExport()
     {
+        $this->logger->info("Starting export of sqlite db. Starting stop watch now.");
+        $stopWatch = StopWatch::start();
         $this->logger->trace("Sqlite db path will be " . $this->buildDbFilePath());
         $this->deleteOldDb();
         $this->createNewDbFromContractDatabase();
         $this->readAndExportAll();
+        $this->logger->info("Sqlite db export finished after " . $stopWatch->measure() . " seconds.");
         return $this->buildDbFilePath();
     }
 
@@ -117,7 +121,6 @@ class SQLiteDbDumper
         DbHelper::throwExceptionOnError($result, $this->db, $query);
         while ($row = $result->fetch_row()) {
             $insertQuery = $tableDefinition->buildInsertQuery($row);
-            $this->logger->trace("Insert query is: " . $insertQuery);
             $querySuccessful = $this->sqliteDb->exec($insertQuery);
             if (! $querySuccessful || $this->sqliteDb->lastErrorCode() !== 0) {
                 throw new \RuntimeException("Error while executing statement against sqlite database: " . $this->sqliteDb->lastErrorMsg() . "\nQuery is: " . $insertQuery);
