@@ -2,8 +2,22 @@
 namespace Scotty\restinterface\dao;
 
 use Scotty\session\SessionInfoProvider;
+use Scotty\changebacktrack\ChangeBacktrack;
 
 class NumberInBookDAO extends AbstractDAO
 {
+    protected function onAfterUpdate($id)
+    {
+        $this->updateUpdatedAtOnLied($id);
+    }
+    
+    protected function onAfterCreate($id)
+    {
+        $this->updateUpdatedAtOnLied($id);
+    }
+    
+    private function updateUpdatedAtOnLied($id){
+        ChangeBacktrack::updateBacktrackOnLiedByChildTable("fkliederbuchlied", $id);
+    }
 }
 

@@ -3,6 +3,7 @@ namespace Scotty\restinterface\dao;
 
 use Scotty\session\SessionInfoProvider;
 use Scotty\database\DbHelper;
+use Scotty\changebacktrack\ChangeBacktrack;
 
 class LiedViewDAO extends AbstractDAO
 {
@@ -66,6 +67,21 @@ class LiedViewDAO extends AbstractDAO
         // In case of a LiedView creation only the fkLiederbuchLied entry is created but the id is the id from Lied.
         // Therefore we ned to redirect to the id of the Lied and not of the inserted fkLiederbuchLied id.
         return parent::redirectToGETWithId($this->request->params->lied_id);
+    }
+
+    protected function onAfterUpdate($id)
+    {
+        $this->updateUpdatedAtOnLied($id);
+    }
+
+    protected function onAfterCreate($id)
+    {
+        $this->updateUpdatedAtOnLied($id);
+    }
+
+    private function updateUpdatedAtOnLied($id)
+    {
+        ChangeBacktrack::updateBacktrackOnLiedByChildTable("fkliederbuchlied", $id);
     }
 }
 

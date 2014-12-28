@@ -100,7 +100,13 @@ abstract class AbstractDAO
         $db = $this->executeStatement($this->queryBuilder, $res);
         $insertedId = $db->insert_id;
         $this->logger->debug("New record with id " . $insertedId . " inserted.");
+        $this->onAfterCreate($insertedId);
         $res = $this->redirectToGETWithId($insertedId);
+    }
+    
+    protected function onAfterCreate($id)
+    {
+        // override if needed
     }
 
     protected function redirectToGETWithId($id)
@@ -121,7 +127,13 @@ abstract class AbstractDAO
         $db = $this->executeStatement($this->queryBuilder, $res);
         $updatedId = $this->request->id;
         $this->logger->debug("Record with id " . $updatedId . " updated.");
+        $this->onAfterUpdate($updatedId);
         $res = $this->redirectToGETWithId($updatedId);
+    }
+    
+    protected function onAfterUpdate($id)
+    {
+        // override if needed
     }
 
     private function delete(&$res)
@@ -129,10 +141,16 @@ abstract class AbstractDAO
         $CRUDOperation = "delete";
         $fullyQualifiedQueryBuilderName = $this->determineQueryBuilderName($CRUDOperation);
         $this->instantiateQueryBuilder($fullyQualifiedQueryBuilderName, $CRUDOperation);
+        $this->onBeforeDelete($this->request->id);
         $this->executeStatement($this->queryBuilder, $res);
         if ($res->totalCount != 1) {
             throw new \RuntimeException("Deleting of " . $this->request->id . " failed.");
         }
+    }
+    
+    protected function onBeforeDelete($id)
+    {
+        // override if needed
     }
 
     private function determineQueryBuilderName($CRUDOperation)
