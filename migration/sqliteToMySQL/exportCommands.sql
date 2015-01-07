@@ -5,11 +5,11 @@ select id, rubrik, reihenfolge from rubrik;
 /* Paramter 9 to the id of lieder@adoray.ch user !!!!!!!!!!!!!!!!!!!!!!*/
 .mode insert lied
 .out export/lied.sql 
-select id, titel, rubrik_id, stichwoerter, bemerkungen, created_at, updated_at, NULL, 8, NULL from Lied;
+select id, titel, rubrik_id, stichwoerter, bemerkungen, created_at, updated_at, NULL, 43, NULL from Lied;
 
 .mode insert liederbuch
 .out export/liederbuch.sql 
-select id, buchname, beschreibung, id, NULL from liederbuch;
+select id, buchname, beschreibung, id, 0 from liederbuch;
 
 .mode insert fkliederbuchlied
 .out export/fkliederbuchlied.sql 
