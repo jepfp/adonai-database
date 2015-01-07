@@ -135,4 +135,24 @@
 			<arg line="app build ${buildMode}" />
 		</exec>
 	</target>
+
+	<target name="enableMaintenance" description="Uploads a maintenance file.">
+		<echo>Uploading maintenance file to ${server}</echo>
+		<copy file="_index.html" tofile="index.html" />
+		<ftp server="${server}" userid="${serverUserId}" password="${serverPassword}" remotedir="" passive="yes" binary="no" verbose="yes">
+			<fileset dir=".">
+				<include name="index.html" />
+			</fileset>
+		</ftp>
+		<delete>
+			<fileset dir="." includes="index.html" />
+		</delete>
+	</target>
+
+	<target name="disableMaintenance" description="Deletes the maintenance files.">
+		<echo>Deleting maintenance files on ${server}</echo>
+		<ftp server="${server}" userid="${serverUserId}" password="${serverPassword}" verbose="yes" action="delete">
+			<fileset file="index.htm*" />
+		</ftp>
+	</target>
 </project>

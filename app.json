@@ -1,5 +1,6 @@
 {
     "name": "Songserver",
+    "indexHtmlPath": "index.php",
 
     "requires": [
     ],
