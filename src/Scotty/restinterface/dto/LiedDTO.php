@@ -18,7 +18,9 @@ class LiedDTO extends AbstractDTO
             ), array(
                 $this->notNullOrEmpty()
             )),
-            new Field("tonality")
+            Field::create("tonality", array(
+                StandardTransformers::emptyToNull()
+            ), array())
         );
         parent::__construct($requestParams);
     }

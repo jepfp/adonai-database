@@ -54,6 +54,33 @@ Ext.define('Songserver.view.SongPropertiesPanel', {
 		    allowBlank : false,
 		    enableKeyEvents : true
 		}, {
+		    fieldLabel : 'Tonart',
+		    name : 'tonality',
+		    xtype : 'combobox',
+		    // valueField : 'tonality',
+		    // displayField : 'tonality',
+		    emptyText : 'Tonart wählen...',
+		    forceSelection : false,
+		    editable : false,
+		    queryMode : 'local',
+		    allowBlank : true,
+		    store : [ [ "", "Unbekannt" ],//
+		    [ "C / a (kein Vorzeichen)", "C / a (kein Vorzeichen)" ],//
+		    [ "G / e (1♯)", "G / e (1♯)" ],//
+		    [ "D / h (2♯)", "D / h (2♯)" ],//
+		    [ "A / fis (3♯)", "A / fis (3♯)" ],//
+		    [ "E / cis (4♯)", "E / cis (4♯)" ],//
+		    [ "H / gis (5♯)", "H / gis (5♯)" ],//
+		    [ "Fis / dis (6♯)", "Fis / dis (6♯)" ],//
+		    [ "Cis / ais (7♯)", "Cis / ais (7♯)" ],//
+		    [ "F / d (1♭)", "F / d (1♭)" ],//
+		    [ "B / g (2♭)", "B / g (2♭)" ],//
+		    [ "Es / c (3♭)", "Es / c (3♭)" ],//
+		    [ "As / f (4♭)", "As / f (4♭)" ],//
+		    [ "Des / b (5♭)", "Des / b (5♭)" ],//
+		    [ "Ges / es (6♭)", "Ges / es (6♭)" ],//
+		    [ "Ces / as (7♭)", "Ces / as (7♭)" ] ]
+		}, {
 		    fieldLabel : 'Rubrik',
 		    name : 'rubrik_id',
 		    xtype : 'combobox',
