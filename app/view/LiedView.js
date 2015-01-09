@@ -9,13 +9,57 @@ Ext.define('Songserver.view.LiedView', {
     requires : [ 'Songserver.view.Song', 'Ext.form.field.ComboBox',
     // Ext.util.Point: When sorting the LiedView. For some reason
     // this is not loaded in debug mode.
-    'Ext.util.Point' ],
+    'Ext.util.Point',
+    'Ext.grid.column.Date'],
 
     loadMask : true,
     liederbuch : null,
     // the currently selected reocrd or null if no record is
     // selected
     selectedRecord : null,
+
+    tableViews : {
+	"tableOfContents" : [ {
+	    header : 'Nummer',
+	    dataIndex : 'Liednr',
+	    editor : {
+		xtype : 'textfield',
+		allowBlank : true
+	    }
+	}, {
+	    header : 'Titel',
+	    dataIndex : 'Titel',
+	    flex : 1
+	}, {
+	    header : 'Rubrik',
+	    dataIndex : 'Rubrik'
+	}, {
+	    header : 'Tonart',
+	    dataIndex : 'tonality'
+	} ],
+	"lastChanges" : [ {
+	    header : 'Geändert am',
+	    dataIndex : 'updated_at',
+	    width : 130,
+	    xtype : 'datecolumn',
+	    format : "d.m.Y H:i:s"
+	}, {
+	    header : 'Benutzer',
+	    dataIndex : 'email',
+	    width : 250
+	}, {
+	    header : 'Nummer',
+	    dataIndex : 'Liednr',
+	    editor : {
+		xtype : 'textfield',
+		allowBlank : true
+	    }
+	}, {
+	    header : 'Titel',
+	    dataIndex : 'Titel',
+	    flex : 1
+	} ]
+    },
 
     initComponent : function() {
 	Ext.apply(this, {
@@ -47,74 +91,107 @@ Ext.define('Songserver.view.LiedView', {
 		enableOverflow : true,
 		itemId : "tbar",
 		items : [ {
-		    name : 'quicksearch',
-		    itemId : 'quicksearch',
-		    xtype : 'textfield',
-		    fieldLabel : 'Suche',
-		    labelWidth : 50,
-		    emptyText : 'Suchbegriff oder Nr eingeben...',
-		    width : 250,
-		    listeners : {
-			scope : this,
-			change : function(textfield, newValue, oldValue) {
-			    this.delayedSearch.delay(750, null, this, [ newValue ]);
+		    xtype : 'buttongroup',
+		    title : 'Suche',
+		    columns : 1,
+		    defaults : {
+			scale : 'small'
+		    },
+		    items : [ {
+			name : 'quicksearch',
+			itemId : 'quicksearch',
+			xtype : 'textfield',
+			// fieldLabel : 'Suche',
+			// labelWidth : 50,
+			emptyText : 'Suchbegriff oder Nr eingeben...',
+			width : 250,
+			listeners : {
+			    scope : this,
+			    change : function(textfield, newValue, oldValue) {
+				this.delayedSearch.delay(750, null, this, [ newValue ]);
+			    }
 			}
-		    }
-		}, "-", {
-		    itemId : 'editSong',
-		    xtype : 'button',
-		    icon : 'resources/images/silk/icons/pencil.png',
-		    text : 'Lied bearbeiten',
-		    disabled : true,
-		    listeners : {
-			scope : this,
-			click : function(button, e) {
-			    this.editSong(this.selectedRecord.get("id"));
-			}
-		    }
+		    } ]
 		}, {
-		    itemId : 'deleteSong',
-		    xtype : 'button',
-		    icon : 'resources/images/silk/icons/cross.png',
-		    text : 'Lied löschen',
-		    disabled : true,
-		    listeners : {
-			scope : this,
-			click : function(button, e) {
-			    this.deleteSong(this.selectedRecord);
+		    xtype : 'buttongroup',
+		    title : 'Lied',
+		    columns : 3,
+		    height : 49,
+		    defaults : {
+			scale : 'small'
+		    },
+		    items : [ {
+			itemId : 'editSong',
+			xtype : 'button',
+			icon : 'resources/images/silk/icons/pencil.png',
+			text : 'Bearbeiten',
+			disabled : true,
+			listeners : {
+			    scope : this,
+			    click : function(button, e) {
+				this.editSong(this.selectedRecord.get("id"));
+			    }
 			}
-		    }
-		}, "-", {
-		    itemId : 'addSong',
-		    xtype : 'button',
-		    icon : 'resources/images/silk/icons/add.png',
-		    text : 'Lied hinzufügen',
-		    listeners : {
-			scope : this,
-			click : function(button, e) {
-			    this.createSong();
+		    }, {
+			itemId : 'deleteSong',
+			xtype : 'button',
+			icon : 'resources/images/silk/icons/cross.png',
+			text : 'Löschen',
+			disabled : true,
+			listeners : {
+			    scope : this,
+			    click : function(button, e) {
+				this.deleteSong(this.selectedRecord);
+			    }
 			}
-		    }
+		    }, {
+			itemId : 'addSong',
+			xtype : 'button',
+			icon : 'resources/images/silk/icons/add.png',
+			text : 'Hinzufügen',
+			listeners : {
+			    scope : this,
+			    click : function(button, e) {
+				this.createSong();
+			    }
+			}
+		    } ]
+		}, {
+		    xtype : 'buttongroup',
+		    title : 'Ansicht umstellen',
+		    columns : 3,
+		    height : 49,
+		    defaults : {
+			scale : 'small'
+		    },
+		    items : [ {
+			itemId : 'viewTableOfContents',
+			xtype : 'button',
+			icon : 'resources/images/silk/icons/book.png',
+			text : 'Inhaltsverzeichnis',
+			listeners : {
+			    scope : this,
+			    click : function(button, e) {
+				this.reconfigure(null, this.tableViews.tableOfContents);
+				this.store.sort("LiedNr", "ASC");
+			    }
+			}
+		    }, {
+			itemId : 'viewLastChanges',
+			xtype : 'button',
+			icon : 'resources/images/silk/icons/clock_edit.png',
+			text : 'Letzte Änderungen',
+			listeners : {
+			    scope : this,
+			    click : function(button, e) {
+				this.reconfigure(null, this.tableViews.lastChanges);
+				this.store.sort("updated_at", "DESC");
+			    }
+			}
+		    } ]
 		} ]
 	    },
-	    columns : [ {
-		header : 'Nummer',
-		dataIndex : 'Liednr',
-		editor : {
-		    xtype : 'textfield',
-		    allowBlank : true
-		}
-	    }, {
-		header : 'Titel',
-		dataIndex : 'Titel',
-		flex : 1
-	    }, {
-		header : 'Rubrik',
-		dataIndex : 'Rubrik'
-	    }, {
-		header : 'Tonart',
-		dataIndex : 'tonality'
-	    } ],
+	    columns : this.tableViews.tableOfContents,
 	    plugins : [ Ext.create('Ext.grid.plugin.CellEditing', {
 		clicksToEdit : 1,
 		listeners : {

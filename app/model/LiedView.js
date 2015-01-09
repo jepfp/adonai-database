@@ -24,6 +24,9 @@ Ext.define('Songserver.model.LiedView', {
 	}, {
 		name : 'updated_at',
 		type : 'string'
+	}, {
+		name : 'email',
+		type : 'string'
 	} ],
 
 	proxy : {
