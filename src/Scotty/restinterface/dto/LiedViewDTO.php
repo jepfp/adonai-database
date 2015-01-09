@@ -28,6 +28,7 @@ class LiedViewDTO extends AbstractDTO
         $fieldsToIgnore[] = "Rubrik";
         $fieldsToIgnore[] = "Titel";
         $fieldsToIgnore[] = "tonality";
+        $fieldsToIgnore[] = "email";
         return $fieldsToIgnore;
     }
 }
