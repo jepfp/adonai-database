@@ -9,8 +9,7 @@ Ext.define('Songserver.view.LiedView', {
     requires : [ 'Songserver.view.Song', 'Ext.form.field.ComboBox',
     // Ext.util.Point: When sorting the LiedView. For some reason
     // this is not loaded in debug mode.
-    'Ext.util.Point',
-    'Ext.grid.column.Date'],
+    'Ext.util.Point', 'Ext.grid.column.Date' ],
 
     loadMask : true,
     liederbuch : null,
@@ -91,7 +90,7 @@ Ext.define('Songserver.view.LiedView', {
 		items : [ {
 		    xtype : 'buttongroup',
 		    title : 'Suche',
-		    columns : 1,
+		    columns : 2,
 		    defaults : {
 			scale : 'small'
 		    },
@@ -104,7 +103,19 @@ Ext.define('Songserver.view.LiedView', {
 			listeners : {
 			    scope : this,
 			    change : function(textfield, newValue, oldValue) {
+				this.down("#emptyQuicksearch").setVisible(newValue != "");
 				this.delayedSearch.delay(750, null, this, [ newValue ]);
+			    }
+			}
+		    }, {
+			itemId : 'emptyQuicksearch',
+			hidden : true,
+			xtype : 'button',
+			icon : 'resources/images/silk/icons/textfield_delete.png',
+			listeners : {
+			    scope : this,
+			    click : function(button, e) {
+				this.down("#quicksearch").setValue("");
 			    }
 			}
 		    } ]
@@ -287,7 +298,8 @@ Ext.define('Songserver.view.LiedView', {
 		// leadingBufferZone : 300,
 		pageSize : 10000,
 		remoteSort : true,
-		// defines which columns shall be displayed. e. g. tableOfContents or lastChanges
+		// defines which columns shall be displayed. e. g.
+		// tableOfContents or lastChanges
 		currentTableView : "tableOfContents",
 
 		listeners : {
