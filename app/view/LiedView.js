@@ -62,14 +62,12 @@ Ext.define('Songserver.view.LiedView', {
     },
 
     initComponent : function() {
+	var store = this.getSongStore();
 	Ext.apply(this, {
 	    title : 'Lade Liederbuch...',
-	    store : this.getSongStore(),
+	    store : store,
 	    loadMask : true,
 	    disableSelection : false,
-	    // selModel : {
-	    // pruneRemoved : false
-	    // },
 	    listeners : {
 		itemdblclick : function(view, record, item, index, e) {
 		    this.editSong(record.get("id"));
@@ -101,8 +99,6 @@ Ext.define('Songserver.view.LiedView', {
 			name : 'quicksearch',
 			itemId : 'quicksearch',
 			xtype : 'textfield',
-			// fieldLabel : 'Suche',
-			// labelWidth : 50,
 			emptyText : 'Suchbegriff oder Nr eingeben...',
 			width : 250,
 			listeners : {
@@ -172,7 +168,9 @@ Ext.define('Songserver.view.LiedView', {
 			listeners : {
 			    scope : this,
 			    click : function(button, e) {
-				this.reconfigure(null, this.tableViews.tableOfContents);
+				var currentView = "tableOfContents";
+				this.reconfigure(null, this.tableViews[currentView]);
+				this.store.currentTableView = currentView;
 				this.store.sort("LiedNr", "ASC");
 			    }
 			}
@@ -184,14 +182,16 @@ Ext.define('Songserver.view.LiedView', {
 			listeners : {
 			    scope : this,
 			    click : function(button, e) {
-				this.reconfigure(null, this.tableViews.lastChanges);
+				var currentView = "lastChanges";
+				this.reconfigure(null, this.tableViews[currentView]);
+				this.store.currentTableView = currentView;
 				this.store.sort("updated_at", "DESC");
 			    }
 			}
 		    } ]
 		} ]
 	    },
-	    columns : this.tableViews.tableOfContents,
+	    columns : this.tableViews[store.currentTableView],
 	    plugins : [ Ext.create('Ext.grid.plugin.CellEditing', {
 		clicksToEdit : 1,
 		listeners : {
@@ -277,6 +277,7 @@ Ext.define('Songserver.view.LiedView', {
     },
 
     getSongStore : function() {
+	this.store = Ext.data.StoreManager.lookup('songView');
 	if (this.store == null) {
 	    this.store = Ext.create('Ext.data.Store', {
 		storeId : 'songView',
@@ -286,6 +287,8 @@ Ext.define('Songserver.view.LiedView', {
 		// leadingBufferZone : 300,
 		pageSize : 10000,
 		remoteSort : true,
+		// defines which columns shall be displayed. e. g. tableOfContents or lastChanges
+		currentTableView : "tableOfContents",
 
 		listeners : {
 		    load : function(store, records, successful, operation, options) {
