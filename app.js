@@ -3,7 +3,7 @@ Ext.require([ 'Ext.direct.*' ]);
 Ext.application({
     name : 'Songserver',
     views : [ 'Viewport', 'Layout', 'auth.LoginLayout', 'LiedView' ],
-    models : [ 'Lied', 'Rubrik', 'LiedView', 'Liederbuch', 'NumberInBook', 'Liedtext', 'Refrain' ],
+    models : [ 'Lied', 'Rubrik', 'LiedView', 'Liederbuch', 'NumberInBook', 'Liedtext', 'Refrain', 'User' ],
     controllers : [ 'auth.Authenticate' ],
     launch : function() {
 	Ext.direct.Manager.addProvider(Ext.app.REMOTING_API);

@@ -22,6 +22,9 @@ Ext.define('Songserver.model.Lied', {
     }, {
 	name : 'updated_at',
 	type : 'string'
+    }, {
+	name : 'lastEditUser_id',
+	type : 'int'
     } ],
 
     hasMany : [ {
@@ -32,19 +35,28 @@ Ext.define('Songserver.model.Lied', {
 	    remoteFilter : true
 	}
     }, {
-	//autoLoad is set to false (as default)
+	// autoLoad is set to false (as default)
 	model : 'Songserver.model.Liedtext',
 	name : 'liedtexts',
 	storeConfig : {
 	    remoteFilter : true
 	}
     }, {
-	//autoLoad is set to false (as default)
+	// autoLoad is set to false (as default)
 	model : 'Songserver.model.Refrain',
 	name : 'refrains',
 	storeConfig : {
 	    remoteFilter : true
 	}
+    } ],
+
+    hasOne : [ {
+	name : 'user',
+	getterName : 'getUser',
+	setterName : 'setUser',
+	model : 'Songserver.model.User',
+	primaryKey : 'id',
+	foreignKey : 'lastEditUser_id'
     } ],
 
     proxy : {

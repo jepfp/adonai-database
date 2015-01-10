@@ -57,8 +57,6 @@ Ext.define('Songserver.view.SongPropertiesPanel', {
 		    fieldLabel : 'Tonart',
 		    name : 'tonality',
 		    xtype : 'combobox',
-		    // valueField : 'tonality',
-		    // displayField : 'tonality',
 		    emptyText : 'Tonart wählen...',
 		    forceSelection : false,
 		    editable : false,
@@ -107,11 +105,15 @@ Ext.define('Songserver.view.SongPropertiesPanel', {
 		}, {
 		    fieldLabel : 'Erstellt',
 		    name : 'created_at',
-		    readOnly : true
+		    xtype : 'displayfield'
 		}, {
 		    fieldLabel : 'Geändert',
 		    name : 'updated_at',
-		    readOnly : true
+		    xtype : 'displayfield'
+		}, {
+		    fieldLabel : 'Von',
+		    itemId : 'user',
+		    xtype : 'displayfield'
 		} ]
 	    } ],
 
@@ -176,9 +178,19 @@ Ext.define('Songserver.view.SongPropertiesPanel', {
     onSongLoaded : function(song) {
 	this.song = song;
 	this.loadRecord(this.song);
+	this.postLoadUserInformation();
 	this.createAndAddSongbookGrid();
 	this.addChangeListeners();
 	this.fireEvent("songLoaded", this.song);
+    },
+
+    postLoadUserInformation : function() {
+	this.song.getUser({
+	    success : function(record, operation) {
+		this.down("#user").setValue(record.get("firstname") + " " + record.get("lastname") + " (" + record.get("email") + ")");
+	    },
+	    scope : this
+	});
     },
 
     createAndAddSongbookGrid : function() {
@@ -198,7 +210,7 @@ Ext.define('Songserver.view.SongPropertiesPanel', {
 		dataIndex : 'Buchname',
 		flex : 1
 	    } ],
-	    height : 120,
+	    height : 156,
 	    flex : 1,
 	    padding : '0px 0px 0px 5px',
 	    plugins : Ext.create('Ext.grid.plugin.CellEditing', {
