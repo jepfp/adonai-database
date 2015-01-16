@@ -97,10 +97,8 @@
 		<copy todir="${buildDir}/all/integration-testing">
 			<fileset dir="integration-testing" />
 		</copy>
-		<echo>Database folder (for legacy access by Adorayclient.exe)...</echo>
-		<copy todir="${buildDir}/all/database">
-			<fileset file="database/.htaccess" />
-			<fileset file="database/adonai.sqlite" />
+		<copy todir="${buildDir}/all/sfWeb">
+			<fileset dir="sfWeb" />
 		</copy>
 	</target>
 
