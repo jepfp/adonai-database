@@ -6,7 +6,6 @@ $b_dir      = 'backup';
 $zip        = 'zip.zip';
 $exceptions = array(
 		'.//' . $b_dir,
-		'.//database',
 		'.//client'
 );
 

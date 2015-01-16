@@ -51,7 +51,7 @@
 		</ftp>
 	</target>
 
-	<target name="zip" depends="cleanDatabaseFolderInBuild">
+	<target name="zip">
 		<echo>Zipping ${buildDir}/all to ${zipLocation}.</echo>
 		<zip destfile="${zipLocation}" basedir="${buildDir}/all" />
 	</target>
@@ -69,12 +69,6 @@
 	<target name="runUnzipPhpScript" depends="updateUnzipPhpScript">
 		<echo>Unzipping by calling the following php script: </echo>
 		<get src="http://${server}${phpUnzipScriptLocation}" dest="${buildDir}/log/unzipperResult.txt" />
-	</target>
-
-	<target name="cleanDatabaseFolderInBuild" description="Removes and creates the database folder to make sure, the productive database will not be overwritten." depends="">
-		<echo>Removing the database folder (${buildDir}/all/database)</echo>
-		<delete dir="${buildDir}/all/database" />
-		<!-- <mkdir dir="${buildDir}/all/database" /> -->
 	</target>
 
 	<target name="build">
@@ -103,10 +97,11 @@
 		<copy todir="${buildDir}/all/integration-testing">
 			<fileset dir="integration-testing" />
 		</copy>
-		<!--<echo>Database folder (without database)...</echo>
+		<echo>Database folder (for legacy access by Adorayclient.exe)...</echo>
 		<copy todir="${buildDir}/all/database">
-			<fileset file="database/dir.php" />
-		</copy>-->
+			<fileset file="database/.htaccess" />
+			<fileset file="database/adonai.sqlite" />
+		</copy>
 	</target>
 
 	<!-- In order to get that thing working, the windows firewall needs this: netsh advfirewall set global StatefulFtp disable
