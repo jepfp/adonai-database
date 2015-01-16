@@ -24,5 +24,12 @@ class LiedDTO extends AbstractDTO
         );
         parent::__construct($requestParams);
     }
+    
+    protected function getFieldsSetByApplication()
+    {
+        $fieldsSetByApp = parent::getFieldsSetByApplication();
+        $fieldsSetByApp[] = "lastEditUser_id";
+        return $fieldsSetByApp;
+    }
 }
 

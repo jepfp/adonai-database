@@ -16,7 +16,7 @@ class AbstractUpdateQueryBuilder extends AbstractModificationQueryBuilder
 
     protected function buildQueryString()
     {
-        $fields = $this->dto->getAllFieldNamesInParams();
+        $fields = $this->dto->getAllFieldNamesInParamsAndFieldsSetByApplication();
         return "UPDATE " . $this->table . " SET " . implode(" = ?, ", $fields) . "= ? " . $this->buildWhereQueryString();
     }
 
@@ -27,8 +27,8 @@ class AbstractUpdateQueryBuilder extends AbstractModificationQueryBuilder
 
     protected function buildValues()
     {
-        // Only get the key value pairs which were sent in the request.
-        $keyValuePairs = $this->dto->getAllKeyValuePairsInParams();
+        // Only get the key value pairs which were sent in the request or added to the list fieldsSetByApplication.
+        $keyValuePairs = $this->dto->getAllKeyValuePairsInParamsAndFieldsSetByApplication();
         foreach ($keyValuePairs as $key => $value) {
             $this->bindParam->add("s", $value);
         }

@@ -14,6 +14,14 @@ class AbstractDTO
 
     private $fieldsToIgnore;
 
+    /**
+     * This are fields which are dynamically determined and set by the application itself as e.
+     * g. lastEditUser_id etc.
+     *
+     * updated_at in Lied is updated by a trigger and therefore not set by the application.
+     */
+    private $fieldsSetByApplication;
+
     private $requestParams;
 
     public function __construct($requestParams)
@@ -21,6 +29,7 @@ class AbstractDTO
         $this->logger = \Logger::getLogger("main");
         $this->requestParams = $requestParams;
         $this->fieldsToIgnore = $this->getFieldsToIgnore();
+        $this->fieldsSetByApplication = $this->getFieldsSetByApplication();
         $this->mapParamsToFields();
     }
 
@@ -59,6 +68,18 @@ class AbstractDTO
         return $fieldsToIgnore;
     }
 
+    /**
+     * Returns the list of fields which are set by the application normally by a transformer.
+     * This method can be overridden in order to add additional fields.
+     *
+     * @return multitype:string
+     */
+    protected function getFieldsSetByApplication()
+    {
+        $fieldsSetByApp = array();
+        return $fieldsSetByApp;
+    }
+
     public function findFieldByKey($key)
     {
         foreach ($this->fields as $aField) {
@@ -78,11 +99,11 @@ class AbstractDTO
         return $fieldNames;
     }
 
-    public function getAllFieldNamesInParams()
+    public function getAllFieldNamesInParamsAndFieldsSetByApplication()
     {
         $fieldNames = array();
         foreach ($this->fields as $aField) {
-            if (array_key_exists($aField->getName(), $this->requestParams)) {
+            if ($this->isFieldInRequestParams($aField) || $this->isFieldSetByApplication($aField)) {
                 $fieldNames[] = $aField->getName();
             }
         }
@@ -104,19 +125,38 @@ class AbstractDTO
     }
 
     /**
-     * Returns all DTO fields with their value which were sent as parameter.
+     * Returns all DTO fields with their value which were sent as parameter or which are in the list fieldsSetByApplication.
      *
      * @return multitype:NULL
      */
-    public function getAllKeyValuePairsInParams()
+    public function getAllKeyValuePairsInParamsAndFieldsSetByApplication()
     {
         $keyValues = array();
         foreach ($this->fields as $aField) {
-            if (array_key_exists($aField->getName(), $this->requestParams)) {
+            if ($this->isFieldInRequestParams($aField) || $this->isFieldSetByApplication($aField)) {
                 $keyValues[$aField->getName()] = $aField->getValue();
             }
         }
         return $keyValues;
+    }
+
+    /**
+     *
+     * @param Field $fieldName            
+     */
+    private function isFieldInRequestParams($field)
+    {
+        return array_key_exists($field->getName(), $this->requestParams);
+    }
+
+    /**
+     *
+     * @param Field $fieldName            
+     */
+    private function isFieldSetByApplication($field)
+    {
+        $fieldsSetByApp = $this->getFieldsSetByApplication();
+        return in_array($field->getName(), $fieldsSetByApp);
     }
 
     protected function notNullOrEmpty()
