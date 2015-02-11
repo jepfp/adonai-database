@@ -30,23 +30,8 @@ class Request
 
     protected function parseRequest()
     {
-        if ($this->method == 'PUT') { // <-- Have to jump through hoops to get PUT data
-            $raw = $this->readRawHttpContent();
-            $params = array();
-            parse_str($raw, $params);
-            if (isset($params['data'])) {
-                $this->params = json_decode($params['data']);
-            } else {
-                $this->params = json_decode($raw);
-            }
-        } else {
-            if (isset($_REQUEST['data'])) {
-                $this->params = json_decode($_REQUEST['data']);
-            } else {
-                $raw = $this->readRawHttpContent();
-                $this->params = json_decode($raw);
-            }
-        }
+        $raw = $this->readRawHttpContent();
+        $this->params = json_decode($raw);
         JsonVerifier::verifyNoJsonError();
     }
 
