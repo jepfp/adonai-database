@@ -19,12 +19,14 @@ class Response
 
     public function to_json()
     {
-        return json_encode(array(
+        $json = json_encode(array(
             'success' => $this->success,
             'message' => $this->message,
             'type' => $this->type,
             'data' => $this->data,
             'totalCount' => $this->totalCount
         ));
+        JsonVerifier::verifyNoJsonError();
+        return $json;
     }
 }

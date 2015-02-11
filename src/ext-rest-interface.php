@@ -13,6 +13,7 @@ try {
         http_response_code(500);
     }
     echo $response->to_json();
+    //TODO: Check for json error here
 } catch (Exception $ex) {
     $logger->error("Allgemeiner Fehler in rest-interface: " . $ex->getMessage(), $ex);
     echo '{"success": false, "message" : "Allgemeiner Fehler in rest-interface."}';

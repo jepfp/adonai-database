@@ -1,4 +1,7 @@
 <?php
+/*
+ * From ext-4.2.0-gpl\examples\restful\remote\lib
+ */
 namespace Scotty\restinterface;
 
 class Request
@@ -28,63 +31,34 @@ class Request
     protected function parseRequest()
     {
         if ($this->method == 'PUT') { // <-- Have to jump through hoops to get PUT data
-            $raw = '';
-            $httpContent = fopen('php://input', 'r');
-            while ($kb = fread($httpContent, 1024)) {
-                $raw .= $kb;
-            }
-            fclose($httpContent);
+            $raw = $this->readRawHttpContent();
             $params = array();
             parse_str($raw, $params);
-            
             if (isset($params['data'])) {
                 $this->params = json_decode($params['data']);
             } else {
-                $params = json_decode($raw);
-                $this->params = $params;
+                $this->params = json_decode($raw);
             }
         } else {
-            // grab JSON data if there...
-            $this->params = (isset($_REQUEST['data'])) ? json_decode($_REQUEST['data']) : null;
-            
             if (isset($_REQUEST['data'])) {
                 $this->params = json_decode($_REQUEST['data']);
             } else {
-                $raw = '';
-                $httpContent = fopen('php://input', 'r');
-                while ($kb = fread($httpContent, 1024)) {
-                    $raw .= $kb;
-                }
-                $params = json_decode($raw);
-                if ($params) {
-                    $this->params = $params;
-                }
+                $raw = $this->readRawHttpContent();
+                $this->params = json_decode($raw);
             }
         }
-        $this->verifyNoJsonError();
+        JsonVerifier::verifyNoJsonError();
     }
 
-    private function verifyNoJsonError()
+    private function readRawHttpContent()
     {
-        switch (json_last_error()) {
-            case JSON_ERROR_DEPTH:
-                throw new \RuntimeException("JSON parse error: max stack depth error.");
-                break;
-            case JSON_ERROR_CTRL_CHAR:
-                throw new \RuntimeException("JSON parse error: Unexpected control character found.");
-                break;
-            case JSON_ERROR_SYNTAX:
-                throw new \RuntimeException("JSON parse error: Syntax error.");
-                break;
-            case JSON_ERROR_UTF8:
-                throw new \RuntimeException("JSON parse error: UTF8 error.");
-                break;
-            case JSON_ERROR_NONE:
-                break;
-            default:
-                throw new \RuntimeException("JSON parse error: Unknown error.");
-                break;
+        $raw = "";
+        $httpContent = fopen('php://input', 'r');
+        while ($kb = fread($httpContent, 1024)) {
+            $raw .= $kb;
         }
+        fclose($httpContent);
+        return $raw;
     }
 
     private function parsePathInfo()
