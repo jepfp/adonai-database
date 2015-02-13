@@ -129,7 +129,7 @@ class AbstractReadQueryBuilder extends AbstractQueryBuilder
     {
         $this->addFiltersAndParams();
         $this->bindParam = new BindParam();
-        $query = "SELECT " . $this->buildCommaSeparatedColumns() . " FROM " . $this->table;
+        $query = "SELECT * FROM " . $this->table;
         $query .= $this->buildWhere();
         $query .= $this->buildOrderBy();
         $query .= $this->limitPart;
@@ -138,10 +138,6 @@ class AbstractReadQueryBuilder extends AbstractQueryBuilder
         DbHelper::bindParams($statement, $this->bindParam);
         $this->logStatement($query, $this->bindParam->get());
         return $statement;
-    }
-    
-    protected function buildCommaSeparatedColumns(){
-        return "*";
     }
     
     protected function addFiltersAndParams()

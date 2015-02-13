@@ -29,4 +29,8 @@ class Response
         JsonVerifier::verifyNoJsonError();
         return $json;
     }
+    
+    public function isException(){
+        return $this->type == "exception";
+    }
 }
