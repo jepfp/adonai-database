@@ -41,9 +41,7 @@ class ResponseSerializer
         header('Content-Disposition: attachment; filename="' . $fileAndItsMetadata["filename"] . '"');
         header('Expires: 0');
         header('Cache-Control: must-revalidate');
-        // TODO: Pragma public prüfen
-        // header('Pragma: public');
-        // header('Content-Length: ' . $fileAndItsMetadata["filesize"]);
+        header('Content-Length: ' . $fileAndItsMetadata["filesize"]);
         echo $fileAndItsMetadata["data"];
     }
 
