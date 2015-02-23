@@ -25,6 +25,9 @@ Ext.define('Songserver.model.Lied', {
     }, {
 	name : 'lastEditUser_id',
 	type : 'int'
+    }, {
+	name : 'file_id',
+	type : 'int'
     } ],
 
     hasMany : [ {

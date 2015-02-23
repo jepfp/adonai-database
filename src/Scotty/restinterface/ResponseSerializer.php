@@ -38,13 +38,13 @@ class ResponseSerializer
         $fileAndItsMetadata = self::findOnlyElement($response);
         header('Content-Description: File Transfer');
         header('Content-Type: application/octet-stream');
-        header('Content-Disposition: attachment; filename="' . $fileAndItsMetadata["filename"] . '"');
+        header('Content-Disposition: attachment; filename="' . $fileAndItsMetadata["builtFilename"] . '"');
         header('Expires: 0');
         header('Cache-Control: must-revalidate');
         header('Content-Length: ' . $fileAndItsMetadata["filesize"]);
         echo $fileAndItsMetadata["data"];
     }
-
+    
     private static function serializeJson($response)
     {
         echo $response->to_json();
