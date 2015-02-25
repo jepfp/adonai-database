@@ -18,7 +18,7 @@ Ext.define('Songserver.model.Rubrik', {
 	type : "rest",
 	reader : {
 	    type : 'json',
-	    root : 'data'
+	    rootProperty : 'data'
 	}
     }
 

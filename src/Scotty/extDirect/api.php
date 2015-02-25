@@ -28,11 +28,11 @@ foreach ($API as $aname=>&$a) {
 $cfg = array(
     'url'=>'src/ext-direct-router.php?XDEBUG_SESSION_START=ECLIPSE_DBGP',
     'type'=>'remoting',
-	'actions'=>$actions,
-	'total'=>2200
+	'actions'=>$actions
 );
 
-echo 'Ext.ns("Ext.app"); Ext.app.REMOTING_API = ';
+// echo 'Ext.ns("Ext.app"); Ext.app.REMOTING_API = ';
+echo 'REMOTING_API = ';
 
-echo json_encode($cfg);
+echo json_encode($cfg, JSON_PRETTY_PRINT);
 echo ';';

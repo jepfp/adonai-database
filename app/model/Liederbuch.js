@@ -22,7 +22,7 @@ Ext.define('Songserver.model.Liederbuch', {
 	type : "rest",
 	reader : {
 	    type : 'json',
-	    root : 'data'
+	    rootProperty : 'data'
 	}
     }
 

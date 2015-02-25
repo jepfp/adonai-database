@@ -11,7 +11,8 @@ Ext.define('Songserver.model.NumberInBook', {
 	type : 'int'
     }, {
 	name : 'lied_id',
-	type : 'int'
+	type : 'int',
+	reference : 'Songserver.model.Lied'
     }, {
 	name : 'Buchname',
 	type : 'string'
@@ -26,14 +27,14 @@ Ext.define('Songserver.model.NumberInBook', {
 	type : 'boolean'
     } ],
 
-    belongsTo : [ 'Lied' ],
+//    belongsTo : [ 'Lied' ],
 
     proxy : {
 	url : 'src/ext-rest-interface.php/numberInBook',
 	type : "rest",
 	reader : {
 	    type : 'json',
-	    root : 'data'
+	    rootProperty : 'data'
 	}
     },
 

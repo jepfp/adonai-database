@@ -6,7 +6,7 @@ Ext.application({
     models : [ 'Lied', 'Rubrik', 'LiedView', 'Liederbuch', 'NumberInBook', 'Liedtext', 'Refrain', 'User' ],
     controllers : [ 'auth.Authenticate' ],
     launch : function() {
-	Ext.direct.Manager.addProvider(Ext.app.REMOTING_API);
+	Ext.direct.Manager.addProvider(REMOTING_API);
 
 	Ext.get('appLoadingMessage').fadeOut({
 	    remove : true,

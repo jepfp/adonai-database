@@ -34,7 +34,7 @@ Ext.define('Songserver.model.LiedView', {
 		type : "rest",
 		reader : {
 			type : 'json',
-			root : 'data',
+			rootProperty : 'data',
 			totalProperty : 'totalCount'
 		}
 

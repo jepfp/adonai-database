@@ -28,7 +28,7 @@ Ext.define('Songserver.model.Refrain', {
 	type : "rest",
 	reader : {
 	    type : 'json',
-	    root : 'data'
+	    rootProperty : 'data'
 	}
     }
 

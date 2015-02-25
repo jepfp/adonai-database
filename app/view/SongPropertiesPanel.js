@@ -4,6 +4,10 @@
  */
 Ext.namespace('Songserver.view');
 
+/**
+ * Events:
+ * - songLoaded: Will be fired the first time after the song has been loaded.
+ */
 Ext.define('Songserver.view.SongPropertiesPanel', {
     extend : 'Ext.form.Panel',
     requires : [ 'Songserver.model.Lied', 'Ext.form.FieldContainer', 'Songserver.view.NotenDisplayfield' ],
@@ -13,13 +17,6 @@ Ext.define('Songserver.view.SongPropertiesPanel', {
     song : null,
     // The grid with the associated and available songbooks
     songbookGrid : null,
-
-    constructor : function(config) {
-	this.callParent(arguments);
-	this.addEvents([
-	/* Will be fired the first time after the song has been loaded. */
-	"songLoaded" ]);
-    },
 
     initComponent : function() {
 	// console.log("Song öffnen. Id: " + this.songId);
@@ -199,7 +196,7 @@ Ext.define('Songserver.view.SongPropertiesPanel', {
     },
 
     createAndAddSongbookGrid : function() {
-	var bookentriesStore = this.song.bookentries();
+	var bookentriesStore = this.song.liedSongserverModelNumberInBooks();
 	this.songbookGrid = Ext.create('Ext.grid.Panel', {
 	    preventHeader : true,
 	    store : bookentriesStore,

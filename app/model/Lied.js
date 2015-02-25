@@ -30,14 +30,15 @@ Ext.define('Songserver.model.Lied', {
 	type : 'int'
     } ],
 
-    hasMany : [ {
+    hasMany : [ 
+                /*{
 	model : 'Songserver.model.NumberInBook',
 	name : 'bookentries',
 	storeConfig : {
 	    autoLoad : true,
 	    remoteFilter : true
 	}
-    }, {
+    }*/ {
 	// autoLoad is set to false (as default)
 	model : 'Songserver.model.Liedtext',
 	name : 'liedtexts',
@@ -67,7 +68,7 @@ Ext.define('Songserver.model.Lied', {
 	type : "rest",
 	reader : {
 	    type : 'json',
-	    root : 'data'
+	    rootProperty : 'data'
 	}
     }
 

@@ -1,11 +1,12 @@
-<?php 
+<?php
 require_once 'src/bootstrap.php';
 ?>
 <!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title><?php 
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title><?php
 echo $projectConfiguration->getProjectTitle();
 echo " (" . $projectConfiguration->getProjectName() . ")";
 ?>
@@ -22,20 +23,12 @@ to the local test folder (build/all). To do so, execute the
 deployLocalTesting target in the buidAndDeploy.xml Ant file. -->
 <link rel="stylesheet" href="resources/Songserver-all.css" />
 <script type="text/javascript" src="app.js"></script>
-<?php 
-}else{
-	?>
-<!-- NOT IN PRODUCTIVE MODE -->
-<!-- <x-compile> -->
-<!-- <x-bootstrap> -->
-<link rel="stylesheet" href="bootstrap.css">
-<script src="ext/ext-dev.js"></script>
-<script src="bootstrap.js"></script>
-<!-- </x-bootstrap> -->
-<script src="ext/locale/ext-lang-de.js"></script>
-<script src="app.js"></script>
-<!-- </x-compile> -->
-<?php 
+<?php
+} else {
+    ?>
+	<script id="microloader" type="text/javascript" src="bootstrap.js"></script>
+	
+<?php
 }
 ?>
 <script src="src/ext-direct-api.php"></script>

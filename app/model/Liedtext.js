@@ -30,7 +30,7 @@ Ext.define('Songserver.model.Liedtext', {
 	type : "rest",
 	reader : {
 	    type : 'json',
-	    root : 'data'
+	    rootProperty : 'data'
 	}
     }
 
