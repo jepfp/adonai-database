@@ -11,7 +11,6 @@ Ext.define('Songserver.view.Navigation', {
     initComponent : function() {
 	Ext.apply(this, {
 	    title : 'Navigation',
-	    listeners : {},
 	    layout : 'accordion',
 	    defaults : {
 		autoScroll : true

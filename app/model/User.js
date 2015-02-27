@@ -5,7 +5,7 @@
 Ext.namespace('Songserver.model');
 
 Ext.define('Songserver.model.User', {
-    extend : 'Ext.data.Model',
+    extend : 'Songserver.model.Base',
 
     fields : [ {
 	name : 'email',
@@ -22,15 +22,5 @@ Ext.define('Songserver.model.User', {
     }, {
 	name : 'active',
 	type : 'boolean'
-    }],
-
-    proxy : {
-	url : 'src/ext-rest-interface.php/user',
-	type : "rest",
-	reader : {
-	    type : 'json',
-	    rootProperty : 'data'
-	}
-    }
-
+    } ]
 });

@@ -5,8 +5,8 @@
 Ext.namespace('Songserver.view');
 
 /**
- * Events:
- * - songLoaded: Will be fired the first time after the song has been loaded.
+ * Events: - songLoaded: Will be fired the first time after the song has been
+ * loaded.
  */
 Ext.define('Songserver.view.SongPropertiesPanel', {
     extend : 'Ext.form.Panel',
@@ -196,7 +196,7 @@ Ext.define('Songserver.view.SongPropertiesPanel', {
     },
 
     createAndAddSongbookGrid : function() {
-	var bookentriesStore = this.song.liedSongserverModelNumberInBooks();
+	bookentriesStore = this.song.numberInBooks();
 	this.songbookGrid = Ext.create('Ext.grid.Panel', {
 	    preventHeader : true,
 	    store : bookentriesStore,
@@ -215,11 +215,14 @@ Ext.define('Songserver.view.SongPropertiesPanel', {
 	    height : 180,
 	    flex : 1,
 	    padding : '0px 0px 0px 5px',
+	    autoLoad : 'true',
 	    plugins : Ext.create('Ext.grid.plugin.CellEditing', {
 		clicksToEdit : 1,
 		listeners : {
-		    beforeedit : function(editor, e, eOpts) {
-			this.showToolbarItems();
+		    edit : function(editor, e, eOpts) {
+			if (e.record.dirty) {
+			    this.showToolbarItems();
+			}
 		    },
 		    scope : this
 		}
@@ -254,7 +257,7 @@ Ext.define('Songserver.view.SongPropertiesPanel', {
 		this.up("songserver-songPanel").displayInfoMessage("Änderungen am Lied gespeichert. Speichere Liedernummern...");
 
 		// https://trello.com/c/WtjY4hle Ablegen der neuen
-		// NumberInSongbook-Einträge schlächt fehl bei neuem Lied
+		// NumberInSongbook-Einträge schlägt fehl bei neuem Lied
 		this.setLiedIdOnAllNumberInBookEntries(record.get("id"));
 
 		this.saveNumberInBookEntries();

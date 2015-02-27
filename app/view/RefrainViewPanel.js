@@ -11,21 +11,15 @@ Ext.namespace('Songserver.view');
  * songtext - {Songserver.model.Refrain} Refrain to display.
  * 
  * songPanel - {Songserver.view.Song} Reference to the song panel.
+ * 
+ * Events: - refrainChanged: Fired, when a refrain has been changed.
  */
-
 Ext.define('Songserver.view.RefrainViewPanel', {
     extend : 'Songserver.view.SongtextViewPanel',
     requires : [ 'Songserver.view.SongtextViewPanel', 'Songserver.model.Refrain', 'Songserver.view.RefrainFormPanel' ],
     alias : 'widget.songserver-refrainViewPanel',
 
     tableName : "refrain",
-
-    constructor : function(config) {
-	this.callParent(arguments);
-	this.addEvents([
-	/* Fired, when a refrain has been changed. */
-	"refrainChanged" ]);
-    },
 
     initComponent : function() {
 	Ext.apply(this, {
@@ -47,7 +41,6 @@ Ext.define('Songserver.view.RefrainViewPanel', {
 	});
 	this.add(contentPanel);
     },
-
 
     /**
      * To be called after the songtext of this panel has been updated.

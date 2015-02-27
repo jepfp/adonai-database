@@ -4,7 +4,7 @@
 Ext.namespace('Songserver.model');
 
 Ext.define('Songserver.model.LiedView', {
-	extend : 'Ext.data.Model',
+    extend : 'Songserver.model.Base',
 
 	fields : [ {
 		name : 'Liednr',
@@ -27,17 +27,5 @@ Ext.define('Songserver.model.LiedView', {
 	}, {
 		name : 'email',
 		type : 'string'
-	} ],
-
-	proxy : {
-		url : 'src/ext-rest-interface.php/liedView',
-		type : "rest",
-		reader : {
-			type : 'json',
-			rootProperty : 'data',
-			totalProperty : 'totalCount'
-		}
-
-	}
-
+	} ]
 });

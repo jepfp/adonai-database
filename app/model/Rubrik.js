@@ -1,7 +1,7 @@
 Ext.namespace('Songserver.model');
 
 Ext.define('Songserver.model.Rubrik', {
-    extend : 'Ext.data.Model',
+    extend : 'Songserver.model.Base',
 
     fields : [ {
 	name : 'Rubrik',
@@ -11,15 +11,6 @@ Ext.define('Songserver.model.Rubrik', {
     hasMany : [ {
 	model : 'Songserver.model.Lied',
 	name : 'lieds'
-    } ],
-
-    proxy : {
-	url : 'src/ext-rest-interface.php/rubrik',
-	type : "rest",
-	reader : {
-	    type : 'json',
-	    rootProperty : 'data'
-	}
-    }
+    } ]
 
 });

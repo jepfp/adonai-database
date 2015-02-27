@@ -5,7 +5,7 @@
 Ext.namespace('Songserver.model');
 
 Ext.define('Songserver.model.Lied', {
-    extend : 'Ext.data.Model',
+    extend : 'Songserver.model.Base',
 
     fields : [ {
 	name : 'Titel',
@@ -61,15 +61,5 @@ Ext.define('Songserver.model.Lied', {
 	model : 'Songserver.model.User',
 	primaryKey : 'id',
 	foreignKey : 'lastEditUser_id'
-    } ],
-
-    proxy : {
-	url : 'src/ext-rest-interface.php/lied',
-	type : "rest",
-	reader : {
-	    type : 'json',
-	    rootProperty : 'data'
-	}
-    }
-
+    } ]
 });

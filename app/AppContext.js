@@ -6,32 +6,31 @@
 Ext.namespace('Songserver');
 
 Ext.define('Songserver.AppContext', {
-			singleton : true,
+    singleton : true,
 
-			showQuestionBeforeSaveSongtableNumberEdit : true,
+    showQuestionBeforeSaveSongtableNumberEdit : true,
 
-			/*
-			 * The viewport, to which either the login or main application panel
-			 * is added.
-			 */
-			viewport : null,
+    /*
+     * The viewport, to which either the login or main application panel is
+     * added.
+     */
+    viewport : null,
 
-			/*
-			 * The current main layout with border layout, which holds the other
-			 * view panels (navigation, table etc.)
-			 */
-			mainLayout : null,
+    /*
+     * The current main layout with border layout, which holds the other view
+     * panels (navigation, table etc.)
+     */
+    mainLayout : null,
 
+    isLoggedIn : function() {
+	if (SCOTTY_CLIENT_CONFIGURATION.user != null) {
+	    return true;
+	} else {
+	    return false;
+	}
+    },
 
-			isLoggedIn : function() {
-				if (SCOTTY_CLIENT_CONFIGURATION.user != null) {
-					return true;
-				} else {
-					return false;
-				}
-			},
-			
-			setLoggedIn : function(userInfo){
-				SCOTTY_CLIENT_CONFIGURATION.user = userInfo;
-			}
-		});
+    setLoggedIn : function(userInfo) {
+	SCOTTY_CLIENT_CONFIGURATION.user = userInfo;
+    }
+});

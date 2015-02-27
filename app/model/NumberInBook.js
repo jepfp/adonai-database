@@ -1,7 +1,7 @@
 Ext.namespace('Songserver.model');
 
 Ext.define('Songserver.model.NumberInBook', {
-    extend : 'Ext.data.Model',
+    extend : 'Songserver.model.Base',
 
     fields : [ {
 	name : 'Liednr',
@@ -12,7 +12,9 @@ Ext.define('Songserver.model.NumberInBook', {
     }, {
 	name : 'lied_id',
 	type : 'int',
-	reference : 'Songserver.model.Lied'
+	reference : {
+	    type : 'Lied'
+	}
     }, {
 	name : 'Buchname',
 	type : 'string'
@@ -27,16 +29,7 @@ Ext.define('Songserver.model.NumberInBook', {
 	type : 'boolean'
     } ],
 
-//    belongsTo : [ 'Lied' ],
-
-    proxy : {
-	url : 'src/ext-rest-interface.php/numberInBook',
-	type : "rest",
-	reader : {
-	    type : 'json',
-	    rootProperty : 'data'
-	}
-    },
+    // belongsTo : [ 'Lied' ],
 
     save : function(options) {
 	// This is needed, because we get all records from the server. Even not
@@ -49,7 +42,7 @@ Ext.define('Songserver.model.NumberInBook', {
 	// We need to set phantom to false here because records created from a
 	// server response using a reader by definition are not phantom
 	// records."
-	if (this.get("id") < 1) {
+	if (!(this.get("id") >= 1)) {
 	    this.phantom = true;
 	}
 	this.callParent(arguments);

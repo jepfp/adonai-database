@@ -6,6 +6,10 @@
 
 Ext.namespace('Songserver.view');
 
+/**
+ * Events: - selectionChanged: Will be fired after another refrain has been
+ * selected by the user.
+ */
 Ext.define('Songserver.view.RefrainCardPanel', {
     extend : 'Ext.panel.Panel',
     requires : [ "Ext.layout.container.Card" ],
@@ -14,13 +18,6 @@ Ext.define('Songserver.view.RefrainCardPanel', {
     // The refrain id which is currently assigned
     selectedRefrainId : null,
     songPanel : null,
-
-    constructor : function(config) {
-	this.callParent(arguments);
-	this.addEvents([
-	/* Will be fired after another refrain has been selected by the user. */
-	"selectionChanged" ]);
-    },
 
     initComponent : function() {
 	Ext.apply(this, {
@@ -51,11 +48,11 @@ Ext.define('Songserver.view.RefrainCardPanel', {
 		border : false,
 		html : '<b>Kein Refrain ausgewählt / zugewiesen</b><br>' + "Klicke auf 'Weiter', um einen zu wählen.",
 		refrainId : null
-	    } ]	    
+	    } ]
 	});
 
 	this.callParent();
-	
+
 	this.addCards();
     },
 

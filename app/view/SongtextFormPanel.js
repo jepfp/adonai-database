@@ -7,10 +7,13 @@ Ext.namespace('Songserver.view');
 /**
  * ABSTRACT CLASS Config parameters:
  * 
- * songtext - {Songserver.model.Liedtext / Songserver.model.Refrain} - Songtext to
- * edit.
+ * songtext - {Songserver.model.Liedtext / Songserver.model.Refrain} - Songtext
+ * to edit.
  * 
  * songPanel - {Songserver.view.Song} Reference to the song panel.
+ * 
+ * Events: - updatedSongtext: Will be fired when the changes have been saved on
+ * the server. loaded.
  */
 
 Ext.define('Songserver.view.SongtextFormPanel', {
@@ -29,18 +32,6 @@ Ext.define('Songserver.view.SongtextFormPanel', {
      * @type String
      */
     songtextFieldName : "PLEASE_SPECIFY_IN_SUBCLASS",
-
-    constructor : function(config) {
-	this.callParent(arguments);
-	this.addEvents([
-	/**
-	 * Will be fired when the changes have been saved on the server.
-	 * 
-	 * @param {Songserver.model.Liedtext /
-	 *                Songserver.model.Refrain} savedSongtext
-	 */
-	"updatedSongtext" ]);
-    },
 
     initComponent : function() {
 

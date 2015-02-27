@@ -1,7 +1,7 @@
 Ext.namespace('Songserver.model');
 
 Ext.define('Songserver.model.Refrain', {
-    extend : 'Ext.data.Model',
+    extend : 'Songserver.model.Base',
 
     fields : [ {
 	name : 'Refrain',
@@ -21,15 +21,5 @@ Ext.define('Songserver.model.Refrain', {
 	storeConfig : {
 	    remoteFilter : true
 	}
-    } ],
-
-    proxy : {
-	url : 'src/ext-rest-interface.php/refrain',
-	type : "rest",
-	reader : {
-	    type : 'json',
-	    rootProperty : 'data'
-	}
-    }
-
+    } ]
 });

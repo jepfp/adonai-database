@@ -1,7 +1,7 @@
 Ext.namespace('Songserver.model');
 
 Ext.define('Songserver.model.Liederbuch', {
-    extend : 'Ext.data.Model',
+    extend : 'Songserver.model.Base',
 
     fields : [ {
 	name : 'Buchname',
@@ -15,15 +15,5 @@ Ext.define('Songserver.model.Liederbuch', {
     }, {
 	name : 'locked',
 	type : 'boolean'
-    } ],
-
-    proxy : {
-	url : 'src/ext-rest-interface.php/liederbuch',
-	type : "rest",
-	reader : {
-	    type : 'json',
-	    rootProperty : 'data'
-	}
-    }
-
+    } ]
 });
