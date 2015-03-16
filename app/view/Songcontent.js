@@ -16,23 +16,27 @@ Ext.define('Songserver.view.Songcontent', {
     // holds the reference to the song panel
     songPanel : null,
 
-    initComponent : function() {
-	Ext.apply(this, {
-	    title : 'Lied-Inhalte',
-	    preventHeader : true,
-	    bodyStyle : 'background-color: #DFE8F6; border: none;',
-	    defaults : {
-		bodyStyle : 'background-color: #DFE8F6; border: none;'
-	    },
-	    items : [ this.createTitlePanel("Refrains:"), {
-		itemId : "refrains"
-	    }, this.createTitlePanel("Strophen:"), {
-		itemId : "verses"
-	    } ]
-	});
-
-	Songserver.view.Songcontent.superclass.initComponent.apply(this, arguments);
-    },
+    title : 'Lied-Inhalte',
+    preventHeader : true,
+    items : [ {
+	xtype : "panel",
+	bodyStyle:{
+	    backgroundColor : '#f5f5f5'
+	},
+	margin: '10 0 0 0',
+	title : "Strophen",
+	collapsible : "true",
+	itemId : "verses"
+    }, {
+	xtype : "panel",
+	bodyStyle:{
+	    backgroundColor : '#f5f5f5'
+	},
+	margin: '10 0 0 0',
+	title : "Refrains",
+	collapsible : "true",
+	itemId : "refrains"
+    } ],
 
     createVersePanels : function(verseStore) {
 	var versePanels = new Array();
@@ -53,12 +57,6 @@ Ext.define('Songserver.view.Songcontent', {
 	    refrainPanels.push(this.createRefrainPanel(record));
 	}, this);
 	this.child("#refrains").add(refrainPanels);
-
-	// enable the title panel
-	Ext.Array.each(this.query('panel[isTitlePanel=true]'), function(aPanel, index, allTitlePanels) {
-	    aPanel.show()
-	});
-	this.doLayout();
     },
 
     /**

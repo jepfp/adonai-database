@@ -63,7 +63,7 @@ Ext.define('Songserver.view.LiedView', {
     initComponent : function() {
 	var store = this.getSongStore();
 	Ext.apply(this, {
-	    title : 'Lade Liederbuch...',
+	    title : SCOTTY_CLIENT_CONFIGURATION.projectTitle + " - Willkommen " + SCOTTY_CLIENT_CONFIGURATION.user.firstname,
 	    store : store,
 	    loadMask : true,
 	    disableSelection : false,
@@ -88,118 +88,81 @@ Ext.define('Songserver.view.LiedView', {
 		enableOverflow : true,
 		itemId : "tbar",
 		items : [ {
-		    xtype : 'buttongroup',
-		    title : 'Suche',
-		    columns : 2,
-		    defaults : {
-			scale : 'small'
-		    },
-		    items : [ {
-			name : 'quicksearch',
-			itemId : 'quicksearch',
-			xtype : 'textfield',
-			emptyText : 'Suchbegriff oder Nr eingeben...',
-			width : 250,
-			listeners : {
-			    scope : this,
-			    change : function(textfield, newValue, oldValue) {
-				this.down("#emptyQuicksearch").setVisible(newValue != "");
-				this.delayedSearch.delay(750, null, this, [ newValue ]);
-			    }
+		    name : 'quicksearch',
+		    itemId : 'quicksearch',
+		    xtype : 'textfield',
+		    inputType : 'search',
+		    emptyText : 'Suchbegriff oder Nr eingeben...',
+		    width : 400,
+		    listeners : {
+			scope : this,
+			change : function(textfield, newValue, oldValue) {
+			    this.delayedSearch.delay(750, null, this, [ newValue ]);
 			}
-		    }, {
-			itemId : 'emptyQuicksearch',
-			hidden : true,
-			xtype : 'button',
-			icon : 'resources/images/silk/icons/textfield_delete.png',
-			listeners : {
-			    scope : this,
-			    click : function(button, e) {
-				this.down("#quicksearch").setValue("");
-			    }
-			}
-		    } ]
+		    }
 		}, {
-		    xtype : 'buttongroup',
-		    title : 'Lied',
-		    columns : 3,
-		    height : 49,
-		    defaults : {
-			scale : 'small'
-		    },
-		    items : [ {
-			itemId : 'editSong',
-			xtype : 'button',
-			icon : 'resources/images/silk/icons/pencil.png',
-			text : 'Bearbeiten',
-			disabled : true,
-			listeners : {
-			    scope : this,
-			    click : function(button, e) {
-				this.editSong(this.selectedRecord.get("id"));
-			    }
+		    itemId : 'addSong',
+		    xtype : 'button',
+		    icon : 'resources/images/silk/icons/add.png',
+		    text : 'Hinzufügen',
+		    listeners : {
+			scope : this,
+			click : function(button, e) {
+			    this.createSong();
 			}
-		    }, {
-			itemId : 'deleteSong',
-			xtype : 'button',
-			icon : 'resources/images/silk/icons/cross.png',
-			text : 'Löschen',
-			disabled : true,
-			listeners : {
-			    scope : this,
-			    click : function(button, e) {
-				this.deleteSong(this.selectedRecord);
-			    }
-			}
-		    }, {
-			itemId : 'addSong',
-			xtype : 'button',
-			icon : 'resources/images/silk/icons/add.png',
-			text : 'Hinzufügen',
-			listeners : {
-			    scope : this,
-			    click : function(button, e) {
-				this.createSong();
-			    }
-			}
-		    } ]
+		    }
 		}, {
-		    xtype : 'buttongroup',
-		    title : 'Ansicht umstellen',
-		    columns : 3,
-		    height : 49,
-		    defaults : {
-			scale : 'small'
-		    },
-		    items : [ {
-			itemId : 'viewTableOfContents',
-			xtype : 'button',
-			icon : 'resources/images/silk/icons/book.png',
-			text : 'Inhaltsverzeichnis',
-			listeners : {
-			    scope : this,
-			    click : function(button, e) {
-				var currentView = "tableOfContents";
-				this.reconfigure(null, this.tableViews[currentView]);
-				this.store.currentTableView = currentView;
-				this.store.sort("LiedNr", "ASC");
-			    }
+		    itemId : 'editSong',
+		    xtype : 'button',
+		    icon : 'resources/images/silk/icons/pencil.png',
+		    text : 'Bearbeiten',
+		    disabled : true,
+		    listeners : {
+			scope : this,
+			click : function(button, e) {
+			    this.editSong(this.selectedRecord.get("id"));
 			}
-		    }, {
-			itemId : 'viewLastChanges',
-			xtype : 'button',
-			icon : 'resources/images/silk/icons/clock_edit.png',
-			text : 'Letzte Änderungen',
-			listeners : {
-			    scope : this,
-			    click : function(button, e) {
-				var currentView = "lastChanges";
-				this.reconfigure(null, this.tableViews[currentView]);
-				this.store.currentTableView = currentView;
-				this.store.sort("updated_at", "DESC");
-			    }
+		    }
+		}, {
+		    itemId : 'deleteSong',
+		    xtype : 'button',
+		    icon : 'resources/images/silk/icons/cross.png',
+		    text : 'Löschen',
+		    disabled : true,
+		    listeners : {
+			scope : this,
+			click : function(button, e) {
+			    this.deleteSong(this.selectedRecord);
 			}
-		    } ]
+		    }
+		}, "->", {
+		    itemId : 'viewTableOfContents',
+		    xtype : 'button',
+		    icon : 'resources/images/silk/icons/book.png',
+		    text : 'Inhaltsverzeichnis',
+		    listeners : {
+			scope : this,
+			click : function(button, e) {
+			    var currentView = "tableOfContents";
+			    this.reconfigure(null, this.tableViews[currentView]);
+			    this.store.currentTableView = currentView;
+			    this.store.sort("LiedNr", "ASC");
+			}
+		    }
+		}, {
+		    itemId : 'viewLastChanges',
+		    xtype : 'button',
+		    icon : 'resources/images/silk/icons/clock_edit.png',
+		    text : 'Letzte Änderungen',
+		    listeners : {
+			scope : this,
+			click : function(button, e) {
+			    var currentView = "lastChanges";
+			    this.reconfigure(null, this.tableViews[currentView]);
+			    this.store.currentTableView = currentView;
+			    this.store.sort("updated_at", "DESC");
+			}
+		    }
 		} ]
 	    },
 	    columns : this.tableViews[store.currentTableView],
@@ -318,7 +281,6 @@ Ext.define('Songserver.view.LiedView', {
 	    Songserver.model.Liederbuch.load(result, {
 		success : function(liederbuch) {
 		    this.liederbuch = liederbuch;
-		    this.setTitle(liederbuch.get("Buchname") + " (" + liederbuch.get("mnemonic") + ")");
 		},
 		scope : this
 	    });

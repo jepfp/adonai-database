@@ -36,8 +36,9 @@ Ext.define('Songserver.view.RefrainViewPanel', {
 	this.removeAll();
 	var htmlContent = this.songtext.get("Refrain");
 	var contentPanel = Ext.create('Ext.panel.Panel', {
-	    border : 0,
-	    html : htmlContent
+	    frame : false,
+	    html : htmlContent,
+	    minHeight: 106
 	});
 	this.add(contentPanel);
     },

@@ -35,15 +35,20 @@ Ext.define('Songserver.view.SongtextViewPanel', {
 	Ext.apply(this, {
 	    title : 'Strophe',
 	    preventHeader : true,
+	    frame : true,
 	    bodyStyle : {
-		padding : '5px'
+		padding : '10px'
 	    },
 	    style : {
 		margin : '5px'
 	    },
 	    dockedItems : [ {
 		xtype : 'toolbar',
-		dock : 'top',
+		dock : 'left',
+		style : {
+		    backgroundColor : '#f5f5f5'
+		},
+		padding: '3',
 		itemId : "tbar",
 		items : this.getToolbarConfiguration()
 	    } ]
@@ -146,7 +151,7 @@ Ext.define('Songserver.view.SongtextViewPanel', {
 
     cancelEdit : function() {
 	this.songtext.reject();
-	if (this.songtext.get("id")) {
+	if (this.songtext.get("id") > 0) {
 	    this.switchToShowMode();
 	    this.loadData();
 	} else {
@@ -202,13 +207,13 @@ Ext.define('Songserver.view.SongtextViewPanel', {
 	    this.displayOrderResultMessage(result);
 	}, this);
     },
-    
-    displayOrderResultMessage : function(isSuccess){
+
+    displayOrderResultMessage : function(isSuccess) {
 	if (isSuccess == true) {
-		this.songPanel.displayInfoMessage("Die neue Reihenfolge wurde auf dem Server gespeichert.");
-	    } else {
-		this.songPanel.displayErrorMessage("Fehler beim Speichern der Reihenfolge.");
-	    }	
+	    this.songPanel.displayInfoMessage("Die neue Reihenfolge wurde auf dem Server gespeichert.");
+	} else {
+	    this.songPanel.displayErrorMessage("Fehler beim Speichern der Reihenfolge.");
+	}
     },
 
     /**

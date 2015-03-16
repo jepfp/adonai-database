@@ -10,30 +10,21 @@ Ext.namespace('Songserver');
 Ext.define('Songserver.view.Layout', {
     extend : 'Ext.panel.Panel',
     requires : [ 'Songserver.view.Navigation' ],
+    
+    layout : 'border',
+    items : [ {
+	xtype : 'songserver-navigation',
+	region : 'west',
+	collapsible : true,
+	split : true,
+	width : 300
+    }, {
+	region : 'center',
+	itemId : 'mainpanel',
+	layout : 'fit'
+    } ],
 
     initComponent : function() {
-	Ext.apply(this, {
-	    layout : 'border',
-	    items : [ {
-		region : 'north',
-		bodyCls : 'applicationHeader',
-		html : SCOTTY_CLIENT_CONFIGURATION.projectTitle + " - Willkommen " + SCOTTY_CLIENT_CONFIGURATION.user.firstname,
-		border : false,
-		split : false
-	    }, {
-		xtype : 'songserver-navigation',
-		region : 'west',
-		collapsible : true,
-		split : false,
-		width : 300
-	    }, {
-		region : 'center',
-		itemId : 'mainpanel',
-		border : false,
-		layout : 'fit'
-	    } ]
-	});
-
 	this.callParent(arguments);
 
 	this.loadPanel("Songserver.view.LiedView", null);
@@ -42,6 +33,7 @@ Ext.define('Songserver.view.Layout', {
 
     loadPanel : function(panelClass, options) {
 	this.query("#mainpanel")[0].removeAll()
-	this.query("#mainpanel")[0].add(Ext.create(panelClass, options));
+	var panel = Ext.create(panelClass, options);
+	this.query("#mainpanel")[0].add(panel);
     }
 });

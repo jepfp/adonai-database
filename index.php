@@ -16,6 +16,27 @@ echo " (" . $projectConfiguration->getProjectName() . ")";
 SCOTTY_CLIENT_CONFIGURATION = <?php echo $projectConfiguration->getClientConfigurationJson(); ?>;
 </script>
 
+<style type="text/css">
+.loadingMessage {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	width: 100%;
+	height: 100%;
+	z-index: 20000;
+	background-color: rgb(50, 83, 100);
+}
+
+.loadingMessage div {
+	padding-top: 100px; font-family : helvetica, arial, verdana, sans-serif;
+	font-size: 20px;
+	color: white;
+	text-align: center;
+	font-family: helvetica, arial, verdana, sans-serif;
+	line-height: 30px;
+}
+</style>
+
 <?php if($projectConfiguration->isProductiveMode()){ ?>
 <!-- PRODUCTIVE MODE -->
 <!-- In order to test the productive mode you need to build and deploy
@@ -37,14 +58,10 @@ deployLocalTesting target in the buidAndDeploy.xml Ant file. -->
 </head>
 <body>
 	<div class="loadingMessage" id="appLoadingMessage">
-		<div class="applicationHeader">Adoray | Adonai Datenbank - Herzlich
-			Willkommen</div>
-		<br>
-		<p>
-			<img src="resources/images/loading.gif"
-				style="float: left; padding-right: 5px;" /> Im Moment wird die
-			Applikation geladen. Bitte hab einen Moment Geduld...
-		</p>
+		<div style="margin: 0 auto; width: 500px;">
+			<img src="resources/images/loading.gif" /><br /> <br /> Im Moment
+			wird die Applikation geladen.<br />Bitte hab einen Moment Geduld...
+		</div>
 	</div>
 </body>
 </html>

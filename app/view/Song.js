@@ -26,14 +26,16 @@ Ext.define('Songserver.view.Song', {
     verseStore : null,
 
     refrainStore : null,
+    scrollable : {
+	x : false,
+	y : 'scroll'
+    },
 
     initComponent : function() {
 
 	// console.log("Song öffnen. Id: " + this.songId);
 	Ext.apply(this, {
 	    title : 'Lied bearbeiten',
-	    autoScroll : true,
-	    bodyStyle : 'background-color: #DFE8F6;',
 	    items : [ {
 		xtype : 'songserver-songPropertiesPanel',
 		songId : this.songId,
@@ -49,83 +51,50 @@ Ext.define('Songserver.view.Song', {
 		    scope : this,
 		    songLoaded : this.onSongLoaded
 		}
-	    // margin: 0,
-	    // width: '600',
-	    // height: 300
 	    }, {
 		xtype : 'songserver-songcontentPanel',
 		songPanel : this
-	    // anchor : "90%"
-	    // margin: 0,
-	    // width: '600',
-	    // height: 300
 	    } ],
 	    layout : {
 		type : 'auto'
 	    },
 	    tbar : [ {
-		xtype : "buttongroup",
-		items : [ {
-		    itemId : 'cancel',
-		    xtype : 'button',
-		    icon : 'resources/images/silk/icons/arrow_turn_left.png',
-		    iconAlign : 'top',
-		    text : 'Zurück zur Übersicht',
-		    listeners : {
-			scope : this,
-			click : function(button, e) {
-			    Songserver.AppContext.mainLayout.loadPanel("Songserver.view.LiedView");
-			}
+		itemId : 'cancel',
+		xtype : 'button',
+		icon : 'resources/images/silk/icons/arrow_turn_left.png',
+		text : 'Zurück zur Übersicht',
+		listeners : {
+		    scope : this,
+		    click : function(button, e) {
+			Songserver.AppContext.mainLayout.loadPanel("Songserver.view.LiedView");
 		    }
-		} ]
+		}
 	    }, {
-		xtype : "buttongroup",
-		title : "Strophen",
-		items : [ {
-		    itemId : 'addVerse',
-		    xtype : 'button',
-		    icon : 'resources/images/silk/icons/add.png',
-		    text : 'Hinzufügen',
-		    listeners : {
-			scope : this,
-			click : function(button, e) {
-			    this.child("songserver-songcontentPanel").createVerse();
-			}
+		itemId : 'addVerse',
+		xtype : 'button',
+		icon : 'resources/images/silk/icons/add.png',
+		text : 'Strophe hinzufügen',
+		listeners : {
+		    scope : this,
+		    click : function(button, e) {
+			this.child("songserver-songcontentPanel").createVerse();
 		    }
-		} ]
-	    }, {
-		xtype : "buttongroup",
-		title : "Refrains",
-		items : [ {
-		    itemId : 'displayRefrains',
-		    xtype : 'button',
-		    icon : 'resources/images/silk/icons/page_edit.png',
-		    text : 'Einblenden',
-		    listeners : {
-			scope : this,
-			click : function(button, e) {
-			    this.down("#displayRefrains").hide();
-			    this.down("#addRefrain").show();
+		}
 
-			    this.child("songserver-songcontentPanel").createRefrainPanels();
-			}
+	    }, {
+		itemId : 'addRefrain',
+		xtype : 'button',
+		toggle : true,
+		icon : 'resources/images/silk/icons/add.png',
+		text : 'Refrain hinzufügen',
+		listeners : {
+		    scope : this,
+		    click : function(button, e) {
+			var songcontentPanel = this.child("songserver-songcontentPanel");
+			var rp = songcontentPanel.createRefrainPanel();
+			songcontentPanel.child("#refrains").add(rp);
 		    }
-		}, {
-		    itemId : 'addRefrain',
-		    xtype : 'button',
-		    toggle : true,
-		    hidden : true,
-		    icon : 'resources/images/silk/icons/add.png',
-		    text : 'Hinzufügen',
-		    listeners : {
-			scope : this,
-			click : function(button, e) {
-			    var songcontentPanel = this.child("songserver-songcontentPanel");
-			    var rp = songcontentPanel.createRefrainPanel();
-			    songcontentPanel.child("#refrains").add(rp);
-			}
-		    }
-		} ]
+		}
 	    } ],
 	    bbar : {
 		itemId : "messageBar",
@@ -177,6 +146,7 @@ Ext.define('Songserver.view.Song', {
 	}
 
 	this.down("songserver-songcontentPanel").createVersePanels(this.verseStore);
+	this.down("songserver-songcontentPanel").createRefrainPanels();
     },
 
     /**
@@ -234,7 +204,6 @@ Ext.define('Songserver.view.Song', {
 	    aPanel.disableEditing();
 	});
 
-	this.down("#displayRefrains").setDisabled(true);
 	this.down("#addRefrain").setDisabled(true);
 	this.down("#addVerse").setDisabled(true);
 	this.down("#cancel").setDisabled(true);
@@ -250,7 +219,6 @@ Ext.define('Songserver.view.Song', {
 	    aPanel.enableEditing();
 	});
 
-	this.down("#displayRefrains").setDisabled(false);
 	this.down("#addRefrain").setDisabled(false);
 	this.down("#addVerse").setDisabled(false);
 	this.down("#cancel").setDisabled(false);

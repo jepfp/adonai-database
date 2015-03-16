@@ -18,21 +18,20 @@ Ext.define('Songserver.view.SongPropertiesPanel', {
     // The grid with the associated and available songbooks
     songbookGrid : null,
 
+    title : 'Details zum Lied',
+    url : '',
+    bodyStyle : 'padding:5px; background-color: #f5f5f5;',
+    preventHeader : true,
+    layout : {
+	type : 'hbox',
+	clearInnerCtOnLayout : true
+    },
+
     initComponent : function() {
 	// console.log("Song öffnen. Id: " + this.songId);
 
 	Ext.apply(this, {
-	    title : 'Details zum Lied',
-	    url : '',
-	    bodyStyle : 'padding:5px; background-color: #DFE8F6; border: none;',
-	    preventHeader : true,
-	    layout : {
-		type : 'hbox',
-		clearInnerCtOnLayout : true
-	    },
-	    defaults : {
-	    // layout : 'fit'
-	    },
+
 	    items : [ {
 		xtype : 'fieldcontainer',
 		width : 450,
@@ -129,7 +128,7 @@ Ext.define('Songserver.view.SongPropertiesPanel', {
 		style : {
 		    margin : '0px',
 		    paddingBottom : '5px',
-		    backgroundColor : "#DFE8F6"
+		    backgroundColor : '#f5f5f5;'
 		},
 
 		items : [ {
@@ -190,6 +189,9 @@ Ext.define('Songserver.view.SongPropertiesPanel', {
 	this.song.getUser({
 	    success : function(record, operation) {
 		this.down("#user").setValue(record.get("firstname") + " " + record.get("lastname") + " (" + record.get("email") + ")");
+		// set the value as init value so we don't loose during a form
+		// reset.
+		this.down("#user").initValue();
 	    },
 	    scope : this
 	});
@@ -198,7 +200,7 @@ Ext.define('Songserver.view.SongPropertiesPanel', {
     createAndAddSongbookGrid : function() {
 	bookentriesStore = this.song.numberInBooks();
 	this.songbookGrid = Ext.create('Ext.grid.Panel', {
-	    preventHeader : true,
+	    // preventHeader : true,
 	    store : bookentriesStore,
 	    columns : [ {
 		header : 'Kürzel',
@@ -212,7 +214,7 @@ Ext.define('Songserver.view.SongPropertiesPanel', {
 		dataIndex : 'Buchname',
 		flex : 1
 	    } ],
-	    height : 180,
+	    height : 207,
 	    flex : 1,
 	    padding : '0px 0px 0px 5px',
 	    autoLoad : 'true',

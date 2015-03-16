@@ -11,14 +11,7 @@ Ext.define('Songserver.view.VerseViewPanel', {
     alias : 'widget.songserver-verseViewPanel',
 
     tableName : "liedtext",
-
-    initComponent : function() {
-	Ext.apply(this, {
-	    title : 'Strophe'
-	});
-
-	this.callParent();
-    },
+    title : 'Strophe',
 
     loadData : function() {
 	this.removeAll();
@@ -29,13 +22,14 @@ Ext.define('Songserver.view.VerseViewPanel', {
 	}
 	htmlContent += this.songtext.get("Strophe");
 	var contentPanel = Ext.create('Ext.panel.Panel', {
-	    border : 0,
-	    html : htmlContent
+	    frame : false,
+	    html : htmlContent,
+	    minHeight: 106
 	});
 	this.add(contentPanel);
     },
-    
-    getRefrainByIdFromStore : function(refrainId){
+
+    getRefrainByIdFromStore : function(refrainId) {
 	return this.songPanel.refrainStore.getById(refrainId);
     },
 
