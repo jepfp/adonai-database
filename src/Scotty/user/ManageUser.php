@@ -95,24 +95,24 @@ class ManageUser
 		try
 		{
 			// Die Nachricht
-			$nachricht = "Neue Registration auf der Liederdatenbank. ";
+			$nachricht = "Neue Registration auf der Liederdatenbank.";
 			$nachricht .= $firstname . " " . $lastname . " (" . $email . ")";
 
 			// Falls eine Zeile der Nachricht mehr als 70 Zeichen enthälten könnte,
 			// sollte wordwrap() benutzt werden
 			$nachricht = wordwrap($nachricht, 70);
-
+			
 			// Send
-			mail('philipp@jenni-pfaffen.ch', 'Neue Registration', $nachricht);
+			mail('philippjenni@bluemail.ch', 'Neue Registration', $nachricht);
 		}
 		catch (Exception $e)
 		{
-			logMessage('Failed to send email.');
+			$this->logMessage('Failed to send email.', $e);
 		}
 	}
 
-	private function logMessage($message){
+	private function logMessage($message, $e){
 		$dbLogger = \Logger::getLogger("dbLogger");
-		$dbLogger->error($message);
+		$dbLogger->error($message, $e);
 	}
 }
