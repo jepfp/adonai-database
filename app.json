@@ -46,7 +46,7 @@
          * root namespace, change this to "". Doing so would change the mapping of
          * "Scotty5.view.Foo" to "sass/src/Scotty5/view/Foo.scss".
          */
-        "namespace": "Scotty5"
+        "namespace": "Songserver"
     },
 
     /**
@@ -236,7 +236,11 @@
      *
      */
     "output": {
-        "base": "${workspace.build.dir}/${build.environment}/${app.name}"
+        "base": "${workspace.build.dir}/${build.environment}/${app.name}",
+        "page": {
+	        "path": "index.php",
+	        "enable": true
+	    }
     },
 
     /**

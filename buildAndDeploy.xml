@@ -4,7 +4,7 @@
 	<property file="buildAndDeploy.properties" />
 
 	<!-- The following properties can be overridden by buildAndDeploy.properties -->
-	<property name="sencha-exe" value="C:\Users\Philipp\bin\Sencha\Cmd\4.0.4.84/sencha.exe" />
+	<property name="sencha-exe" value="C:\Users\Philipp\bin\Sencha\Cmd\5.1.2.52\sencha.exe" />
 	<property name="buildMode" value="production" />
 	<property name="buildDir" value="build" />
 	<property name="zipLocation" value="${buildDir}/zip.zip" />
@@ -82,6 +82,11 @@
 		</copy>
 		<copy todir="${buildDir}/all">
 			<fileset file="build/${buildMode}/Songserver/app.js" />
+			<fileset file="build/${buildMode}/Songserver/app.json" />
+			<fileset file="build/${buildMode}/Songserver/index.php" />
+		</copy>
+		<copy todir="${buildDir}/all">
+			<fileset file="build/${buildMode}/Songserver/app.json" />
 		</copy>
 		<copy todir="${buildDir}/all/resources">
 			<fileset file="build/${buildMode}/Songserver/resources/Songserver-all.css" />
@@ -92,7 +97,6 @@
 		</copy>
 		<copy todir="${buildDir}/all">
 			<fileset file="_index.html" />
-			<fileset file="index.php" />
 		</copy>
 		<copy todir="${buildDir}/all/integration-testing">
 			<fileset dir="integration-testing" />
@@ -123,7 +127,7 @@
 
 	<target name="buildSenchaApp" description="Builds the JS-Code">
 		<echo>Building Sencha App</echo>
-		<echo>IMPORTANT: Make sure sencha Cmd 4.0.4.84 and Ruby 1.9.3 are installed and that ruby is available through the systems path.</echo>
+		<echo>IMPORTANT: Make sure sencha Cmd 5.1.2.52 and Ruby 1.9.3 are installed and that ruby is available through the systems path.</echo>
 		<exec executable="${sencha-exe}">
 			<arg line="app build ${buildMode}" />
 		</exec>

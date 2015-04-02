@@ -33,44 +33,45 @@ Ext.define('Songserver.view.SongtextFormPanel', {
      */
     songtextFieldName : "PLEASE_SPECIFY_IN_SUBCLASS",
 
+    bodyStyle : 'border: none;',
+    preventHeader : true,
+    // layout : {
+    // type : 'hbox',
+    // clearInnerCtOnLayout : true
+    // },
+    defaults : {
+    // layout : 'fit'
+    },
+
+    items : [ {
+	xtype : 'fieldcontainer',
+	// width : 300,
+	fieldDefaults : {
+	    msgTarget : 'side',
+	    labelWidth : 75
+	},
+	defaultType : 'textfield',
+	// layout : 'anchor',
+	defaults : {
+	    // anchor : '100%'
+	    width : 300
+	},
+	items : [ {
+	    xtype : 'textareafield',
+	    name : 'TOBECHANGED',
+	    itemId : 'songtextFieldName',
+	    // height : 200,
+	    // autoScroll: true,
+	    grow : true,
+	    hideLabel : true,
+	    anchor : '100%'
+	} ]
+    } ],
+
     initComponent : function() {
-
-	Ext.apply(this, {
-	    bodyStyle : 'border: none;',
-	    preventHeader : true,
-	    // layout : {
-	    // type : 'hbox',
-	    // clearInnerCtOnLayout : true
-	    // },
-	    defaults : {
-	    // layout : 'fit'
-	    },
-	    items : [ {
-		xtype : 'fieldcontainer',
-		// width : 300,
-		fieldDefaults : {
-		    msgTarget : 'side',
-		    labelWidth : 75
-		},
-		defaultType : 'textfield',
-		// layout : 'anchor',
-		defaults : {
-		    // anchor : '100%'
-		    width : 300
-		},
-		items : [ {
-		    xtype : 'textareafield',
-		    name : this.songtextFieldName,
-		    // height : 200,
-		    // autoScroll: true,
-		    grow : true,
-		    hideLabel : true,
-		    anchor : '100%'
-		} ]
-	    } ]
-	});
-
 	this.callParent();
+
+	this.down("#songtextFieldName").name = this.songtextFieldName;
 
 	this.loadRecord(this.songtext);
 

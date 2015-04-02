@@ -28,7 +28,8 @@ SCOTTY_CLIENT_CONFIGURATION = <?php echo $projectConfiguration->getClientConfigu
 }
 
 .loadingMessage div {
-	padding-top: 100px; font-family : helvetica, arial, verdana, sans-serif;
+	padding-top: 100px;
+	font-family: helvetica, arial, verdana, sans-serif;
 	font-size: 20px;
 	color: white;
 	text-align: center;
@@ -36,23 +37,11 @@ SCOTTY_CLIENT_CONFIGURATION = <?php echo $projectConfiguration->getClientConfigu
 	line-height: 30px;
 }
 </style>
-
-<?php if($projectConfiguration->isProductiveMode()){ ?>
-<!-- PRODUCTIVE MODE -->
-<!-- In order to test the productive mode you need to build and deploy
-to the local test folder (build/all). To do so, execute the
-deployLocalTesting target in the buidAndDeploy.xml Ant file. -->
-<link rel="stylesheet" href="resources/Songserver-all.css" />
-<script type="text/javascript" src="app.js"></script>
-<?php
-} else {
-    ?>
-	<script id="microloader" type="text/javascript" src="bootstrap.js"></script>
-	
-<?php
-}
-?>
 <script src="src/ext-direct-api.php"></script>
+
+<script id="microloader" type="text/javascript" src="bootstrap.js"></script>
+
+
 <link rel="stylesheet" type="text/css" href="resources/css/style.css" />
 
 </head>

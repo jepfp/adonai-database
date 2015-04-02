@@ -26,11 +26,20 @@ Ext.define('Songserver.view.Song', {
     verseStore : null,
 
     refrainStore : null,
-    scrollable : {
-	x : false,
-	y : 'scroll'
-    },
 
+    bodyStyle : {
+	overflowX: "hidden",
+	overflowY: "scroll"
+    },
+    
+//    scrollable: true,
+    
+    layout: {
+        type: 'anchor',
+        reserveScrollbar: true // There will be a gap even when there's no scrollbar
+    },
+    scrollable: false,
+    
     initComponent : function() {
 
 	// console.log("Song öffnen. Id: " + this.songId);
@@ -55,9 +64,6 @@ Ext.define('Songserver.view.Song', {
 		xtype : 'songserver-songcontentPanel',
 		songPanel : this
 	    } ],
-	    layout : {
-		type : 'auto'
-	    },
 	    tbar : [ {
 		itemId : 'cancel',
 		xtype : 'button',
@@ -102,7 +108,7 @@ Ext.define('Songserver.view.Song', {
 	    }
 	});
 
-	Songserver.view.Song.superclass.initComponent.apply(this, arguments);
+	this.callParent();
 
 	this.hideInfoMessageTask = new Ext.util.DelayedTask(function() {
 	    if (this != null && this.child("#messageBar") != null) {
@@ -233,8 +239,8 @@ Ext.define('Songserver.view.Song', {
      * item. Some not allowed buttons for example are disabled.
      */
     prepareFormForAddingNewItem : function() {
-	this.down("#displayRefrains").setDisabled(true);
 	this.down("#addVerse").setDisabled(true);
+	this.down("#addRefrain").setDisabled(true);
     },
 
     /**
@@ -246,7 +252,7 @@ Ext.define('Songserver.view.Song', {
      */
     switchToEditMode : function(song) {
 	this.songId = song.get("id");
-	this.down("#displayRefrains").setDisabled(false);
 	this.down("#addVerse").setDisabled(false);
+	this.down("#addRefrain").setDisabled(false);
     }
 });

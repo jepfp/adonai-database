@@ -1,5 +1,6 @@
 Ext.define('Songserver.model.Base', {
     extend : 'Ext.data.Model',
+    requires : [ 'Ext.data.proxy.Rest' ],
 
     fields : [ {
 	name : 'id',
@@ -10,7 +11,8 @@ Ext.define('Songserver.model.Base', {
 	namespace : 'Songserver.model',
 
 	proxy : {
-	    url : 'src/ext-rest-interface.php/{entityName:lowercase}',
+	    // first letter not capital
+	    url : 'src/ext-rest-interface.php/{entityName:uncapitalize}',
 	    type : "rest",
 	    reader : {
 		type : 'json',
