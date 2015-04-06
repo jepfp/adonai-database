@@ -1,6 +1,5 @@
 <div class="navigationContent">
-<h1><img src="resources/images/silk/icons/flag_green.png" class="leftTextImage"/>Willkommen</h1>
-... auf Adonai, der Liederdatenbank.<br>
-Viel Spass beim Hinzufügen, Löschen und Ändern von Liedern.<br><br>
-Unterhalb dieses Textes findest du ein Menü für weitere Funktionen.
+Vielen Dank, dass du mithilfst das Liederbuch zu pflegen.
+<br><br>Hast du Fragen? Dann hilft dir unser <a href="faq.php" target="blank">FAQ</a> weiter oder du kannst uns via
+<a href="mailto:lieder@adoray.ch">lieder@adoray.ch</a> kontaktieren.
 </div>

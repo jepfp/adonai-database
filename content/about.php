@@ -1,10 +1,8 @@
 <div class="navigationContent">
-<h1><img src="resources/images/silk/icons/help.png" class="leftTextImage" />Über das Programm</h1>
-
 <table>
 <tr>
 <td>Version:</td>
-<td>4.1.0 / Januar 15</td>
+<td>5.0.0 Alpha / April 15</td>
 </tr>
 <tr>
 <td>Entwicklung:</td>

@@ -16,7 +16,7 @@ Ext.define('Songserver.view.Navigation', {
 		autoScroll : true
 	    },
 	    items : [ {
-		title : 'Start',
+		title : 'Willkommen',
 		loader : {
 		    url : 'content/start.php',
 		    renderer : 'html',
@@ -26,17 +26,10 @@ Ext.define('Songserver.view.Navigation', {
 	    }, {
 		title : 'Liederbuch wählen',
 		items : [ {
-		    border : false,
-		    loader : {
-			url : 'content/chooseLiederbuch.php',
-			renderer : 'html',
-			autoLoad : true
-		    }
-		}, {
 		    name : 'buchSelection',
 		    xtype : 'combobox',
-		    padding : 5,
-		    width : 270,
+		    padding : 8,
+		    width : 284,
 		    valueField : 'id',
 		    displayField : 'Buchname',
 		    emptyText : 'Liederbuch wählen...',
@@ -73,9 +66,9 @@ Ext.define('Songserver.view.Navigation', {
 		    autoLoad : true
 		}
 	    }, {
-		title : 'Information & Hilfe',
+		title : 'Über das Programm',
 		loader : {
-		    url : 'content/informationAndHelp.php',
+		    url : 'content/about.php',
 		    renderer : 'html',
 		    autoLoad : true
 		}
