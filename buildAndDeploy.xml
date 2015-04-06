@@ -97,6 +97,7 @@
 		</copy>
 		<copy todir="${buildDir}/all">
 			<fileset file="_index.html" />
+			<fileset file="faq.php" />
 		</copy>
 		<copy todir="${buildDir}/all/integration-testing">
 			<fileset dir="integration-testing" />
