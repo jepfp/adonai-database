@@ -8,7 +8,7 @@
 </head>
 
 <body>
-	<a href="startDebug.php?XDEBUG_SESSION_START=ECLIPSE_DBGP">Start Debugger</a>
+	<a href="startDebugger.php?XDEBUG_SESSION_START=ECLIPSE_DBGP">Start Debugger</a>
 
 </body>
 </html>
