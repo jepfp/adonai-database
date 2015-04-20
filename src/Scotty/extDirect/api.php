@@ -26,7 +26,7 @@ foreach ($API as $aname=>&$a) {
 }
 
 $cfg = array(
-    'url'=>'src/ext-direct-router.php?XDEBUG_SESSION_START=ECLIPSE_DBGP',
+    'url'=>'src/ext-direct-router.php',
     'type'=>'remoting',
 	'actions'=>$actions
 );
