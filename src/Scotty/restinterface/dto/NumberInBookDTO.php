@@ -7,10 +7,8 @@ class NumberInBookDTO extends AbstractDTO
     public function __construct($requestParams)
     {
         $this->fields = array(
-            Field::create("Liednr", array(
-                StandardTransformers::emptyToNull()
-        ), array(
-                //$this->notNullOrEmpty() -> It may be null
+            Field::create("Liednr", array(), array(
+                $this->notNullOrEmpty()
             )),
             Field::create("lied_id", array(), array(
                 $this->notNullOrEmpty()
@@ -21,7 +19,7 @@ class NumberInBookDTO extends AbstractDTO
         );
         parent::__construct($requestParams);
     }
-    
+
     protected function getFieldsToIgnore()
     {
         $fieldsToIgnore = parent::getFieldsToIgnore();
