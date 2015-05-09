@@ -232,7 +232,7 @@ Ext.define('Songserver.view.SongtextViewPanel', {
     },
 
     save : function() {
-	this.formPanel.saveChanges();
+	this.formPanel.saveChangesIfNecessary();
     },
 
     deleteIt : function(promptFirst) {

@@ -35,33 +35,21 @@ Ext.define('Songserver.view.SongtextFormPanel', {
 
     bodyStyle : 'border: none;',
     preventHeader : true,
-    // layout : {
-    // type : 'hbox',
-    // clearInnerCtOnLayout : true
-    // },
-    defaults : {
-    // layout : 'fit'
-    },
 
     items : [ {
 	xtype : 'fieldcontainer',
-	// width : 300,
 	fieldDefaults : {
 	    msgTarget : 'side',
 	    labelWidth : 75
 	},
 	defaultType : 'textfield',
-	// layout : 'anchor',
 	defaults : {
-	    // anchor : '100%'
 	    width : 300
 	},
 	items : [ {
 	    xtype : 'textareafield',
 	    name : 'TOBECHANGED',
 	    itemId : 'songtextFieldName',
-	    // height : 200,
-	    // autoScroll: true,
 	    grow : true,
 	    hideLabel : true,
 	    anchor : '100%'
@@ -78,7 +66,7 @@ Ext.define('Songserver.view.SongtextFormPanel', {
 	this.replaceBrTags();
     },
 
-    saveChanges : function() {
+    saveChangesIfNecessary : function() {
 	this.songPanel.setLoading(true);
 	var form = this.getForm();
 	this.formatFields();
@@ -86,12 +74,21 @@ Ext.define('Songserver.view.SongtextFormPanel', {
 
 	this.up("songserver-songPanel").displayInfoMessage("Text wird gespeichert. Bitte warten...");
 
+	if (this.songtext.dirty) {
+	    this.saveChanges();
+	} else {
+	    this.cancelEdit();
+	}
+    },
+
+    saveChanges : function() {
 	this.songtext.save({
 	    success : function(record, operation) {
 		this.up("songserver-songPanel").displayInfoMessage("Die Änderungen wurden gespeichert.");
 
 		// Update the current this.songtext with the new data
-		// This is important espacially when we have added a songtext.
+		// This is important espacially when we have added a
+		// songtext.
 		this.songtext = record;
 
 		this.fireEvent("updatedSongtext", record);
@@ -104,6 +101,11 @@ Ext.define('Songserver.view.SongtextFormPanel', {
 	    },
 	    scope : this
 	});
+    },
+
+    cancelEdit : function() {
+	this.songPanel.setLoading(false);
+	this.up("songserver-songtextViewPanel").cancelEdit();
     },
 
     /**
