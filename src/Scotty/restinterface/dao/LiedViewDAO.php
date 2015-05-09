@@ -16,10 +16,6 @@ class LiedViewDAO extends AbstractDAO
         
         if ($this->request->method == "PUT") {
             
-            // If the Liednr changes it will always be a PUT request
-            // - New Liednr (no entry in middle table yet) --> POST
-            // - Changing Liednr --> PUT (as is)
-            // - Null / Empty Liednr --> DELETE (redirect to NumberInBookDAO)
             $this->addLiedIdAndLiederbuchId();
             
             $request = $this->request;
@@ -27,51 +23,24 @@ class LiedViewDAO extends AbstractDAO
             $liederbuchId = $request->params->liederbuch_id;
             $fkLiederbuchLiedId = $this->loadfkLiederbuchLiedEntryFor($liederbuchId, $liedId);
             
+            // does relationship already exist?
             if ($fkLiederbuchLiedId > 0) {
-                if ($request->params->Liednr === "" || $request->params->Liednr === null) {
-                    $deleteResponse =  $this->redirectToNumberInBookDelete($fkLiederbuchLiedId);
-                    return $this->redirectToGETWithId($liedId);
-                }else{
-                    // put
-                    $putResponse = $this->redirectToNumberInBookPut($fkLiederbuchLiedId);
-                    return $this->redirectToGETWithId($liedId);
-                }
+                // yes --> delete or edit (put)
+                $action = (! $request->params->Liednr) ? "DELETE" : "PUT";
+                $this->redirectToNumberInBook($action, $fkLiederbuchLiedId);
+                return $this->redirectToGETWithId($liedId);
             } else {
-                // new entry
-                $this->request->method = "POST";
-                return $this->redirectToNumberInBookPost($fkLiederbuchLiedId);
+                // post (new entry)
+                return $this->redirectToNumberInBook("POST", $fkLiederbuchLiedId);
             }
         }
         return parent::dispatch($request);
     }
 
-    private function redirectToNumberInBookDelete($id)
-    {
-        $controller = "numberInBook";
-        $action = "DELETE";
-        $this->logger->trace("Perform redirect from LiedView to (controller: $controller, action: $action, id: $id).");
-        $request = Request::create($action, $controller, $action, $id);
-        $dao = DAOFactory::createDAO($controller);
-        return $dao->dispatch($request);
-    }
-    
-    private function redirectToNumberInBookPost()
+    private function redirectToNumberInBook($action, $id)
     {
         $originalRequest = $this->request;
         $controller = "numberInBook";
-        $action = "POST";
-        $this->logger->trace("Perform redirect from LiedView to (controller: $controller, action: $action, id: null).");
-        $request = Request::create($action, $controller, $action, null);
-        $request->params = $originalRequest->params;
-        $dao = DAOFactory::createDAO($controller);
-        return $dao->dispatch($request);
-    }
-    
-    private function redirectToNumberInBookPut($id)
-    {
-        $originalRequest = $this->request;
-        $controller = "numberInBook";
-        $action = "PUT";
         $this->logger->trace("Perform redirect from LiedView to (controller: $controller, action: $action, id: $id).");
         $request = Request::create($action, $controller, $action, $id);
         $request->params = $originalRequest->params;
