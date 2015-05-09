@@ -11,7 +11,6 @@ Ext.define('Songserver.view.LiedView', {
     // this is not loaded in debug mode.
     'Ext.util.Point', 'Ext.grid.column.Date' ],
 
-    loadMask : true,
     liederbuch : null,
     // the currently selected reocrd or null if no record is
     // selected
@@ -65,7 +64,6 @@ Ext.define('Songserver.view.LiedView', {
 	Ext.apply(this, {
 	    title : SCOTTY_CLIENT_CONFIGURATION.projectTitle + " - Willkommen " + SCOTTY_CLIENT_CONFIGURATION.user.firstname,
 	    store : store,
-	    loadMask : true,
 	    disableSelection : false,
 	    listeners : {
 		itemdblclick : function(view, record, item, index, e) {

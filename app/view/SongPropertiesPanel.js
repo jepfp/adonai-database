@@ -252,11 +252,12 @@ Ext.define('Songserver.view.SongPropertiesPanel', {
     },
 
     saveChanges : function() {
+	this.up("songserver-songPanel").displayInfoMessage("Änderungen werden gespeichert. Bitte warten...");
+	this.up("songserver-songPanel").setLoading(true);
 	var form = this.getForm();
 	var record = form.getRecord();
 	this.song.set(form.getValues());
 
-	this.up("songserver-songPanel").displayInfoMessage("Änderungen werden gespeichert. Bitte warten...");
 
 	this.song.save({
 	    success : function(record, operation) {
@@ -273,6 +274,7 @@ Ext.define('Songserver.view.SongPropertiesPanel', {
 	    },
 	    failure : function(record, operation) {
 		this.handleSaveError('Fehler beim Speichern der Lied-Eigenschaften.');
+		this.up("songserver-songPanel").setLoading(false);
 	    },
 	    scope : this
 	});
@@ -296,7 +298,9 @@ Ext.define('Songserver.view.SongPropertiesPanel', {
 	} else {
 	    this.up("songserver-songPanel").displayInfoMessage("Änderungen am Lied gespeichert.");
 	    this.up("songserver-songPanel").switchToEditMode(this.song);
+	    this.songbookGrid.getStore().reload();
 	    this.hideToolbarItems();
+	    this.up("songserver-songPanel").setLoading(false);
 	}
     },
 
@@ -325,6 +329,7 @@ Ext.define('Songserver.view.SongPropertiesPanel', {
 		this.handleSaveError('Fehler beim Speichern. Prüfe, ob die Liednummer ' //
 			+ record.get("Liednr") + ' nicht bereits im Liederbuch ' //
 			+ record.get("Buchname") + ' verwendet wird.');
+		this.up("songserver-songPanel").setLoading(false);
 	    },
 	    scope : this
 	});
@@ -338,6 +343,7 @@ Ext.define('Songserver.view.SongPropertiesPanel', {
 	    failure : function(record, operation) {
 		this.handleSaveError('Fehler beim Speichern. Bitte melde diesen Fehler an ' //
 			+ 'lieder@adoray.ch mit der Info, dass das Entfernen einer Liednummer fehlgeschlagen ist.');
+		this.up("songserver-songPanel").setLoading(false);
 	    },
 	    scope : this
 	});
