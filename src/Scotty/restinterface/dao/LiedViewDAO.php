@@ -15,26 +15,30 @@ class LiedViewDAO extends AbstractDAO
         $this->request = $request;
         
         if ($this->request->method == "PUT") {
-            
-            $this->addLiedIdAndLiederbuchId();
-            
-            $request = $this->request;
-            $liedId = $request->params->lied_id;
-            $liederbuchId = $request->params->liederbuch_id;
-            $fkLiederbuchLiedId = $this->loadfkLiederbuchLiedEntryFor($liederbuchId, $liedId);
-            
-            // does relationship already exist?
-            if ($fkLiederbuchLiedId > 0) {
-                // yes --> delete or edit (put)
-                $action = (! $request->params->Liednr) ? "DELETE" : "PUT";
-                $this->redirectToNumberInBook($action, $fkLiederbuchLiedId);
-                return $this->redirectToGETWithId($liedId);
-            } else {
-                // post (new entry)
-                return $this->redirectToNumberInBook("POST", $fkLiederbuchLiedId);
-            }
+            return $this->dispatchViaNumberInBook($request);
         }
+        
         return parent::dispatch($request);
+    }
+
+    private function dispatchViaNumberInBook()
+    {
+        $this->addLiedIdAndLiederbuchId();
+        
+        $liedId = $this->request->params->lied_id;
+        $liederbuchId = $this->request->params->liederbuch_id;
+        $fkLiederbuchLiedId = $this->loadfkLiederbuchLiedEntryFor($liederbuchId, $liedId);
+        
+        // does relationship already exist?
+        if ($fkLiederbuchLiedId > 0) {
+            // yes --> delete or edit (put)
+            $action = (! $this->request->params->Liednr) ? "DELETE" : "PUT";
+            $this->redirectToNumberInBook($action, $fkLiederbuchLiedId);
+            return $this->redirectToGETWithId($liedId);
+        } else {
+            // post (new entry)
+            return $this->redirectToNumberInBook("POST", $fkLiederbuchLiedId);
+        }
     }
 
     private function redirectToNumberInBook($action, $id)
@@ -83,13 +87,6 @@ class LiedViewDAO extends AbstractDAO
         $id = $sessionInfoProvider->getCurrentLiederbuchId();
         $this->logger->trace("Current liederbuchId: " . $id);
         return $id;
-    }
-
-    protected function redirectToGETWithId($id)
-    {
-        // In case of a LiedView creation only the fkLiederbuchLied entry is created but the id is the id from Lied.
-        // Therefore we ned to redirect to the id of the Lied and not of the inserted fkLiederbuchLied id.
-        return parent::redirectToGETWithId($this->request->params->lied_id);
     }
 
     protected function onAfterUpdate($id)
