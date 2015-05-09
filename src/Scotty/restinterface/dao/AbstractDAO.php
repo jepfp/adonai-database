@@ -40,8 +40,6 @@ abstract class AbstractDAO
     {
         $this->request = $request;
         
-        $this->onBeforeDispatch();
-        
         $res = new Response();
         $res->success = true;
         $res->message = "Success";
@@ -73,11 +71,6 @@ abstract class AbstractDAO
         return $res;
     }
 
-    protected function onBeforeDispatch()
-    {
-        // override if needed
-    }
-
     private function checkIfUserIsLoggedIn()
     {
         SecInfoProvider::throwErrorIfNotLoggedIn();
@@ -103,7 +96,7 @@ abstract class AbstractDAO
         $this->onAfterCreate($insertedId);
         $res = $this->redirectToGETWithId($insertedId);
     }
-    
+
     protected function onAfterCreate($id)
     {
         // override if needed
@@ -130,7 +123,7 @@ abstract class AbstractDAO
         $this->onAfterUpdate($updatedId);
         $res = $this->redirectToGETWithId($updatedId);
     }
-    
+
     protected function onAfterUpdate($id)
     {
         // override if needed
@@ -147,7 +140,7 @@ abstract class AbstractDAO
             throw new \RuntimeException("Deleting of " . $this->request->id . " failed.");
         }
     }
-    
+
     protected function onBeforeDelete($id)
     {
         // override if needed
