@@ -91,7 +91,8 @@ Ext.define('Songserver.view.SongPropertiesPanel', {
 			storeId : 'categoryChoice',
 			listeners : {
 			    load : function(store, records, successful, operation, eOpts) {
-				// Load the song after all rubriks have
+				// Load the song after all
+				// rubriks have
 				// been loaded
 				this.loadOrCreateSong();
 			    },
@@ -162,7 +163,8 @@ Ext.define('Songserver.view.SongPropertiesPanel', {
 		    this.onSongLoaded(record);
 		},
 		callback : function(record, operation) {
-		    // do something whether the load succeeded or failed
+		    // do something whether the load succeeded
+		    // or failed
 		}
 	    });
 	} else {
@@ -189,7 +191,8 @@ Ext.define('Songserver.view.SongPropertiesPanel', {
 	this.song.getUser({
 	    success : function(record, operation) {
 		this.down("#user").setValue(record.get("firstname") + " " + record.get("lastname") + " (" + record.get("email") + ")");
-		// set the value as init value so we don't loose during a form
+		// set the value as init value so we don't loose
+		// during a form
 		// reset.
 		this.down("#user").initValue();
 	    },
@@ -234,8 +237,10 @@ Ext.define('Songserver.view.SongPropertiesPanel', {
 	this.add(this.songbookGrid);
     },
 
-    // this function adds change listeners to the form and the grid
-    // in order to show the fbar so that the user can see the hidden buttons
+    // this function adds change listeners to the form and the
+    // grid
+    // in order to show the fbar so that the user can see the
+    // hidden buttons
     // "save" and "discard changes"
     addChangeListeners : function() {
 	this.getForm().addListener("dirtychange", function(form, dirty, eOpts) {
@@ -258,8 +263,10 @@ Ext.define('Songserver.view.SongPropertiesPanel', {
 		this.loadRecord(this.song);
 		this.up("songserver-songPanel").displayInfoMessage("Änderungen am Lied gespeichert. Speichere Liedernummern...");
 
-		// https://trello.com/c/WtjY4hle Ablegen der neuen
-		// NumberInSongbook-Einträge schlägt fehl bei neuem Lied
+		// https://trello.com/c/WtjY4hle Ablegen der
+		// neuen
+		// NumberInSongbook-Einträge schlägt fehl bei
+		// neuem Lied
 		this.setLiedIdOnAllNumberInBookEntries(record.get("id"));
 
 		this.saveNumberInBookEntries();
@@ -276,7 +283,8 @@ Ext.define('Songserver.view.SongPropertiesPanel', {
 	this.songbookGrid.getStore().data.each(function(record) {
 	    var currentIsDirtyState = record.dirty;
 	    record.set("lied_id", lied_id);
-	    // We don't mark the record as dirty if it isn't yet.
+	    // We don't mark the record as dirty if it isn't
+	    // yet.
 	    record.dirty = currentIsDirtyState;
 	});
     },
@@ -284,28 +292,55 @@ Ext.define('Songserver.view.SongPropertiesPanel', {
     saveNumberInBookEntries : function() {
 	var modifiedRecords = this.getDirtyNumberInBookEntries();
 	if (modifiedRecords.length > 0) {
-	    modifiedRecords[0].save({
-		success : function(record, operation) {
-		    // Hack: The commit call is necessary in case of a create
-		    // operation. The triangle flag (markDirty)
-		    // does not disappear because internally the framework calls
-		    // it with modifiedFieldNames empty which
-		    // is not as we would expect it.
-		    record.commit();
-		    this.saveNumberInBookEntries();
-		},
-		failure : function(record, operation) {
-		    this.handleSaveError('Fehler beim Speichern. Prüfe, ob die Liednummer ' //
-			    + record.get("Liednr") + ' nicht bereits im Liederbuch ' //
-			    + record.get("Buchname") + ' verwendet wird.');
-		},
-		scope : this
-	    });
+	    this.saveOrDeleteSingleRecord(modifiedRecords[0]);
 	} else {
 	    this.up("songserver-songPanel").displayInfoMessage("Änderungen am Lied gespeichert.");
 	    this.up("songserver-songPanel").switchToEditMode(this.song);
 	    this.hideToolbarItems();
 	}
+    },
+
+    saveOrDeleteSingleRecord : function(record) {
+	if (record.get("Liednr")) { // neither null or empty
+	    this.saveSingleRecord(record);
+	} else {
+	    this.deleteSingleRecord(record);
+	}
+    },
+
+    saveSingleRecord : function(record) {
+	record.save({
+	    success : function(record, operation) {
+		// Hack: The commit call is necessary in case of
+		// a create
+		// operation. The triangle flag (markDirty)
+		// does not disappear because internally the
+		// framework calls
+		// it with modifiedFieldNames empty which
+		// is not as we would expect it.
+		record.commit();
+		this.saveNumberInBookEntries();
+	    },
+	    failure : function(record, operation) {
+		this.handleSaveError('Fehler beim Speichern. Prüfe, ob die Liednummer ' //
+			+ record.get("Liednr") + ' nicht bereits im Liederbuch ' //
+			+ record.get("Buchname") + ' verwendet wird.');
+	    },
+	    scope : this
+	});
+    },
+
+    deleteSingleRecord : function(record) {
+	record.erase({
+	    success : function(record, operation) {
+		this.saveNumberInBookEntries();
+	    },
+	    failure : function(record, operation) {
+		this.handleSaveError('Fehler beim Speichern. Bitte melde diesen Fehler an ' //
+			+ 'lieder@adoray.ch mit der Info, dass das Entfernen einer Liednummer fehlgeschlagen ist.');
+	    },
+	    scope : this
+	});
     },
 
     getDirtyNumberInBookEntries : function() {
