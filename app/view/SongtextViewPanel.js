@@ -254,7 +254,7 @@ Ext.define('Songserver.view.SongtextViewPanel', {
 		scope : this
 	    });
 	} else {
-	    this.songtext.destroy({
+	    this.songtext.erase({
 		scope : this,
 		failure : this.onDeleteFailure,
 		success : function(record, operation) {

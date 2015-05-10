@@ -235,7 +235,7 @@ Ext.define('Songserver.view.LiedView', {
 		scope : this
 	    });
 	} else {
-	    song.destroy({
+	    song.erase({
 		scope : this,
 		failure : function(record, operation) {
 		    Ext.Msg.alert("Fehler beim Löschen", "Das Lied konnte nicht gelöscht werden. "
