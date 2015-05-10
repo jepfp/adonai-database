@@ -20,19 +20,19 @@ Ext.define('Songserver.view.Songcontent', {
     preventHeader : true,
     items : [ {
 	xtype : "panel",
-	bodyStyle:{
+	bodyStyle : {
 	    backgroundColor : '#f5f5f5'
 	},
-	margin: '10 0 0 0',
+	margin : '10 0 0 0',
 	title : "Strophen",
 	collapsible : "true",
 	itemId : "verses"
     }, {
 	xtype : "panel",
-	bodyStyle:{
+	bodyStyle : {
 	    backgroundColor : '#f5f5f5'
 	},
-	margin: '10 0 0 0',
+	margin : '10 0 0 0',
 	title : "Refrains",
 	collapsible : "true",
 	itemId : "refrains"
@@ -41,11 +41,7 @@ Ext.define('Songserver.view.Songcontent', {
     createVersePanels : function(verseStore) {
 	var versePanels = new Array();
 	verseStore.each(function(aVerse, index, allRecords) {
-	    var panel = Ext.create("Songserver.view.VerseViewPanel", {
-		songtext : aVerse,
-		songPanel : this.songPanel
-	    });
-	    versePanels.push(panel);
+	    this.createVersePanel(aVerse);
 	}, this);
 	this.child("#verses").add(versePanels);
     },
@@ -105,24 +101,25 @@ Ext.define('Songserver.view.Songcontent', {
     /**
      * Creates a new verse form and adds the emtpy panel to the GUI.
      */
-    createVerse : function() {
+    createVersePanel : function(verse) {
 	var p = Ext.create("Songserver.view.VerseViewPanel", {
+	    songtext : verse,
 	    songPanel : this.songPanel
 	});
 
 	this.child("#verses").add(p);
-
-	// scroll down
-	this.songPanel.body.dom.scrollTop = this.songPanel.body.dom.scrollHeight;
+	
+	return p;
     },
 
     /*
-     * Creates a new CORRECT configured (events) refrain panel and returns it.
+     * Creates a new CORRECT configured (events) refrain panel and adds it to
+     * the GUI.
      * 
      * @param {Songserver.model.Refrain} refrain
      */
     createRefrainPanel : function(refrain) {
-	return Ext.create("Songserver.view.RefrainViewPanel", {
+	var p = Ext.create("Songserver.view.RefrainViewPanel", {
 	    songtext : refrain,
 	    songPanel : this.songPanel,
 	    listeners : {
@@ -130,5 +127,9 @@ Ext.define('Songserver.view.Songcontent', {
 		scope : this
 	    }
 	});
+
+	this.child("#refrains").add(p);
+	
+	return p;
     }
 });

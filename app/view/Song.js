@@ -28,18 +28,19 @@ Ext.define('Songserver.view.Song', {
     refrainStore : null,
 
     bodyStyle : {
-	overflowX: "hidden",
-	overflowY: "scroll"
+	overflowX : "hidden",
+	overflowY : "scroll"
     },
-    
-//    scrollable: true,
-    
-    layout: {
-        type: 'anchor',
-        reserveScrollbar: true // There will be a gap even when there's no scrollbar
+
+    // scrollable: true,
+
+    layout : {
+	type : 'anchor',
+	reserveScrollbar : true
+    // There will be a gap even when there's no scrollbar
     },
-    scrollable: false,
-    
+    scrollable : false,
+
     initComponent : function() {
 
 	// console.log("Song öffnen. Id: " + this.songId);
@@ -83,7 +84,9 @@ Ext.define('Songserver.view.Song', {
 		listeners : {
 		    scope : this,
 		    click : function(button, e) {
-			this.child("songserver-songcontentPanel").createVerse();
+			var p = this.child("songserver-songcontentPanel").createVersePanel();
+			// scroll down
+			this.body.dom.scrollTop = this.body.dom.scrollHeight;
 		    }
 		}
 
@@ -96,9 +99,10 @@ Ext.define('Songserver.view.Song', {
 		listeners : {
 		    scope : this,
 		    click : function(button, e) {
-			var songcontentPanel = this.child("songserver-songcontentPanel");
-			var rp = songcontentPanel.createRefrainPanel();
-			songcontentPanel.child("#refrains").add(rp);
+			var p = this.child("songserver-songcontentPanel").createRefrainPanel();
+			// scroll down
+			this.body.dom.scrollTop = this.body.dom.scrollHeight;
+
 		    }
 		}
 	    } ],
