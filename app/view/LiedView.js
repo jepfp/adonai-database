@@ -38,9 +38,7 @@ Ext.define('Songserver.view.LiedView', {
 	"lastChanges" : [ {
 	    header : 'Geändert am',
 	    dataIndex : 'updated_at',
-	    width : 130,
-	    xtype : 'datecolumn',
-	    format : "d.m.Y H:i:s"
+	    width : 145,
 	}, {
 	    header : 'Benutzer',
 	    dataIndex : 'email',

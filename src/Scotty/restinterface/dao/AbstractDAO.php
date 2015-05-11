@@ -240,6 +240,14 @@ abstract class AbstractDAO
 
     protected function transformResult($row)
     {
+        if (isset($row['updated_at'])) {
+            $time = new \DateTime($row['updated_at']);
+            $row['updated_at'] = $time->format("d.m.Y H:i:s");
+        }
+        if (isset($row['created_at'])) {
+            $time = new \DateTime($row['created_at']);
+            $row['created_at'] = $time->format("d.m.Y H:i:s");
+        }
         return $row;
     }
 }
