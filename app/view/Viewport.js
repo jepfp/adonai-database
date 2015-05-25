@@ -8,39 +8,37 @@ Ext.require("Ext.grid.plugin.CellEditing");
 Ext.require("Ext.layout.component.FieldSet");
 
 Ext.define('Songserver.view.Viewport', {
-	extend : 'Ext.container.Viewport',
-	requires : [ 'Songserver.view.Layout', 'Songserver.view.auth.LoginLayout',
-			'Songserver.AppContext' ],
+    extend : 'Ext.container.Viewport',
+    requires : [ 'Songserver.view.Layout', 'Songserver.view.auth.LoginLayout', 'Songserver.AppContext' ],
 
-	initComponent : function() {
-		Ext.apply(this, {
-			layout : 'fit'
-		});
+    initComponent : function() {
+	Ext.apply(this, {
+	    layout : 'fit'
+	});
 
-		this.callParent(arguments);
+	this.callParent(arguments);
 
-		Songserver.AppContext.viewport = this;
-		if (Songserver.AppContext.isLoggedIn()) {
-			this.loadApplicationLayout();
-		} else {
-			this.loadLoginLayout();
-		}
-
-	},
-
-	loadLoginLayout : function() {
-		this.loadPanel('Songserver.view.auth.LoginLayout', {});
-	},
-
-	loadApplicationLayout : function() {
-		this.loadPanel('Songserver.view.Layout', {});
-	},
-
-	loadPanel : function(panelClass, options) {
-		this.setLoading(true);
-		this.removeAll()
-		Songserver.AppContext.mainLayout = this.add(Ext.create(panelClass,
-				options));
-		this.setLoading(false);
+	Songserver.AppContext.viewport = this;
+	if (Songserver.AppContext.isLoggedIn()) {
+	    this.loadApplicationLayout();
+	} else {
+	    this.loadLoginLayout();
 	}
+
+    },
+
+    loadLoginLayout : function() {
+	this.loadPanel('Songserver.view.auth.LoginLayout', {});
+    },
+
+    loadApplicationLayout : function() {
+	this.loadPanel('Songserver.view.Layout', {});
+    },
+
+    loadPanel : function(panelClass, options) {
+	this.setLoading(true);
+	this.removeAll()
+	Songserver.AppContext.mainLayout = this.add(Ext.create(panelClass, options));
+	this.setLoading(false);
+    }
 });
