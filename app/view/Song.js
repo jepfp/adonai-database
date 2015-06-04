@@ -108,7 +108,10 @@ Ext.define('Songserver.view.Song', {
 	    } ],
 	    bbar : {
 		itemId : "messageBar",
-		height : '25'
+		height : 28,
+		style : {
+		    backgroundColor : '#f5f5f5'
+		}
 	    }
 	});
 
@@ -157,6 +160,7 @@ Ext.define('Songserver.view.Song', {
 
 	this.down("songserver-songcontentPanel").createVersePanels(this.verseStore);
 	this.down("songserver-songcontentPanel").createRefrainPanels();
+	this.displayInfoMessage("Lied vollständig geladen.");
     },
 
     /**
