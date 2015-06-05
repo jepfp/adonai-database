@@ -177,9 +177,6 @@ Ext.define('Songserver.view.SongtextViewPanel', {
 	ownerCt.remove(this, false);
 	ownerCt.insert(index - 1, this);
 
-	// this.up("songserver-songcontentPanel").doLayout(); doesn't seem to be
-	// necessary at the moment.
-
 	ChangeOrder.moveUp(this.tableName, this.songtext.get("id"), function(result, e) {
 	    this.displayOrderResultMessage(result);
 	}, this);

@@ -8,10 +8,10 @@ Ext.namespace('Songserver.view');
  * Config parameters: songPanel {Songserver.view.Song} Reference to the song
  * panel.
  */
-Ext.define('Songserver.view.Songcontent', {
+Ext.define('Songserver.view.SongContentContainerPanel', {
     extend : 'Ext.panel.Panel',
     requires : [ 'Songserver.view.VerseViewPanel', 'Songserver.view.RefrainViewPanel' ],
-    alias : 'widget.songserver-songcontentPanel',
+    alias : 'widget.songserver-songContentContainerPanel',
 
     // holds the reference to the song panel
     songPanel : null,
@@ -26,7 +26,25 @@ Ext.define('Songserver.view.Songcontent', {
 	margin : '10 0 0 0',
 	title : "Strophen",
 	collapsible : "true",
-	itemId : "verses"
+	itemId : "verses",
+	dockedItems : {
+	    xtype : 'toolbar',
+	    dock : 'bottom',
+	    style : {
+		backgroundColor : '#f5f5f5'
+	    },
+	    items : [ {
+		itemId : 'addVerse',
+		xtype : 'button',
+		icon : 'resources/images/silk/icons/add.png',
+		text : 'Strophe hinzufügen',
+		listeners : {
+		    click : function(button, e) {
+			button.up("songserver-songContentContainerPanel").createVersePanel();
+		    }
+		}
+	    } ]
+	}
     }, {
 	xtype : "panel",
 	bodyStyle : {
@@ -35,7 +53,27 @@ Ext.define('Songserver.view.Songcontent', {
 	margin : '10 0 0 0',
 	title : "Refrains",
 	collapsible : "true",
-	itemId : "refrains"
+	itemId : "refrains",
+	dockedItems : {
+	    xtype : 'toolbar',
+	    dock : 'bottom',
+	    style : {
+		backgroundColor : '#f5f5f5'
+	    },
+	    items : [ {
+		itemId : 'addRefrain',
+		xtype : 'button',
+		toggle : true,
+		icon : 'resources/images/silk/icons/add.png',
+		text : 'Refrain hinzufügen',
+		listeners : {
+		    scope : this,
+		    click : function(button, e) {
+			button.up("songserver-songContentContainerPanel").createRefrainPanel();
+		    }
+		}
+	    } ]
+	}
     } ],
 
     createVersePanels : function(verseStore) {
@@ -108,7 +146,7 @@ Ext.define('Songserver.view.Songcontent', {
 	});
 
 	this.child("#verses").add(p);
-	
+
 	return p;
     },
 
@@ -129,7 +167,7 @@ Ext.define('Songserver.view.Songcontent', {
 	});
 
 	this.child("#refrains").add(p);
-	
+
 	return p;
     }
 });

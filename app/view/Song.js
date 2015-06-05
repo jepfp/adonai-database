@@ -11,7 +11,7 @@ Ext.namespace('Songserver.view');
 
 Ext.define('Songserver.view.Song', {
     extend : 'Ext.panel.Panel',
-    requires : [ 'Songserver.view.SongPropertiesPanel', 'Songserver.view.Songcontent', 'Ext.container.ButtonGroup' ],
+    requires : [ 'Songserver.view.SongPropertiesPanel', 'Songserver.view.SongContentContainerPanel', 'Ext.container.ButtonGroup' ],
     alias : 'widget.songserver-songPanel',
 
     hideInfoMessageTask : null,
@@ -62,7 +62,7 @@ Ext.define('Songserver.view.Song', {
 		    songLoaded : this.onSongLoaded
 		}
 	    }, {
-		xtype : 'songserver-songcontentPanel',
+		xtype : 'songserver-songContentContainerPanel',
 		songPanel : this
 	    } ],
 	    tbar : [ {
@@ -74,35 +74,6 @@ Ext.define('Songserver.view.Song', {
 		    scope : this,
 		    click : function(button, e) {
 			Songserver.AppContext.mainLayout.loadPanel("Songserver.view.LiedView");
-		    }
-		}
-	    }, {
-		itemId : 'addVerse',
-		xtype : 'button',
-		icon : 'resources/images/silk/icons/add.png',
-		text : 'Strophe hinzufügen',
-		listeners : {
-		    scope : this,
-		    click : function(button, e) {
-			var p = this.child("songserver-songcontentPanel").createVersePanel();
-			// scroll down
-			this.body.dom.scrollTop = this.body.dom.scrollHeight;
-		    }
-		}
-
-	    }, {
-		itemId : 'addRefrain',
-		xtype : 'button',
-		toggle : true,
-		icon : 'resources/images/silk/icons/add.png',
-		text : 'Refrain hinzufügen',
-		listeners : {
-		    scope : this,
-		    click : function(button, e) {
-			var p = this.child("songserver-songcontentPanel").createRefrainPanel();
-			// scroll down
-			this.body.dom.scrollTop = this.body.dom.scrollHeight;
-
 		    }
 		}
 	    } ],
@@ -158,8 +129,8 @@ Ext.define('Songserver.view.Song', {
 	    return;
 	}
 
-	this.down("songserver-songcontentPanel").createVersePanels(this.verseStore);
-	this.down("songserver-songcontentPanel").createRefrainPanels();
+	this.down("songserver-songContentContainerPanel").createVersePanels(this.verseStore);
+	this.down("songserver-songContentContainerPanel").createRefrainPanels();
 	this.displayInfoMessage("Lied vollständig geladen.");
     },
 
@@ -212,29 +183,30 @@ Ext.define('Songserver.view.Song', {
 
 	this.holdingLockPanel = requestingPanel;
 
-	var panels = this.child("songserver-songcontentPanel").getVerseAndRefrainPanels();
+	var songContentContainer = this.child("songserver-songContentContainerPanel");
+	var panels = songContentContainer.getVerseAndRefrainPanels();
 
 	Ext.Array.each(panels, function(aPanel, index, allPanels) {
 	    aPanel.disableEditing();
 	});
 
-	this.down("#addRefrain").setDisabled(true);
-	this.down("#addVerse").setDisabled(true);
+	songContentContainer.down("#addRefrain").setDisabled(true);
+	songContentContainer.down("#addVerse").setDisabled(true);
 	this.down("#cancel").setDisabled(true);
 
 	return true;
     },
 
     freeEditLock : function() {
-
-	var panels = this.child("songserver-songcontentPanel").getVerseAndRefrainPanels();
+	var songContentContainer = this.child("songserver-songContentContainerPanel");
+	var panels = songContentContainer.getVerseAndRefrainPanels();
 
 	Ext.Array.each(panels, function(aPanel, index, allPanels) {
 	    aPanel.enableEditing();
 	});
 
-	this.down("#addRefrain").setDisabled(false);
-	this.down("#addVerse").setDisabled(false);
+	songContentContainer.down("#addRefrain").setDisabled(false);
+	songContentContainer.down("#addVerse").setDisabled(false);
 	this.down("#cancel").setDisabled(false);
 
 	this.holdingLockPanel = null;
