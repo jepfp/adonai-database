@@ -12,6 +12,10 @@ Jean-Marie, Adoray Schweiz<br>
 Adriano, Adoray Aarau</td>
 </tr>
 <tr>
+<td>Datenqualität:</td>
+<td>Jakob, Adoray Luzern
+</tr>
+<tr>
 <td>Support:</td>
 <td>lieder@adoray.ch</td>
 </tr>
