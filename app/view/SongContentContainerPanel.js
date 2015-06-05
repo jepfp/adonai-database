@@ -10,7 +10,7 @@ Ext.namespace('Songserver.view');
  */
 Ext.define('Songserver.view.SongContentContainerPanel', {
     extend : 'Ext.panel.Panel',
-    requires : [ 'Songserver.view.VerseViewPanel', 'Songserver.view.RefrainViewPanel' ],
+    requires : [ 'Songserver.view.VerseViewPanel', 'Songserver.view.RefrainViewPanel', 'Songserver.view.SongContentPanel' ],
     alias : 'widget.songserver-songContentContainerPanel',
 
     // holds the reference to the song panel
@@ -19,11 +19,7 @@ Ext.define('Songserver.view.SongContentContainerPanel', {
     title : 'Lied-Inhalte',
     preventHeader : true,
     items : [ {
-	xtype : "panel",
-	bodyStyle : {
-	    backgroundColor : '#f5f5f5'
-	},
-	margin : '10 0 0 0',
+	xtype : "songserver-songContentPanel",
 	title : "Strophen",
 	collapsible : "true",
 	itemId : "verses",
@@ -46,11 +42,7 @@ Ext.define('Songserver.view.SongContentContainerPanel', {
 	    } ]
 	}
     }, {
-	xtype : "panel",
-	bodyStyle : {
-	    backgroundColor : '#f5f5f5'
-	},
-	margin : '10 0 0 0',
+	xtype : "songserver-songContentPanel",
 	title : "Refrains",
 	collapsible : "true",
 	itemId : "refrains",
