@@ -6,7 +6,6 @@ body {
 color: #157fcc;
 f5f5f5
 */
-
 .navigationContent {
 	padding: 8px 10px;
 	float: left;
@@ -59,4 +58,19 @@ f5f5f5
 	padding-left: 20px;
 	background-image: url("../images/silk/icons/exclamation.png");
 	background-repeat: no-repeat;
+}
+
+.songsheetThumbnailPanel {
+	text-align: center;
+	padding: 10px;
+}
+
+.songsheetThumbnailPanel a {
+	color: #157fcc;
+	text-decoration: none;
+}
+
+.songsheetThumbnailPanel a:hover {
+	color: #157fcc;
+	text-decoration: underline;
 }

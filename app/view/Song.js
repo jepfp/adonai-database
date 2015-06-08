@@ -131,6 +131,7 @@ Ext.define('Songserver.view.Song', {
 
 	this.down("songserver-songContentContainerPanel").createVersePanels(this.verseStore);
 	this.down("songserver-songContentContainerPanel").createRefrainPanels();
+	this.down("songserver-songsheetSongContentPanel").createAndAddSongsheetThumbnailPanels();
 	this.displayInfoMessage("Lied vollständig geladen.");
     },
 
