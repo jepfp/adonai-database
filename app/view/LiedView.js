@@ -6,10 +6,7 @@ Ext.namespace('Songserver.view');
 
 Ext.define('Songserver.view.LiedView', {
     extend : 'Ext.grid.Panel',
-    requires : [ 'Songserver.view.Song', 'Ext.form.field.ComboBox',
-    // Ext.util.Point: When sorting the LiedView. For some reason
-    // this is not loaded in debug mode.
-    'Ext.util.Point', 'Ext.grid.column.Date' ],
+    requires : [ 'Songserver.view.Song', 'Ext.form.field.ComboBox', 'Ext.grid.column.Date' ],
 
     liederbuch : null,
     // the currently selected reocrd or null if no record is
