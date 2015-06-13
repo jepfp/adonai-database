@@ -2,11 +2,12 @@ Ext.namespace('Songserver.view');
 
 Ext.define('Songserver.view.songsheet.SongsheetSongContentPanel', {
     extend : 'Songserver.view.SongContentPanel',
-    requires : [ 'Songserver.view.songsheet.SongsheetThumbnailPanel' ],
+    requires : [ 'Songserver.view.songsheet.SongsheetThumbnailPanel', 'Songserver.view.songsheet.SongsheetUploadThumbnailPanel' ],
     alias : 'widget.songserver-songsheetSongContentPanel',
     title : 'Noten',
     layout : {
-	type : 'hbox'
+	type : 'hbox',
+	align : 'stretch'
     },
 
     createAndAddSongsheetThumbnailPanels : function() {
@@ -17,6 +18,7 @@ Ext.define('Songserver.view.songsheet.SongsheetSongContentPanel', {
 	    this.add(this.createPdfThumbnail(fileId));
 	} else {
 	    this.add(this.createNoSongsheetAvailableThumbnail());
+	    //this.add(this.createUploadThumbnail());
 	}
     },
 
@@ -33,6 +35,12 @@ Ext.define('Songserver.view.songsheet.SongsheetSongContentPanel', {
 	    return Ext.create('Songserver.view.songsheet.SongsheetThumbnailPanel', {
 		html : '<div><img src="resources/images/pdf_icon_no_pdf.png" height="80px" />' + //
 		'<br>keine Noten vorhanden</div>'
+	    });
+	},
+
+	createUploadThumbnail : function() {
+	    return Ext.create('Songserver.view.songsheet.SongsheetUploadThumbnailPanel', {
+		flex : 1
 	    });
 	}
     }
