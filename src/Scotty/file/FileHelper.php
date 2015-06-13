@@ -9,7 +9,7 @@ class FileHelper
     public static function findFileIdByLiedId($liedId)
     {
         $db = DatabaseConnector::db();
-        $statement = $db->prepare("SELECT id FROM file WHERE lied_id = ?");
+        $statement = $db->prepare("SELECT f.id as id FROM `file` as f join filemetadata as md ON (f.filemetadata_id = md.id) WHERE md.lied_id = ?;");
         $statement->bind_param("i", $liedId);
         $statement->execute();
         $statement->bind_result($id);
@@ -20,17 +20,17 @@ class FileHelper
         }
     }
 
-    public static function buildFilenameByLied($liedId)
+    public static function buildFilenameByFileId($fileId)
     {
         $db = DatabaseConnector::db();
-        $statement = $db->prepare("SELECT Titel FROM lied WHERE id = ?");
-        $statement->bind_param("i", $liedId);
+        $statement = $db->prepare("SELECT Titel FROM lied as l join filemetadata as md ON (l.id = md.lied_id) join `file` as f ON (md.id = f.filemetadata_id) WHERE f.id = ?;");
+        $statement->bind_param("i", $fileId);
         $statement->execute();
         $statement->bind_result($titel);
         if ($statement->fetch() === true) {
             return self::stringToValidFilename($titel);
         } else {
-            throw new \RuntimeException("Lied with id " . $liedId . " does not exist.");
+            throw new \RuntimeException("Titel for file with id " . $fileId . " could not be generated.");
         }
     }
 

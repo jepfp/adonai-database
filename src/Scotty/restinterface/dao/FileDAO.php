@@ -20,7 +20,7 @@ class FileDAO extends AbstractDAO
 
     protected function transformResult($row)
     {
-        $row["builtFilename"] = FileHelper::buildFilenameByLied($row["lied_id"]) . "." . $row["filetype"];
+        $row["builtFilename"] = FileHelper::buildFilenameByFileId($row["id"]) . "." . $row["filetype"];
         return $row;
     }
 }
