@@ -30,15 +30,14 @@ Ext.define('Songserver.model.Lied', {
 	type : 'int'
     } ],
 
-    hasMany : [ 
-                /*{
-	model : 'Songserver.model.NumberInBook',
-	name : 'bookentries',
+    hasMany : [ {
+	// autoLoad is set to false (as default)
+	model : 'Songserver.model.FileMetadata',
+	name : 'files',
 	storeConfig : {
-	    autoLoad : true,
 	    remoteFilter : true
 	}
-    }*/ {
+    }, {
 	// autoLoad is set to false (as default)
 	model : 'Songserver.model.Liedtext',
 	name : 'liedtexts',

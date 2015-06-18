@@ -22,6 +22,8 @@ Ext.define('Songserver.view.Song', {
      * @type Songserver.view.SongtextViewPanel
      */
     holdingLockPanel : null,
+    
+    fileStore : null,
 
     verseStore : null,
 
@@ -115,6 +117,11 @@ Ext.define('Songserver.view.Song', {
 	    scope : this,
 	    callback : this.songBelongingsCollector
 	});
+	this.fileStore = song.files();
+	this.fileStore.load({
+	    scope : this,
+	    callback : this.songBelongingsCollector
+	});
     },
 
     getRefrainByVerse : function(aVerse) {
@@ -124,7 +131,7 @@ Ext.define('Songserver.view.Song', {
     },
 
     songBelongingsCollector : function(records, operation, success) {
-	if (this.verseStore.loading || this.refrainStore.loading) {
+	if (this.verseStore.loading || this.refrainStore.loading || this.fileStore.loading) {
 	    // wait for the second one
 	    return;
 	}

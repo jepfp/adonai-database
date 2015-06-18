@@ -12,10 +12,9 @@ Ext.define('Songserver.view.songsheet.SongsheetSongContentPanel', {
 
     createAndAddSongsheetThumbnailPanels : function() {
 	var songPanel = this.up("songserver-songPanel");
-	var song = songPanel.getSong();
-	var fileId = song.get("file_id");
-	if (fileId > 0) {
-	    this.add(this.createPdfThumbnail(fileId));
+	if (songPanel.fileStore.count() > 0) {
+	    var id = songPanel.fileStore.getAt(0).get("id");
+	    this.add(this.createPdfThumbnail(id));
 	} else {
 	    this.add(this.createNoSongsheetAvailableThumbnail());
 	    //this.add(this.createUploadThumbnail());
@@ -25,7 +24,7 @@ Ext.define('Songserver.view.songsheet.SongsheetSongContentPanel', {
     privates : {
 	createPdfThumbnail : function(fileId) {
 	    return Ext.create('Songserver.view.songsheet.SongsheetThumbnailPanel', {
-		html : '<a href="src/ext-rest-interface.php/file/' + fileId + '" target="_blank"><div>' + //
+		html : '<a href="src/ext-rest-interface.php/file?filter=[{%22property%22:%22filemetadata_id%22,%22value%22:' + fileId + '}]" target="_blank"><div>' + //
 		'<img src="resources/images/pdf_icon.png" height="80px" />' + //
 		'<br>Noten anzeigen.</div></a>'
 	    });
