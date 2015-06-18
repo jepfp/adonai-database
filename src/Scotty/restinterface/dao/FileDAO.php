@@ -13,8 +13,10 @@ class FileDAO extends AbstractDAO
 
     private function throwExceptionIfNoId()
     {
-        if (! $this->request->id > 0) {
-            throw new \RuntimeException("File does not support fetching all entries. Please filter by id.");
+        $filters = $this->request->getRequestParamAsDecodedJson("filter");
+        if ($filters == null || $filters[0]->property != "filemetadata_id") {
+            // ($filtres == null) is also true for an empty filter array
+            throw new \RuntimeException("File does not support fetching all entries. Please filter by filemetadata_id.");
         }
     }
 
