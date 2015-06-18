@@ -25,10 +25,7 @@ Ext.define('Songserver.model.Lied', {
     }, {
 	name : 'lastEditUser_id',
 	type : 'int'
-    }, {
-	name : 'file_id',
-	type : 'int'
-    } ],
+    }],
 
     hasMany : [ {
 	// autoLoad is set to false (as default)

@@ -10,7 +10,7 @@ Ext.namespace('Songserver.view');
  */
 Ext.define('Songserver.view.SongPropertiesPanel', {
     extend : 'Ext.form.Panel',
-    requires : [ 'Songserver.model.Lied', 'Ext.form.FieldContainer', 'Songserver.view.NotenDisplayfield' ],
+    requires : [ 'Songserver.model.Lied', 'Ext.form.FieldContainer' ],
     alias : 'widget.songserver-songPropertiesPanel',
 
     // The song object that we want to edit
@@ -99,11 +99,6 @@ Ext.define('Songserver.view.SongPropertiesPanel', {
 			    scope : this
 			}
 		    }
-		}, {
-		    fieldLabel : 'Noten',
-		    name : 'file_id',
-		    itemId : 'fileId',
-		    xtype : 'songserver-notenDisplayfield'
 		}, {
 		    fieldLabel : 'Erstellt',
 		    name : 'created_at',
@@ -217,7 +212,7 @@ Ext.define('Songserver.view.SongPropertiesPanel', {
 		dataIndex : 'Buchname',
 		flex : 1
 	    } ],
-	    height : 207,
+	    height : 178,
 	    flex : 1,
 	    padding : '0px 0px 0px 5px',
 	    autoLoad : 'true',
