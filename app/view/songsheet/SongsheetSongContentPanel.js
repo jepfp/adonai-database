@@ -99,6 +99,7 @@ Ext.define('Songserver.view.songsheet.SongsheetSongContentPanel', {
 		    },
 		    success : function(record, operation) {
 			this.createAndAddSongsheetThumbnailPanels();
+			this.up("songserver-songPanel").displayInfoMessage("Noten gelöscht.");
 		    }
 		});
 	    }
