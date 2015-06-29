@@ -9,7 +9,7 @@ CREATE TABLE `filemetadata` (
     FOREIGN KEY (`lied_id`)
     REFERENCES `lied` (`id`)
     ON DELETE CASCADE
-    ON UPDATE CASCADE);
+    ON UPDATE CASCADE) ENGINE = InnoDB ;
     
 insert into filemetadata (id, lied_id) select id, lied_id from `file`;
 ALTER TABLE `file` 
