@@ -4,6 +4,8 @@
  */
 namespace Scotty\restinterface;
 
+use Scotty\restinterface\requestparamsparser\ApplicationJsonParser;
+
 class Request
 {
 
@@ -13,7 +15,7 @@ class Request
     {
         $instance = new self();
         $instance->method = $_SERVER["REQUEST_METHOD"];
-        $instance->parseRequest();
+        $instance->parseParams();
         $instance->parsePathInfo();
         return $instance;
     }
@@ -28,22 +30,10 @@ class Request
         return $instance;
     }
 
-    protected function parseRequest()
+    private function parseParams()
     {
-        $raw = $this->readRawHttpContent();
-        $this->params = json_decode($raw);
-        JsonVerifier::verifyNoJsonError();
-    }
-
-    private function readRawHttpContent()
-    {
-        $raw = "";
-        $httpContent = fopen('php://input', 'r');
-        while ($kb = fread($httpContent, 1024)) {
-            $raw .= $kb;
-        }
-        fclose($httpContent);
-        return $raw;
+        $parser = new ApplicationJsonParser();
+        $this->params = $parser->parseParams();
     }
 
     private function parsePathInfo()
