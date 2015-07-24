@@ -38,8 +38,8 @@ Ext.define('Songserver.view.songsheet.SongsheetSongContentPanel', {
 	    this.down('#removeSongsheet').setVisible(true);
 	} else {
 	    this.add(this.createNoSongsheetAvailableThumbnail());
+	    this.add(this.createUploadThumbnail());
 	    this.down('#removeSongsheet').setVisible(false);
-	    // this.add(this.createUploadThumbnail());
 	}
     },
 

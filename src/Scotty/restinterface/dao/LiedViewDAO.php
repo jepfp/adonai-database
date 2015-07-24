@@ -6,6 +6,7 @@ use Scotty\database\DbHelper;
 use Scotty\changebacktrack\ChangeBacktrack;
 use \Scotty\restinterface\Request;
 use Scotty\restinterface\DAOFactory;
+use Scotty\restinterface\Response;
 
 class LiedViewDAO extends AbstractDAO
 {
@@ -14,6 +15,7 @@ class LiedViewDAO extends AbstractDAO
     {
         $this->request = $request;
         
+        // TODO: Exceptions are not catched as it is done in parent method.
         if ($this->request->method == "PUT") {
             return $this->dispatchViaNumberInBook($request);
         }
@@ -34,7 +36,9 @@ class LiedViewDAO extends AbstractDAO
             // yes --> delete or edit (put)
             $action = (! $this->request->params->Liednr) ? "DELETE" : "PUT";
             $this->redirectToNumberInBook($action, $fkLiederbuchLiedId);
-            return $this->redirectToGETWithId($liedId);
+            $res = new Response();
+            $this->redirectToGETWithId($res, $liedId);
+            return $res;
         } else {
             // post (new entry)
             return $this->redirectToNumberInBook("POST", $fkLiederbuchLiedId);

@@ -8,7 +8,7 @@ try {
     $request = Scotty\restinterface\Request::createFromHttpRequest();
     $dao = DAOFactory::createDAO($request->controller);
     $response = $dao->dispatch($request);
-    ResponseSerializer::serializeResponse($request->controller, $response);
+    ResponseSerializer::serializeResponse($request, $response);
 } catch (Exception $ex) {
     $logger->error("Allgemeiner Fehler in rest-interface: " . $ex->getMessage(), $ex);
     http_response_code(500);

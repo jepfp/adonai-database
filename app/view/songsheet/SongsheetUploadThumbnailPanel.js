@@ -7,6 +7,7 @@ Ext.define('Songserver.view.songsheet.SongsheetUploadThumbnailPanel', {
     style : {
 	margin : '5px'
     },
+    defaultListenerScope : true,
 
     layout : 'center',
     items : [ {
@@ -16,22 +17,32 @@ Ext.define('Songserver.view.songsheet.SongsheetUploadThumbnailPanel', {
 	    xtype : 'filefield',
 	    buttonOnly : true,
 	    hideLabel : true,
-	    name : 'songsheetUpload',
+	    name : 'file',
 	    buttonText : 'PDF-Noten hochladen...',
 	    listeners : {
-		'change' : function(fb, v) {
-		    var form = this.up('songserver-songsheetUploadThumbnailPanel').getForm();
-		    form.submit({
-			method : 'POST',
-			url : 'index.php',
-			waitMsg : 'Noten werden hochgeladen. Bitte warten...',
-			success : function(fp, o) {
-			    msg('Success', 'Processed file "' + o.result.file + '" on the server');
-			}
-		    });
-		}
+		'change' : 'onChange'
 	    }
 	} ]
-    } ]
+    } ],
+
+    onChange : function(fb, v) {
+	var form = this.getForm();
+	form.submit({
+	    method : 'POST',
+	    url : 'src/ext-rest-interface.php/file',
+	    params : {
+		lied_id : this.determineLiedId()
+	    },
+	    waitMsg : 'Noten werden hochgeladen. Bitte warten...',
+	    success : function(fp, o) {
+		msg('Success', 'Processed file "' + o.result.file + '" on the server');
+	    }
+	});
+    },
+
+    determineLiedId : function() {
+	var songPanel = this.up("songserver-songPanel");
+	return songPanel.songId;
+    },
 
 });

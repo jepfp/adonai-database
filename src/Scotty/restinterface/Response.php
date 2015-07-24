@@ -11,10 +11,12 @@ class Response
     public $success, $data, $message, $errors, $tid, $trace, $totalCount;
     
     public $type;
-
+    
     public function __construct()
     {
         $this->type = "response";
+        $this->success = true;
+        $this->message = "Success";
     }
 
     public function to_json()

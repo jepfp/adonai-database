@@ -4,7 +4,7 @@
  */
 namespace Scotty\restinterface;
 
-use Scotty\restinterface\requestparamsparser\ApplicationJsonParser;
+use Scotty\restinterface\requestparamsparser\ParamsParserFactory;
 
 class Request
 {
@@ -32,7 +32,7 @@ class Request
 
     private function parseParams()
     {
-        $parser = new ApplicationJsonParser();
+        $parser = ParamsParserFactory::createParser();
         $this->params = $parser->parseParams();
     }
 

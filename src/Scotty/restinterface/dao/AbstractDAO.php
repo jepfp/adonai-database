@@ -41,8 +41,6 @@ abstract class AbstractDAO
         $this->request = $request;
         
         $res = new Response();
-        $res->success = true;
-        $res->message = "Success";
         
         try {
             $this->checkIfUserIsLoggedIn();
@@ -89,12 +87,18 @@ abstract class AbstractDAO
     {
         $CRUDOperation = "create";
         $fullyQualifiedQueryBuilderName = $this->determineQueryBuilderName($CRUDOperation);
+        $this->onBeforeBuildCreateQuery();
         $this->instantiateQueryBuilder($fullyQualifiedQueryBuilderName, $CRUDOperation);
         $db = $this->executeStatement($this->queryBuilder, $res);
         $insertedId = $db->insert_id;
         $this->logger->debug("New record with id " . $insertedId . " inserted.");
         $this->onAfterCreate($insertedId);
-        $res = $this->redirectToGETWithId($insertedId);
+        $this->redirectToGETWithId($res, $insertedId);
+    }
+
+    protected function onBeforeBuildCreateQuery()
+    {
+        // override if needed
     }
 
     protected function onAfterCreate($id)
@@ -102,14 +106,14 @@ abstract class AbstractDAO
         // override if needed
     }
 
-    protected function redirectToGETWithId($id)
+    protected function redirectToGETWithId(&$res, $id)
     {
         $controller = $this->request->controller;
         $action = $this->request->action;
         $this->logger->trace("Perform redirect to GET (controller: $controller, action: $action, id: $id).");
         $request = Request::create("GET", $controller, $action, $id);
         $dao = DAOFactory::createDAO($controller);
-        return $dao->dispatch($request);
+        $res = $dao->dispatch($request);
     }
 
     private function update(&$res)
@@ -121,7 +125,7 @@ abstract class AbstractDAO
         $updatedId = $this->request->id;
         $this->logger->debug("Record with id " . $updatedId . " updated.");
         $this->onAfterUpdate($updatedId);
-        $res = $this->redirectToGETWithId($updatedId);
+        $this->redirectToGETWithId($res, $updatedId);
     }
 
     protected function onAfterUpdate($id)

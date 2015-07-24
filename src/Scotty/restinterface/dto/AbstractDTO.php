@@ -40,7 +40,7 @@ class AbstractDTO
             if (in_array($key, $this->fieldsToIgnore)) {
                 $this->logger->debug("Ignoring field '" . $key . "' because it is in ignore list.");
             } elseif ($field) {
-                $this->logger->debug("Settings field '" . $field->getName() . "' to '" . $value . "'");
+                $this->logger->debug("Setting field '" . $field->getName() . "' to '" . $value . "'");
                 $field->setValue($value);
             } else {
                 $ex = new DTOException("Mapping of param '" . $key . "' failed!");

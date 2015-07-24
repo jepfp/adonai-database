@@ -3,8 +3,11 @@ namespace Scotty\database;
 
 class DbHelper
 {
+
     /**
-     * @param unknown $checkSubject statement or query result
+     *
+     * @param unknown $checkSubject
+     *            statement or query result
      */
     public static function throwExceptionOnError($checkSubject, $db, $query)
     {
@@ -13,10 +16,12 @@ class DbHelper
             throw DatabaseException::constructWithDbErrorAndQuery($db->error, $query);
         }
     }
-    
+
     /**
      * Throws an error if the statement has an error.
-     * @param mysqli_stmt $statement
+     * This also works after the execution of a statement.
+     * 
+     * @param mysqli_stmt $statement            
      * @throws DatabaseException
      */
     public static function throwExceptionOnStatementError($statement)
@@ -25,7 +30,7 @@ class DbHelper
             throw DatabaseException::constructFromStatement($statement);
         }
     }
-    
+
     public static function bindParams($statement, $bindParamObject)
     {
         // The following has been done with this comment:
@@ -40,7 +45,7 @@ class DbHelper
             $method->invokeArgs($statement, $refArray);
         }
     }
-    
+
     private static function refValues($arr)
     {
         $refs = array();

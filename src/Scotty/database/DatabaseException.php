@@ -6,7 +6,7 @@ class DatabaseException extends \RuntimeException
     
     public static function constructWithDbErrorAndQuery($dbErrorMessage, $query){
         $message = "The following builder statement is invalid.";
-        $message .= "MySQL last error message: " . $dbErrorMessage . "\n";
+        $message .= " MySQL last error message: " . $dbErrorMessage . "\n";
         $message .= "Query: " . $query;
         return new DatabaseException($message);
     }

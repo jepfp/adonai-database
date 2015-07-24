@@ -14,14 +14,19 @@ class ResponseSerializer
         return self::$logger;
     }
 
-    public static function serializeResponse($controller, $response)
+    /**
+     * 
+     * @param Request $request
+     * @param Response $response
+     */
+    public static function serializeResponse($request, $response)
     {
         if ($response->isException()) {
             // Internal Server Error
             // TODO: Clean implementation of Responses with status codes and client side errors
             http_response_code(500);
             self::serializeJson($response);
-        } elseif (self::isBinaryController($controller, $response)) {
+        } elseif (self::isBinaryController($request->controller, $response) && self::isGetRequest($request)) {
             self::serializeBinary($response);
         } else {
             self::serializeJson($response);
@@ -31,6 +36,11 @@ class ResponseSerializer
     private static function isBinaryController($controller, $response)
     {
         return $controller == "file";
+    }
+    
+    private static function isGetRequest($request)
+    {
+        return strcasecmp($request->method, "GET") === 0;
     }
 
     private static function serializeBinary($response)
