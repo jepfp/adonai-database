@@ -39,7 +39,7 @@ abstract class AbstractQueryBuilder
             return $params;
         }
         foreach ($params as $p) {
-            if (mb_strlen($p) > 2000) {
+            if (mb_strlen($p) > self::MAX_SIZE_IN_BYTES_OF_A_PARAM_TO_BE_LOGGED) {
                 $cuttedParams[] = mb_strcut($p, 0, self::MAX_SIZE_IN_BYTES_OF_A_PARAM_TO_BE_LOGGED) . "[CUTTED FOR LOGGING BY SCOTTY]";
             } else {
                 $cuttedParams[] = $p;
