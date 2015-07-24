@@ -60,7 +60,6 @@ class FileDAO extends AbstractDAO
     protected function redirectToGETWithId(&$res, $id)
     {
         // nothing to do so far
-        $a = 2;
     }
 }
 
