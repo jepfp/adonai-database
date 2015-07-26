@@ -3,9 +3,18 @@ namespace Scotty\restinterface\dao;
 
 use Scotty\file\FileHelper;
 use Scotty\file\FileMetadataHelper;
+use Scotty\restinterface\dto\DTOException;
 
 class FileDAO extends AbstractDAO
 {
+
+    /**
+     * For now only file upload html input elements with name = file are taken into account.
+     * See FileDTO_FileInputName.png for details (this folder).
+     */
+    const NAME_OF_HTML_INPUT_ELEMENT = 'file';
+
+    const PDF_MIME_TYPE = 'application/pdf';
 
     protected function onBeforeExecuteRead()
     {
@@ -29,8 +38,17 @@ class FileDAO extends AbstractDAO
 
     protected function onBeforeBuildCreateQuery()
     {
+        $this->validateUploadedFile();
         $fileMetadataId = $this->createFileMetadataEntryForNewFile();
         $this->replaceLiedIdByFileMetadataIdInParams($fileMetadataId);
+    }
+
+    private function validateUploadedFile()
+    {
+        $type = $_FILES[FileDAO::NAME_OF_HTML_INPUT_ELEMENT]['type'];
+        if ($type != self::PDF_MIME_TYPE) {
+            throw new DTOException("Die hochgeladene Datei ist keine PDF-Datei.");
+        }
     }
 
     private function createFileMetadataEntryForNewFile()
@@ -56,7 +74,7 @@ class FileDAO extends AbstractDAO
         unset($params['lied_id']);
         $params['filemetadata_id'] = $fileMetadataId;
     }
-    
+
     protected function redirectToGETWithId(&$res, $id)
     {
         // nothing to do so far

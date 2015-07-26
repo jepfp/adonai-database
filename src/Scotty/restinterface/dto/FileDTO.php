@@ -1,14 +1,9 @@
 <?php
 namespace Scotty\restinterface\dto;
 
+use Scotty\restinterface\dao\FileDAO;
 class FileDTO extends AbstractDTO
 {
-
-    /**
-     * For now only file upload html input elements with name = file are taken into account.
-     * See FileDTO_FileInputName.png for details (this folder).
-     */
-    const NAME_OF_HTML_INPUT_ELEMENT = 'file';
 
     private static $MIME_MAPPING = array(
         'application/pdf' => 'pdf'
@@ -55,7 +50,7 @@ class FileDTO extends AbstractDTO
     private static function readUploadedFileContent()
     {
         try {
-            $tmpName = $_FILES[self::NAME_OF_HTML_INPUT_ELEMENT]['tmp_name'];
+            $tmpName = $_FILES[FileDAO::NAME_OF_HTML_INPUT_ELEMENT]['tmp_name'];
             self::verifyFileExists($tmpName);
             $fp = fopen($tmpName, 'r');
             return fread($fp, filesize($tmpName));
@@ -74,21 +69,21 @@ class FileDTO extends AbstractDTO
     private static function extractFilenameFromMultipartFormDataRequest()
     {
         return function ($input) {
-            return $_FILES[self::NAME_OF_HTML_INPUT_ELEMENT]['name'];
+            return $_FILES[FileDAO::NAME_OF_HTML_INPUT_ELEMENT]['name'];
         };
     }
 
     private static function extractFilesizeFromMultipartFormDataRequest()
     {
         return function ($input) {
-            return $_FILES[self::NAME_OF_HTML_INPUT_ELEMENT]['size'];
+            return $_FILES[FileDAO::NAME_OF_HTML_INPUT_ELEMENT]['size'];
         };
     }
 
     private static function extractAndMapFileTypeFromMultipartFormDataRequest()
     {
         return function ($input) {
-            $type = $_FILES[self::NAME_OF_HTML_INPUT_ELEMENT]['type'];
+            $type = $_FILES[FileDAO::NAME_OF_HTML_INPUT_ELEMENT]['type'];
             return self::$MIME_MAPPING[$type];
         };
     }
