@@ -8,9 +8,9 @@
 	<property name="buildMode" value="production" />
 	<property name="buildDir" value="build" />
 	<property name="zipLocation" value="${buildDir}/zip.zip" />
-	<property name="server" value="adonai.philippjenni.ch" />
+	<property name="server" value="" />
 	<property name="phpUnzipScriptLocation" value="/unzipper.php" />
-	<property name="serverUserId" value="adonaiDeploy@philippjenni.ch" />
+	<property name="serverUserId" value="" />
 	<property name="serverPassword" value="THIS PASSWORD WON'T WORK" />
 
 
