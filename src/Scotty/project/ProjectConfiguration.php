@@ -40,7 +40,7 @@ class ProjectConfiguration{
 									'layout' => array(
 											'class' => 'LoggerLayoutPattern',
 											'params' => array(
-													'conversionPattern' => '%date [%logger] [%level] %.2000message%newline%ex'
+													'conversionPattern' => '%date [%logger] [%level] %.2500message%newline%ex'
 											)
 									),
 									'params' => array(
