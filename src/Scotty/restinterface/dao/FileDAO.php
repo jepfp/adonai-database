@@ -4,6 +4,7 @@ namespace Scotty\restinterface\dao;
 use Scotty\file\FileHelper;
 use Scotty\file\FileMetadataHelper;
 use Scotty\restinterface\dto\DTOException;
+use Scotty\restinterface\dto\Scotty\restinterface\dto;
 
 class FileDAO extends AbstractDAO
 {
@@ -44,6 +45,23 @@ class FileDAO extends AbstractDAO
     }
 
     private function validateUploadedFile()
+    {
+        $this->verifyFileSent();
+        $this->verifyType();
+    }
+
+    private function verifyFileSent()
+    {
+        if (! isset($_FILES[FileDAO::NAME_OF_HTML_INPUT_ELEMENT])) {
+            // If this exception occurs, maybe php is configured wrongly? Check
+            // http://stackoverflow.com/questions/9691057/php-apache-ajax-post-limit
+            $ex = new DTOException('Es wurde keine hochgeladene Datei gefunden. Eventuell liegt ein Server-Konfigurationsfehler vor.');
+            $ex->setFieldName('$_FILES["' . FileDAO::NAME_OF_HTML_INPUT_ELEMENT . '"]');
+            throw $ex;
+        }
+    }
+
+    private function verifyType()
     {
         $type = $_FILES[FileDAO::NAME_OF_HTML_INPUT_ELEMENT]['type'];
         if ($type != self::PDF_MIME_TYPE) {
