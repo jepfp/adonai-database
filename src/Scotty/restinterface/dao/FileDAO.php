@@ -63,6 +63,7 @@ class FileDAO extends AbstractDAO
         }
     }
 
+    // Note: This method is not tested with an int test, because post_max_size is caught before.
     private function verifiyMaxFileSize()
     {
         $errorCode = $_FILES[FileDAO::NAME_OF_HTML_INPUT_ELEMENT]['error'];
@@ -71,6 +72,7 @@ class FileDAO extends AbstractDAO
         }
     }
 
+    // Note: This method is not tested with an int test, because it cannot be faked.
     private function verifyNoUploadError()
     {
         $errorCode = $_FILES[FileDAO::NAME_OF_HTML_INPUT_ELEMENT]['error'];
