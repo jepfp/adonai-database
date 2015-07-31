@@ -177,6 +177,17 @@ Ext.define('Songserver.view.Song', {
 	this.child("#messageBar").add("<div class='footerErrorMessage'>" + text + "</div>");
 	this.hideInfoMessageTask.delay(seconds);
     },
+    
+    showSaveErrorMessage : function(message) {
+	this.displayErrorMessage("Fehler beim Speichern.");
+	Ext.Msg.show({
+	    title : 'Fehler beim Speichern',
+	    msg : message,
+	    buttons : Ext.Msg.OK,
+	    icon : Ext.Msg.ERROR,
+	    scope : this
+	});
+    },
 
     /**
      * Returns the current opened / editing Songserver.model.Song.

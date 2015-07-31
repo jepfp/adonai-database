@@ -34,15 +34,41 @@ Ext.define('Songserver.view.songsheet.SongsheetUploadThumbnailPanel', {
 		lied_id : this.determineLiedId()
 	    },
 	    waitMsg : 'Noten werden hochgeladen. Bitte warten...',
-	    success : function(fp, o) {
-		msg('Success', 'Processed file "' + o.result.file + '" on the server');
-	    }
+	    success : this.onFormSubmitSuccessful,
+	    failure : this.onFormSubmitFailure,
+	    scope : this
 	});
     },
 
     determineLiedId : function() {
 	var songPanel = this.up("songserver-songPanel");
 	return songPanel.songId;
+    },
+
+    onFormSubmitSuccessful : function(form, action) {
+	var songPanel = this.up("songserver-songPanel");
+	songPanel.fileStore.load({
+	    scope : this,
+	    callback : function(records, operation, success) {
+		this.up('songserver-songsheetSongContentPanel').createAndAddSongsheetThumbnailPanels();
+		if (success) {
+		    songPanel.displayInfoMessage("Datei erfolgreich hochgeladen.");
+		} else {
+		    songPanel.displayErrorMessage("Beim Hochladen der Datei ist ein Fehler aufgetreten. Bitte informiere uns via lieder@adoray.ch.");
+		}
+	    }
+	});
+    },
+
+    onFormSubmitFailure : function(form, action) {
+	var songPanel = this.up("songserver-songPanel");
+	songPanel.showSaveErrorMessage(action.result.message);
+	songPanel.fileStore.load({
+	    scope : this,
+	    callback : function(records, operation, success) {
+		this.up('songserver-songsheetSongContentPanel').createAndAddSongsheetThumbnailPanels();
+	    }
+	});
     },
 
 });
