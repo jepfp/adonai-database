@@ -11,6 +11,7 @@ use Scotty\restinterface\querybuilder\AssocBinder;
 use Scotty\database\DbHelper;
 use Scotty\restinterface\dto\DTOException;
 use Scotty\restinterface\DAOFactory;
+use Scotty\exception\DomainException;
 
 abstract class AbstractDAO
 {
@@ -62,6 +63,8 @@ abstract class AbstractDAO
             $res = $this->handleException($ex, $ex->getMessage());
         } catch (DTOException $ex) {
             $res = $this->handleDtoException($ex);
+        } catch (DomainException $ex) {
+            $res = $this->handleDomainException($ex);
         } catch (\RuntimeException $ex) {
             $res = $this->handleException($ex);
         }
@@ -233,6 +236,16 @@ abstract class AbstractDAO
         return $res;
     }
 
+    protected function handleDomainException(DomainException $ex)
+    {
+        $res = new Response();
+        $res->success = false;
+        $res->type = "exception";
+        $res->message = $ex->getMessage();
+        $this->logger->error($res->message, $ex);
+        return $res;
+    }
+    
     protected function determineTableName()
     {
         $fullyQualifiedClassName = get_class($this);

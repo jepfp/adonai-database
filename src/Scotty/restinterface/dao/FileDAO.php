@@ -5,6 +5,7 @@ use Scotty\file\FileHelper;
 use Scotty\file\FileMetadataHelper;
 use Scotty\restinterface\dto\DTOException;
 use Scotty\restinterface\dto\Scotty\restinterface\dto;
+use Scotty\exception\DomainException;
 
 class FileDAO extends AbstractDAO
 {
@@ -57,8 +58,7 @@ class FileDAO extends AbstractDAO
         if (! isset($_FILES[FileDAO::NAME_OF_HTML_INPUT_ELEMENT])) {
             // If this exception occurs, maybe php is configured wrongly? Check
             // http://stackoverflow.com/questions/9691057/php-apache-ajax-post-limit
-            $ex = new DTOException('Es wurde keine hochgeladene Datei gefunden. Eventuell ist die Datei zu gross oder es liegt ein Server-Konfigurationsfehler vor.');
-            $ex->setFieldName('$_FILES["' . FileDAO::NAME_OF_HTML_INPUT_ELEMENT . '"]');
+            $ex = new DomainException('Es wurde keine hochgeladene Datei gefunden. Eventuell ist die Datei zu gross oder es liegt ein Server-Konfigurationsfehler vor.');
             throw $ex;
         }
     }
@@ -68,7 +68,7 @@ class FileDAO extends AbstractDAO
     {
         $errorCode = $_FILES[FileDAO::NAME_OF_HTML_INPUT_ELEMENT]['error'];
         if ($errorCode === UPLOAD_ERR_INI_SIZE) {
-            throw new DTOException("Die Datei ist zu gross.");
+            throw new DomainException("Die Datei ist zu gross.");
         }
     }
 
@@ -85,7 +85,7 @@ class FileDAO extends AbstractDAO
     {
         $type = $_FILES[FileDAO::NAME_OF_HTML_INPUT_ELEMENT]['type'];
         if ($type != self::PDF_MIME_TYPE) {
-            throw new DTOException("Die hochgeladene Datei ist keine PDF-Datei.");
+            throw new DomainException("Die hochgeladene Datei ist keine PDF-Datei.");
         }
     }
 
