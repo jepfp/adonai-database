@@ -24,4 +24,22 @@ class FileMetadataHelper
         }
         return $insertedId;
     }
+    
+    // TODO: A transaction would be needed here as well
+    public static function countSourcePdfForLied($liedId)
+    {
+        $db = DatabaseConnector::db();
+        $statement = $db->prepare("select count(*) as amount from filemetadata where filetype = 'sourcepdf' and lied_id = ?;");
+        $statement->bind_param("i", $liedId);
+        $statement->execute();
+        $statement->bind_result($amount);
+        
+        $fetchResult = $statement->fetch();
+        $statement->close();
+        if ($fetchResult === true) {
+            return $amount;
+        } else {
+            throw new \RuntimeException("Error while counting source pdf files for lied_id = " . $liedId);
+        }
+    }
 }

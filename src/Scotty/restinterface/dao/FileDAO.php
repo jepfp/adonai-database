@@ -41,7 +41,9 @@ class FileDAO extends AbstractDAO
     protected function onBeforeBuildCreateQuery()
     {
         $this->validateUploadedFile();
-        $fileMetadataId = $this->createFileMetadataEntryForNewFile();
+        $liedId = $this->validateAndGetLiedId();
+        $this->verifyNoOtherSourcePdfExists($liedId);
+        $fileMetadataId = $this->createFileMetadataEntryForNewFile($liedId);
         $this->replaceLiedIdByFileMetadataIdInParams($fileMetadataId);
     }
 
@@ -62,7 +64,7 @@ class FileDAO extends AbstractDAO
             throw $ex;
         }
     }
-
+    
     // Note: This method is not tested with an int test, because post_max_size is caught before.
     private function verifiyMaxFileSize()
     {
@@ -71,7 +73,7 @@ class FileDAO extends AbstractDAO
             throw new DomainException("Die Datei ist zu gross.");
         }
     }
-
+    
     // Note: This method is not tested with an int test, because it cannot be faked.
     private function verifyNoUploadError()
     {
@@ -89,11 +91,24 @@ class FileDAO extends AbstractDAO
         }
     }
 
-    private function createFileMetadataEntryForNewFile()
+    private function validateAndGetLiedId()
     {
         $params = $this->request->params;
         $this->verifyLiedIdIsSet($params);
         $liedId = $params['lied_id'];
+        return $liedId;
+    }
+
+    private function verifyNoOtherSourcePdfExists($liedId)
+    {
+        $amount = FileMetadataHelper::countSourcePdfForLied($liedId);
+        if ($amount !== 0) {
+            throw new DomainException("Fehler beim Hochladen der Noten, weil bereits Noten zu diesem Lied vorhanden sind. Bitte aktualisiere die Seite und lösche zuerst vorhandene Noten.");
+        }
+    }
+
+    private function createFileMetadataEntryForNewFile($liedId)
+    {
         $fileMetadataId = FileMetadataHelper::createSourcePdfFileMetadataEntry($liedId);
         $this->logger->debug("New filemetadata entry with id " . $fileMetadataId . " and lied_id " . $liedId . " inserted.");
         return $fileMetadataId;
