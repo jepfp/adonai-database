@@ -15,16 +15,14 @@ class ResponseSerializer
     }
 
     /**
-     * 
-     * @param Request $request
-     * @param Response $response
+     *
+     * @param Request $request            
+     * @param Response $response            
      */
     public static function serializeResponse($request, $response)
     {
         if ($response->isException()) {
-            // Internal Server Error
-            // TODO: Clean implementation of Responses with status codes and client side errors
-            http_response_code(500);
+            // TODO: Clean implementation of Responses with status codes and server or client side errors
             self::serializeJson($response);
         } elseif (self::isBinaryController($request->controller, $response) && self::isGetRequest($request)) {
             self::serializeBinary($response);
@@ -37,7 +35,7 @@ class ResponseSerializer
     {
         return $controller == "file";
     }
-    
+
     private static function isGetRequest($request)
     {
         return strcasecmp($request->method, "GET") === 0;
@@ -47,7 +45,7 @@ class ResponseSerializer
     {
         $fileAndItsMetadata = self::findOnlyElement($response);
         header('Content-Description: File Transfer');
-        // TODO: Implement more general when adding other types than  pdf. For unknown use header('Content-Type: application/octet-stream');
+        // TODO: Implement more general when adding other types than pdf. For unknown use header('Content-Type: application/octet-stream');
         header('Content-Type: application/pdf');
         header('Content-Disposition: inline; filename="' . $fileAndItsMetadata["builtFilename"] . '"');
         header('Expires: 0');

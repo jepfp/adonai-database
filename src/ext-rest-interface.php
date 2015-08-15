@@ -1,7 +1,6 @@
 <?php
 use Scotty\restinterface\DAOFactory;
 use Scotty\restinterface\ResponseSerializer;
-header('Content-type: text/javascript');
 require ('bootstrap.php');
 
 try {
