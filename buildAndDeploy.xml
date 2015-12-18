@@ -7,22 +7,16 @@
 	<property name="sencha-exe" value="C:\Users\Philipp\bin\Sencha\Cmd\5.1.3.61\sencha.exe" />
 	<property name="buildMode" value="production" />
 	<property name="buildDir" value="build" />
-	<property name="zipLocation" value="${buildDir}/zip.zip" />
-	<property name="server" value="" />
-	<property name="phpUnzipScriptLocation" value="/unzipper.php" />
-	<property name="serverUserId" value="" />
-	<property name="serverPassword" value="THIS PASSWORD WON'T WORK" />
+	<property name="environment" value="localBuild" />
 
 
-	<target name="help">
-		<echo>This build file is designed to build and deploy the Songserver project.</echo>
+	<target name="info">
+		<echo>This build file is designed to build and deploy the Songserver project locally or to docker.</echo>
 		<echo>The current build and deploy configuration is:</echo>
 		<echo>sencha-exe:     ${sencha-exe}</echo>
 		<echo>buildDir:       ${buildDir}</echo>
-		<echo>zipLocation:    ${zipLocation}</echo>
-		<echo>server:         ${server}</echo>
-		<echo>serverUserId:   ${serverUserId}</echo>
-		<echo>serverPassword: (See property file...)</echo>
+		<echo>dockerHost:     ${dockerHost}</echo>
+		<echo>environment:     ${environment}</echo>
 	</target>
 
 	<target name="cleanBuildFolder">
@@ -33,42 +27,16 @@
 		<mkdir dir="${buildDir}/log" />
 	</target>
 
-	<target name="deploy" depends="help, cleanBuildFolder, buildSenchaApp, build, zip, copyToWebServer, runUnzipPhpScript, overwriteConfiguration">
-		<echo>Deploying to ${server} finished.</echo>
+	<target name="deploy" depends="deployLocal, putToDocker">
+		<echo>Deploying environment ${environment} to ${dockerHost} finished.</echo>
 	</target>
 
-	<target name="deployLocalTesting" depends="cleanBuildFolder, buildSenchaApp, build, overwriteBuildConfiguration">
-		<echo>Local deploy finished.</echo>
-		<echo>You can start http://localhost/adonai-database/build/all/</echo>
+	<target name="putToDocker" depends="copyToDockerHost, runDockerImage">
+		<echo>Deploying to ${dockerHost} finished.</echo>
 	</target>
 
-	<!-- In order to get that thing working, the windows firewall needs this: netsh advfirewall set global StatefulFtp disable
-				See: http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=7077696 for details -->
-	<target name="copyToWebServer">
-		<echo>Deploying to ${server}</echo>
-		<ftp server="${server}" userid="${serverUserId}" password="${serverPassword}" remotedir="" passive="no" binary="yes" verbose="yes" depends="yes">
-			<fileset file="${zipLocation}" />
-		</ftp>
-	</target>
-
-	<target name="zip">
-		<echo>Zipping ${buildDir}/all to ${zipLocation}.</echo>
-		<zip destfile="${zipLocation}" basedir="${buildDir}/all" />
-	</target>
-
-	<!-- In order to get that thing working, the windows firewall needs this: netsh advfirewall set global StatefulFtp disable
-					See: http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=7077696 for details -->
-	<target name="updateUnzipPhpScript">
-		<echo>Updating PHP unzipper script: </echo>
-		<!-- depends = "yes" is not set because we always overwrite -->
-		<ftp server="${server}" userid="${serverUserId}" password="${serverPassword}" remotedir="" passive="yes" binary="no" verbose="yes">
-			<fileset file="./${phpUnzipScriptLocation}" />
-		</ftp>
-	</target>
-
-	<target name="runUnzipPhpScript" depends="updateUnzipPhpScript">
-		<echo>Unzipping by calling the following php script: </echo>
-		<get src="http://${server}${phpUnzipScriptLocation}" dest="${buildDir}/log/unzipperResult.txt" />
+	<target name="deployLocal" depends="info, cleanBuildFolder, buildSenchaApp, build, overwriteBuildConfiguration">
+		<echo>Local deployment for ${environment} finished: ${buildDir}/all - http://localhost/adonai-database/${buildDir}/all/</echo>
 	</target>
 
 	<target name="build">
@@ -107,23 +75,42 @@
 		</copy>
 	</target>
 
-	<!-- In order to get that thing working, the windows firewall needs this: netsh advfirewall set global StatefulFtp disable
-	See: http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=7077696 for details -->
-	<target name="overwriteConfiguration" description="Overwrites the build with a specific configuration.">
-		<echo>Updating the configuration on ${server}</echo>
-		<echo>Configuration source deploy/configurations/${server}</echo>
-		<!-- depends = "yes" is not set because we always overwrite -->
-		<ftp server="${server}" userid="${serverUserId}" password="${serverPassword}" remotedir="" passive="yes" binary="no" verbose="yes">
-			<fileset dir="deploy/configurations/${server}" />
-		</ftp>
+	<target name="overwriteBuildConfiguration" description="Overwrites the build with it's configuration so that we can test directly.">
+		<echo>Updating the local build with it's configuration (${environment})</echo>
+		<echo>Configuration source deploy/configurations/${environment}</echo>
+		<copy todir="${buildDir}/all" overwrite="true">
+			<fileset dir="deploy/configurations/${environment}" />
+		</copy>
 	</target>
 
-	<target name="overwriteBuildConfiguration" description="Overwrites the LOCAL build with it's configuration so that we can test directly.">
-		<echo>Updating the local build with it's configuration</echo>
-		<echo>Configuration source deploy/configurations/localBuild</echo>
-		<copy todir="${buildDir}/all" overwrite="true">
-			<fileset dir="deploy/configurations/localBuild" />
-		</copy>
+	<target name="copyToDockerHost">
+		<echo>Copying to docker host ${dockerHost} ${dockerImageWorkspace}/www</echo>
+		<scp todir="root:${sshPassword}@${dockerHost}:${dockerImageWorkspace}/www" trust="true" verbose="true">
+			<fileset dir="${buildDir}/all" />
+		</scp>
+	</target>
+
+	<target name="buildDockerImageOnDockerHost">
+		<echo>Creating the following image at ${dockerHost}: ${environment}</echo>
+		<sshexec command="(cd ${dockerImageWorkspace}; git pull)" host="${dockerHost}" username="root" password="${sshPassword}" trust="true" />
+		<sshexec command="docker build -t ${environment} ${dockerImageWorkspace}" host="${dockerHost}" username="root" password="${sshPassword}" trust="true" />
+	</target>
+
+	<target name="getCurrentConfigurationDockerIp">
+		<echo>Getting ip of running docker containter: ${environment}</echo>
+		<sshexec command=" docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ${environment}" host="${dockerHost}" username="root" password="${sshPassword}" trust="true" />
+	</target>
+
+	<target name="loadMySqlDumpToCurrentConfiguration">
+		<echo>Loading dump from ${databaseRestoreDir}/${environment} into ${environment}</echo>
+		<sshexec command="mysql -e &quot;source ${databaseRestoreDir}/${environment}.sql&quot; --user=dockerdefault --password=${mysqlPassword} --host=172.17.0.2 dockerdefault" host="${dockerHost}" username="root" password="${sshPassword}" trust="true" />
+	</target>
+
+	<target name="runDockerImage">
+		<echo>Assuring database backup existance for container: ${databaseHostBackupDir}/${environment}</echo>
+		<sshexec command="mkdir -p ${databaseHostBackupDir}/${environment}" host="${dockerHost}" username="root" password="${sshPassword}" trust="true" />
+		<echo>Running docker image ${environment}</echo>
+		<sshexec command="docker run --name=${environment} -e &quot;MYSQL_DATABASE=dockerdefault&quot; -e &quot;MYSQL_USER=dockerdefault&quot; -e &quot;MYSQL_PASSWORD=${mysqlPassword}&quot; -p 80:80 -d -v /etc/localtime:/etc/localtime:ro -v ${databaseHostBackupDir}/${environment}:${databaseContainerBackupDir} ${environment}" host="${dockerHost}" username="root" password="${sshPassword}" trust="true" />
 	</target>
 
 	<target name="buildSenchaApp" description="Builds the JS-Code">
