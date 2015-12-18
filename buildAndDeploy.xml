@@ -102,9 +102,14 @@
 		<echo>IP of ${environment} is ${ipOfRunningEnvironment}.</echo>
 	</target>
 
-	<target name="loadMySqlDumpToCurrentConfiguration" depends="getCurrentIpOfRunningEnvironment">
+	<target name="loadMySqlDumpIntoContainer" depends="getCurrentIpOfRunningEnvironment">
 		<echo>Loading dump from ${databaseRestoreDir}/${environment} into ${environment}</echo>
 		<sshexec command="mysql -e &quot;source ${databaseRestoreDir}/${environment}.sql&quot; --user=dockerdefault --password=${mysqlPassword} --host=${ipOfRunningEnvironment} dockerdefault" host="${dockerHost}" username="root" password="${sshPassword}" trust="true" />
+	</target>
+
+	<target name="backupMySqlDatabaseFromRunningContainer" depends="getCurrentIpOfRunningEnvironment">
+		<echo>Backing up ${environment}</echo>
+		<sshexec command="docker exec -t ${environment} /mysqlBackup/mysqlBackup.sh" host="${dockerHost}" username="root" password="${sshPassword}" trust="true" />
 	</target>
 
 	<target name="runDockerImage">
