@@ -8,9 +8,9 @@
 ## DOCKER ##
 dockerHost=
 sshPassword=
-dockerImageWorkspace=/jep/docker/docker-scotty
-databaseRestoreDir=/jep/database/restore
-databaseHostBackupDir=/jep/database/backup
+dockerImageWorkspace=/media/data/docker/docker-scotty
+databaseRestoreDir=/media/data/database/restore
+databaseHostBackupDir=/media/data/database/backup
 databaseContainerBackupDir=/backup/mysql
 ##PRODUCTIVE SYSTEM project-customer-type
 environment=
