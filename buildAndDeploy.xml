@@ -31,8 +31,30 @@
 		<echo>Deploying environment ${environment} to ${dockerHost} finished.</echo>
 	</target>
 
-	<target name="putToDocker" depends="copyToDockerHost, runDockerImage">
+	<target name="redeploy" depends="backupMySqlDatabaseFromRunningContainer, stopRunningContainer, removeContainer, deploy">
+		<echo>Redeploying environment ${environment} to ${dockerHost} finished.</echo>
+	</target>
+
+	<target name="putToDocker" depends="copyToDockerHost, buildDockerImageOnDockerHost, runDockerImage">
 		<echo>Deploying to ${dockerHost} finished.</echo>
+	</target>
+
+	<target name="stopRunningContainer">
+		<input message="Do you really want to stop ${environment} (y/n)?" validargs="y,n" addproperty="reallyStopInput" />
+		<condition property="doAbort">
+			<equals arg1="n" arg2="${reallyStopInput}" />
+		</condition>
+		<fail if="doAbort">Build aborted by user.</fail>
+		<sshexec command="docker stop ${environment}" host="${dockerHost}" username="root" password="${sshPassword}" trust="true" />
+	</target>
+
+	<target name="removeContainer">
+		<input message="Do you really want to remove ${environment} and its data (y/n)?" validargs="y,n" addproperty="reallyRemoveInput" />
+		<condition property="doAbort">
+			<equals arg1="n" arg2="${reallyRemoveInput}" />
+		</condition>
+		<fail if="doAbort">Build aborted by user.</fail>
+		<sshexec command="docker rm ${environment}" host="${dockerHost}" username="root" password="${sshPassword}" trust="true" />
 	</target>
 
 	<target name="deployLocal" depends="info, cleanBuildFolder, buildSenchaApp, build, overwriteBuildConfiguration">
@@ -116,7 +138,7 @@
 		<echo>Assuring database backup existance for container: ${databaseHostBackupDir}/${environment}</echo>
 		<sshexec command="mkdir -p ${databaseHostBackupDir}/${environment}" host="${dockerHost}" username="root" password="${sshPassword}" trust="true" />
 		<echo>Running docker image ${environment}</echo>
-		<sshexec command="docker run --name=${environment} -e &quot;MYSQL_DATABASE=dockerdefault&quot; -e &quot;MYSQL_USER=dockerdefault&quot; -e &quot;MYSQL_PASSWORD=${mysqlPassword}&quot; -p 80:80 -d -v /etc/localtime:/etc/localtime:ro -v ${databaseHostBackupDir}/${environment}:${databaseContainerBackupDir} ${environment}" host="${dockerHost}" username="root" password="${sshPassword}" trust="true" />
+		<sshexec command="docker run --name=${environment} -e &quot;MYSQL_DATABASE=dockerdefault&quot; -e &quot;MYSQL_USER=dockerdefault&quot; -e &quot;MYSQL_PASSWORD=${mysqlPassword}&quot; -d -v /etc/localtime:/etc/localtime:ro -v ${databaseHostBackupDir}/${environment}:${databaseContainerBackupDir} ${environment}" host="${dockerHost}" username="root" password="${sshPassword}" trust="true" />
 	</target>
 
 	<target name="buildSenchaApp" description="Builds the JS-Code">
