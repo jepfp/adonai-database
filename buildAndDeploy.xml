@@ -89,6 +89,9 @@
 			<fileset file="_index.html" />
 			<fileset file="faq.php" />
 		</copy>
+		<copy todir="${buildDir}/all/client">
+			<fileset dir="client" />
+		</copy>
 		<copy todir="${buildDir}/all/integration-testing">
 			<fileset dir="integration-testing" />
 		</copy>
@@ -106,6 +109,8 @@
 	</target>
 
 	<target name="copyToDockerHost">
+		<echo>Deleting directory ${dockerImageWorkspace}/www at ${dockerHost}</echo>
+		<sshexec command="rm -rf ${dockerImageWorkspace}/www &amp;&amp; mkdir ${dockerImageWorkspace}/www" host="${dockerHost}" username="root" password="${sshPassword}" trust="true" />
 		<echo>Copying to docker host ${dockerHost} ${dockerImageWorkspace}/www</echo>
 		<scp todir="root:${sshPassword}@${dockerHost}:${dockerImageWorkspace}/www" trust="true" verbose="true">
 			<fileset dir="${buildDir}/all" />
