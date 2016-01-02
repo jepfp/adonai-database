@@ -82,10 +82,15 @@ h2 {
 			hinzufügst, wirst du scrollen müssen. Versuche das zu verhindern.</p>
 		<h2>Mehrsprachigkeit</h2>
 		<p class="question">Was mache ich, wenn ich zur englischen
-			Originalversion den deutschen Text hinzufügen möchte?</p>
-		<p>Füge einfach die Liedtexte in den verschiedenen Sprachen hinzu.
+			Originalversion den deutschen Text hinzufügen möchte (oder
+			umgekehrt)?</p>
+		<p>
+			Füge einfach die Liedtexte in den verschiedenen Sprachen am Ende hinzu.
 			Erstelle nicht mehrere einzelne Lieder in den verschiedenen Sprachen,
-			sonst findest du die Lieder nicht mehr.</p>
+			sonst findest du die Lieder nicht mehr.<br>Wichtig ist, dass zuerst
+			die Strophen und Refrains aufgeführt sind, die man auch auf dem
+			Notenblatt findet.
+		</p>
 		<p class="question">Ich habe ein mehrsprachiges Lied. Wie soll ich den
 			Titel benennen?</p>
 		<p>
@@ -102,13 +107,21 @@ h2 {
 		<p class="question">Kann ich selbst Noten als PDF zu einem Lied
 			hinzufügen?</p>
 		<p>
-			Ja. Im Moment aber noch über einen Umweg: Füge das Lied mit der
-			entsprechenden Nummerierung in der Dropbox (wie bisher) hinzu. Einige
-			Tage später werden wir es dann ebenfalls zur Datenbank hinzufügen und
-			in der Dropbox wieder entfernen. Falls du Zugang zur Dropbox
-			benötigst, melde dich bei lieder@adoray.ch.<br>Hinweis: Es ist
-			geplant, das du bald selbst direkt online PDFs selbst hinzufügen
-			kannst.
+			Ja. Es ist wichtig, dass du wenn möglich auch die Noten zu einem
+			neuen Lied hinzufügst oder Noten hinzufügst zu Liedern, die noch
+			keine Noten haben.<br> Wichtig beim Hinzufügen der Noten ist, dass
+			die Texte im Beamer-Programm mit den Texten auf dem Notenblatt
+			übereinstimmen.
+		</p>
+		<p class="question">Darf ich die Noten eines Liedes ersetzen, wenn
+			bereits Noten vorhanden sind?</p>
+		<p>
+			Wenn du zum gleichen Lied bessere Noten hast (z. B. eine bessere
+			Qualität), darfst du die Noten ersetzen. Wenn du eine andere Version
+			des Liedes besitzt (z. B. eine andere Melodie, andere Tonart)
+			solltest du ein neues Lied hinzufügen und den Unterschied zu deinem
+			im Titel erwähnen.<br> Falls du Fragen diesbezüglich hast, melde dich
+			bitte unter lieder@adoray.ch.
 		</p>
 		<p class="question">Gibt es mehrere PDF-Dateien pro Lied?</p>
 		<p>Nein. Pro Lied kann eine PDF-Datei mit mehreren Seiten hinzugefügt
@@ -118,6 +131,19 @@ h2 {
 			zwei verschiedene Tonarten) musst du das Lied ein zweites Mal
 			hinzufügen. Den Unterschied des einen Liedes vom anderen kannst du
 			mit einem kurzen Hinweis im Titel vermerken.</p>
+		<h2>Übereinstimmung Noten und Text</h2>
+		<p class="question">Müssen Text und Noten übereinstimmen?</p>
+		<p>Ja, alle Strophen, Refrains und weitere Liedteile sollen mit den
+			Texten in den Noten übereinstimmen. Wenn zu zusätzlich weitere
+			Strophen oder Strophen in einer anderen Sprache kennst, darfst du
+			diese zu unterst einfügen. Wenn du eine andere Version des Textes mit den
+			zugehörigen Noten hast, kannst du ein neues Lied mit diesem Text
+			hinzufügen und im Titel des Liedes einen entsprechenden Hinweis
+			anbringen.</p>
+		<p class="question">Was soll ich ändern, wenn Noten und Text nicht
+			übereinstimmen?</p>
+		<p>Passe den Text in der Datenbank so an, damit er dem Text in den
+			Noten entspricht.</p>
 		<h2>AdorayClient</h2>
 		<p class="question">Was ist 'AdorayClient'?</p>
 		<p>AdorayClient ist das Beamer-Programm, mit dem du die Liedtexte
