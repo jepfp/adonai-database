@@ -69,6 +69,6 @@ Ext.define('Songserver.view.songsheet.SongsheetUploadThumbnailPanel', {
 		this.up('songserver-songsheetSongContentPanel').createAndAddSongsheetThumbnailPanels();
 	    }
 	});
-    },
+    }
 
 });
