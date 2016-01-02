@@ -9,8 +9,6 @@ class DatabaseConnector
 	
 	private $db;
 
-	private $projectConfiguration;
-
 	public function __construct()
 	{
 		$projectConfiguration = ProjectConfiguration::getInstance();
