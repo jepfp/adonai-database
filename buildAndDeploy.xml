@@ -8,6 +8,8 @@
 	<property name="buildMode" value="production" />
 	<property name="buildDir" value="build" />
 	<property name="environment" value="localBuild" />
+	<property name="zipFilename" value="zip.zip" />
+	<property name="zipLocation" value="${buildDir}/${zipFilename}" />
 
 
 	<target name="info">
@@ -111,10 +113,15 @@
 	<target name="copyToDockerHost">
 		<echo>Deleting directory ${dockerImageWorkspace}/www at ${dockerHost}</echo>
 		<sshexec command="rm -rf ${dockerImageWorkspace}/www &amp;&amp; mkdir ${dockerImageWorkspace}/www" host="${dockerHost}" username="root" password="${sshPassword}" trust="true" />
+		<echo>Zipping ${buildDir}/all to ${zipLocation}.</echo>
+		<zip destfile="${zipLocation}" basedir="${buildDir}/all" />
 		<echo>Copying to docker host ${dockerHost} ${dockerImageWorkspace}/www</echo>
-		<scp todir="root:${sshPassword}@${dockerHost}:${dockerImageWorkspace}/www" trust="true" verbose="true">
-			<fileset dir="${buildDir}/all" />
+		<scp todir="root:${sshPassword}@${dockerHost}:${dockerImageWorkspace}/www" trust="true">
+			<fileset file="${zipLocation}" />
 		</scp>
+		<echo>Unzipping ${dockerImageWorkspace}/www/${zipFilename} to ${dockerImageWorkspace}/www and deleting zip...</echo>
+		<sshexec command="(unzip -d ${dockerImageWorkspace}/www ${dockerImageWorkspace}/www/${zipFilename}; rm ${dockerImageWorkspace}/www/${zipFilename})" host="${dockerHost}" username="root" password="${sshPassword}" trust="true" />
+		
 	</target>
 
 	<target name="buildDockerImageOnDockerHost">
