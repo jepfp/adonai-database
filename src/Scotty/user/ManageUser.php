@@ -2,11 +2,11 @@
 namespace Scotty\user;
 
 use \Scotty\database\DatabaseConnector;
+use \Scotty\mailing\MailSender;
+use Scotty\mailing\Scotty\mailing;
 
 class ManageUser
 {
-	private $projectConfiguration;
-
 	public function register($formPacket)
 	{
 		$response = array();
@@ -92,18 +92,12 @@ class ManageUser
 	}
 
 	private function sendMail($email, $firstname, $lastname, $adoray){
+	    $mailSender = new MailSender();
 		try
 		{
-			// Die Nachricht
-			$nachricht = "Neue Registration auf der Liederdatenbank.";
+			$nachricht = "Neue Registration auf der Liederdatenbank.\r\n";
 			$nachricht .= $firstname . " " . $lastname . " (" . $email . ")";
-
-			// Falls eine Zeile der Nachricht mehr als 70 Zeichen enthälten könnte,
-			// sollte wordwrap() benutzt werden
-			$nachricht = wordwrap($nachricht, 70);
-			
-			// Send
-			mail('philippjenni@bluemail.ch', 'Neue Registration', $nachricht);
+			$mailSender->sendMail('philippjenni@bluemail.ch', 'Neue Registration', $nachricht);
 		}
 		catch (Exception $e)
 		{

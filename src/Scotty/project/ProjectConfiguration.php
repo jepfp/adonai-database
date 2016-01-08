@@ -25,6 +25,13 @@ class ProjectConfiguration
         ),
         'projectTitle' => "CONFIGURE ME",
         'defaultProjectName' => "example-scotty",
+        'mailing' => array(
+            'senderMail' => 'CONFIGURE ME',
+            'senderName' => 'Scotty',
+            'username' => 'CONFIGURE ME',
+            'password' => 'CONFIGURE ME',
+            'subjectPrefix' => ''
+        ),
         'log4phpConfiguration' => array(
             'rootLogger' => array(
                 'appenders' => array(
@@ -226,5 +233,10 @@ class ProjectConfiguration
     public function getDbConfiguration()
     {
         return $this->config['db'];
+    }
+    
+    public function getMailingConfiguration()
+    {
+        return $this->config['mailing'];
     }
 }
