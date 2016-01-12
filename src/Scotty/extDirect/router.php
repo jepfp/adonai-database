@@ -17,7 +17,6 @@ class BogusAction
 
 header('Content-type: text/javascript');
 
-$isForm = false;
 $isUpload = false;
 if (isset($HTTP_RAW_POST_DATA)) {
     // jep: for Content-Type: application/json
@@ -27,8 +26,7 @@ if (isset($HTTP_RAW_POST_DATA)) {
     // jep: for forms
     // note from http://www.php.net/manual/de/ini.core.php#ini.always-populate-raw-post-data
     // $HTTP_RAW_POST_DATA ist bei enctype="multipart/form-data" nicht verfügbar.
-    if (isset($_POST['extAction'])) { // form post
-        $isForm = true;
+    if (isFormRequest()) { // form post
         $isUpload = $_POST['extUpload'] == 'true';
         $data = new BogusAction();
         $data->action = $_POST['extAction'];
@@ -41,6 +39,11 @@ if (isset($HTTP_RAW_POST_DATA)) {
     } else {
         die('Invalid request.');
     }
+}
+
+function isFormRequest()
+{
+    return isset($_POST['extAction']);
 }
 
 function doRpc($callerData)
@@ -58,9 +61,8 @@ function doRpc($callerData)
         
         // check if user is logged in (if he doesn't try to log in)
         // TODO: do a proper exclusion implementation
-        if ($action != "Authentication" &&         // for login
-        $method != "register")         // for registrations
-        {
+        if ($action != "Authentication" && $method != "register") {
+            // for everything but login and registrations
             SecInfoProvider::throwErrorIfNotLoggedIn();
         }
         
@@ -72,12 +74,12 @@ function doRpc($callerData)
         }
         doAroundCalls($apiMethodDefinition['before'], $callerData);
         
-        $r = array(
+        $returnValue = array(
             'type' => 'rpc',
             'tid' => $callerData->tid,
             'action' => $action,
             'method' => $method,
-            'success' => true //if there is a successful method call, success is true
+            'success' => true // TODO: this is actually not needed by extjs but still asserted in tests. Remove.
         );
         
         // TODO jep: Check possible security issue here.
@@ -91,24 +93,19 @@ function doRpc($callerData)
             );
         }
         
-        $r['result'] = call_user_func_array(array(
+        $returnValue['result'] = call_user_func_array(array(
             $actionClass,
             $method
         ), $params);
         
-        doAroundCalls($apiMethodDefinition['after'], $callerData, $r);
-        doAroundCalls($apiAction['after'], $callerData, $r);
+        doAroundCalls($apiMethodDefinition['after'], $callerData, $returnValue);
+        doAroundCalls($apiAction['after'], $callerData, $returnValue);
     } catch (SecurityException $e) {
-        $r['success'] = false;
-        $r['type'] = 'exception';
-        $r['message'] = $e->getMessage();
+        handleException($e, $returnValue);
     } catch (Exception $e) {
-        $r['success'] = false;
-        $r['type'] = 'exception';
-        $r['message'] = $e->getMessage();
-        $r['where'] = $e->getTraceAsString();
+        handleException($e, $returnValue);
     }
-    return $r;
+    return $returnValue;
 }
 
 // jep: This method does method calls (before and after) the actual method call if it is configured so. Never used yet.
@@ -126,6 +123,20 @@ function doAroundCalls(&$fns, &$callerData, &$returnData = null)
     }
 }
 
+function handleException($e, &$returnValue)
+{
+    $returnValue['type'] = 'exception';
+    $returnValue['message'] = $e->getMessage();
+    $returnValue['where'] = $e->getTraceAsString();
+    $returnValue['success'] = false; // TODO: this is actually not needed by extjs but still asserted in tests. Remove.
+    if (isFormRequest()) {
+        // because ext js doesn't seem to handle exceptions in the same way when
+        // performing e form post, we have to add the information to the result-node as well
+        $returnValue['result']['success'] = false;
+        $returnValue['result']['message'] = $e->getMessage();
+    }
+}
+
 $response = null;
 if (is_array($data)) {
     $response = array();
@@ -135,7 +146,7 @@ if (is_array($data)) {
 } else {
     $response = doRpc($data);
 }
-if ($isForm && $isUpload) {
+if (isFormRequest() && $isUpload) {
     echo '<html><body><textarea>';
     echo json_encode($response);
     echo '</textarea></body></html>';
