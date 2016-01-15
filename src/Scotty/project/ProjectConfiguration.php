@@ -26,6 +26,7 @@ class ProjectConfiguration
         'projectTitle' => "CONFIGURE ME",
         'defaultProjectName' => "example-scotty",
         'mailing' => array(
+            'enable' => false,
             'senderMail' => 'CONFIGURE ME',
             'senderName' => 'Scotty',
             'username' => 'CONFIGURE ME',
@@ -143,7 +144,7 @@ class ProjectConfiguration
     private function parseIni($path)
     {
         // Parse without sections
-        $ini_array = parse_ini_file($path);
+        $ini_array = parse_ini_file($path, false, INI_SCANNER_TYPED);
         
         // http://stackoverflow.com/questions/7480833/ini-file-to-multidimensional-array-in-php
         $ini = array();

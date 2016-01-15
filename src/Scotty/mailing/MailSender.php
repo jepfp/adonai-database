@@ -5,7 +5,7 @@ require_once __DIR__ . '/../../lib/swiftmailer/lib/swift_required.php';
 
 use \Scotty\project\ProjectConfiguration;
 
-class MailSender
+class MailSender implements IMailSender
 {
 
     private $mailingConfig;
@@ -17,11 +17,11 @@ class MailSender
 
     public function sendMail($to, $subject, $text)
     {
-        $subject = $this->buildSubjectWithPrefix($subject);
+        $subject = SubjectBuilder::buildSubjectWithPrefix($subject);
         $mailer = $this->setupMailer();
         $message = $this->buildMessage($this->mailingConfig['senderMail'], $this->mailingConfig['senderName'], $to, $subject, $text);
         $numSent = $mailer->send($message);
-        \Logger::getLogger("dbLogger")->info("E-Mail to $to with subject $subject sent to $numSent receipent(s).");
+        \Logger::getLogger("main")->info("E-Mail to $to with subject $subject sent to $numSent receipent(s).");
     }
 
     private function setupMailer()
@@ -45,14 +45,5 @@ class MailSender
         ));
         $message->setBody($text);
         return $message;
-    }
-
-    private function buildSubjectWithPrefix($subject)
-    {
-        if ($this->mailingConfig['subjectPrefix'] != '') {
-            return $this->mailingConfig['subjectPrefix'] . ": " . $subject;
-        } else {
-            return $subject;
-        }
     }
 }

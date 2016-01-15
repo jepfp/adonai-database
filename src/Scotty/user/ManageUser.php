@@ -2,8 +2,8 @@
 namespace Scotty\user;
 
 use \Scotty\database\DatabaseConnector;
-use \Scotty\mailing\MailSender;
 use Scotty\mailing\Scotty\mailing;
+use Scotty\mailing\MailSenderFactory;
 
 class ManageUser
 {
@@ -91,7 +91,7 @@ class ManageUser
 
     private function sendMail($email, $firstname, $lastname, $adoray)
     {
-        $mailSender = new MailSender();
+        $mailSender = MailSenderFactory::createMailSender();
         try {
             $nachricht = "Neue Registration auf der Liederdatenbank.\r\n";
             $nachricht .= $firstname . " " . $lastname . " (" . $email . ")";
