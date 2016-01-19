@@ -6,6 +6,7 @@ use Scotty\filesystem\FsHelper;
 use Scotty\database\DbHelper;
 use Scotty\database\DatabaseConnector;
 use Scotty\utils\StopWatch;
+use Scotty\sqlitedbdump\songbooksongnumberassociation\CrossAssociationFiller;
 
 class SQLiteDbDumper
 {
@@ -78,7 +79,7 @@ class SQLiteDbDumper
         $this->logger->trace("Sqlite db path will be " . $this->buildDbFilePath());
         $this->deleteOldDb();
         $this->createNewDbFromContractDatabase();
-        $this->readAndExportAll();
+        $this->performDbOperations();
         $this->logger->info("Sqlite db export finished after " . $stopWatch->measure() . " seconds.");
         return $this->buildDbFilePath();
     }
@@ -101,15 +102,28 @@ class SQLiteDbDumper
         }
     }
 
-    private function readAndExportAll()
+    private function performDbOperations()
     {
         $this->sqliteDb = new \SQLite3($this->buildDbFilePath());
         $this->sqliteDb->exec("BEGIN IMMEDIATE TRANSACTION");
+        $this->exportAllMySqlTables();
+        $this->addCrossSongbookSongnumberAssociations();
+        //Hier die weiteren Liedernummern ergänzen
+        $this->sqliteDb->exec("COMMIT TRANSACTION");
+        $this->sqliteDb->close();
+    }
+    
+    private function exportAllMySqlTables()
+    {
         foreach ($this->tableDefinitions as $td) {
             $this->exportTable($td);
         }
-        $this->sqliteDb->exec("COMMIT TRANSACTION");
-        $this->sqliteDb->close();
+    }
+    
+    private function addCrossSongbookSongnumberAssociations()
+    {
+        $filler = new CrossAssociationFiller();
+        $filler->fill($this->db, $this->sqliteDb);
     }
 
     private function exportTable($tableDefinition)
