@@ -92,6 +92,7 @@ abstract class AbstractDAO
         $fullyQualifiedQueryBuilderName = $this->determineQueryBuilderName($CRUDOperation);
         $this->onBeforeBuildCreateQuery();
         $this->instantiateQueryBuilder($fullyQualifiedQueryBuilderName, $CRUDOperation);
+        $this->validateSave($this->queryBuilder->getDto(), $CRUDOperation);
         $db = $this->executeStatement($this->queryBuilder, $res);
         $insertedId = $db->insert_id;
         $this->logger->debug("New record with id " . $insertedId . " inserted.");
@@ -105,6 +106,12 @@ abstract class AbstractDAO
     }
 
     protected function onAfterCreate($id)
+    {
+        // override if needed
+    }
+
+    // TODO: https://trello.com/c/Qjgy1bQz In case of an update: Validate save should work with the whole values and not just the changed ones
+    protected function validateSave($dto)
     {
         // override if needed
     }
@@ -124,6 +131,7 @@ abstract class AbstractDAO
         $CRUDOperation = "update";
         $fullyQualifiedQueryBuilderName = $this->determineQueryBuilderName($CRUDOperation);
         $this->instantiateQueryBuilder($fullyQualifiedQueryBuilderName, $CRUDOperation);
+        $this->validateSave($this->queryBuilder->getDto(), $CRUDOperation);
         $db = $this->executeStatement($this->queryBuilder, $res);
         $updatedId = $this->request->id;
         $this->logger->debug("Record with id " . $updatedId . " updated.");
@@ -245,7 +253,7 @@ abstract class AbstractDAO
         $this->logger->error($res->message, $ex);
         return $res;
     }
-    
+
     protected function determineTableName()
     {
         $fullyQualifiedClassName = get_class($this);

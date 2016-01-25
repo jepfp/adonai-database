@@ -321,9 +321,7 @@ Ext.define('Songserver.view.SongPropertiesPanel', {
 		this.saveNumberInBookEntries();
 	    },
 	    failure : function(record, operation) {
-		this.handleSaveError('Fehler beim Speichern. Prüfe, ob die Liednummer ' //
-			+ record.get("Liednr") + ' nicht bereits im Liederbuch ' //
-			+ record.get("Buchname") + ' verwendet wird.');
+		this.handleSaveError(operation.getError());
 		this.up("songserver-songPanel").setLoading(false);
 	    },
 	    scope : this

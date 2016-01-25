@@ -168,4 +168,12 @@ class AbstractDTO
             }
         };
     }
+    
+    protected function noSpaces(){
+        return function($input){
+            if(strpos($input, " ") !== false){
+                throw new DTOException("Das Feld darf keine Leerzeichen enthalten.");
+            }
+        };
+    }
 }

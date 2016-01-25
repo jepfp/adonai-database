@@ -233,8 +233,7 @@ Ext.define('Songserver.view.LiedView', {
 	    song.erase({
 		scope : this,
 		failure : function(record, operation) {
-		    Ext.Msg.alert("Fehler beim Löschen", "Das Lied konnte nicht gelöscht werden. "
-			    + "Bitte informiere den Website-Verantwortlichen über diesen Fehler.");
+		    Ext.Msg.alert("Fehler beim Löschen", "Das Lied konnte nicht gelöscht werden. " + "Bitte informiere den Website-Verantwortlichen über diesen Fehler.");
 		},
 		success : function(record, operation) {
 		    Songserver.AppContext.mainLayout.loadPanel("Songserver.view.LiedView");
@@ -343,10 +342,10 @@ Ext.define('Songserver.view.LiedView', {
 	    success : function(batch, options) {
 	    },
 	    failure : function(batch, options) {
+		message = batch.getExceptions()[0].getError();
 		Ext.Msg.show({
 		    title : 'Fehler beim Speichern',
-		    msg : 'Fehler beim Speichern. Eventuell wird die Nummer bereits für ein anderes ' + 'Lied in diesem Liederbuch verwendet.'
-			    + '<br>Bitte versuche es mit einer anderen Nummer.',
+		    msg : message,
 		    buttons : Ext.Msg.OK,
 		    icon : Ext.Msg.ERROR,
 		    scope : this

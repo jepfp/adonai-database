@@ -35,10 +35,14 @@ class LiedViewDAO extends AbstractDAO
         if ($fkLiederbuchLiedId > 0) {
             // yes --> delete or edit (put)
             $action = (! $this->request->params->Liednr) ? "DELETE" : "PUT";
-            $this->redirectToNumberInBook($action, $fkLiederbuchLiedId);
-            $res = new Response();
-            $this->redirectToGETWithId($res, $liedId);
-            return $res;
+            $res = $this->redirectToNumberInBook($action, $fkLiederbuchLiedId);
+            if ($res->success == true) {
+                $res = new Response();
+                $this->redirectToGETWithId($res, $liedId);
+                return $res;
+            } else {
+                return $res;
+            }
         } else {
             // post (new entry)
             return $this->redirectToNumberInBook("POST", $fkLiederbuchLiedId);

@@ -17,7 +17,8 @@ Ext.define('Songserver.model.Base', {
 	    reader : {
 		type : 'json',
 		rootProperty : 'data',
-		totalProperty : 'totalCount'
+		totalProperty : 'totalCount',
+		messageProperty : 'message'
 	    }
 	}
     }

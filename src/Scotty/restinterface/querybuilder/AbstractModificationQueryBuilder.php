@@ -14,7 +14,7 @@ abstract class AbstractModificationQueryBuilder extends AbstractQueryBuilder
 {
 
     /**
-     * 
+     *
      * @var BindParam
      */
     protected $bindParam;
@@ -38,6 +38,11 @@ abstract class AbstractModificationQueryBuilder extends AbstractQueryBuilder
         return new $fullyQualifiedName($this->request->params);
     }
 
+    public function getDto()
+    {
+        return $this->dto;
+    }
+
     public function build($db)
     {
         $this->bindParam = new BindParam();
@@ -49,7 +54,7 @@ abstract class AbstractModificationQueryBuilder extends AbstractQueryBuilder
         $this->logStatement($query, $this->bindParam->get());
         return $statement;
     }
-    
+
     abstract protected function buildQueryString();
 
     protected abstract function buildValues();
