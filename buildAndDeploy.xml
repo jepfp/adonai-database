@@ -150,7 +150,7 @@
 		<echo>Assuring database backup existance for container: ${databaseHostBackupDir}/${environment}</echo>
 		<sshexec command="mkdir -p ${databaseHostBackupDir}/${environment}" host="${dockerHost}" username="root" password="${sshPassword}" trust="true" />
 		<echo>Running docker image ${environment}</echo>
-		<sshexec command="docker run --name=${environment} -e &quot;MYSQL_DATABASE=dockerdefault&quot; -e &quot;MYSQL_USER=dockerdefault&quot; -e &quot;MYSQL_PASSWORD=${mysqlPassword}&quot; -d -v /etc/localtime:/etc/localtime:ro -v ${databaseHostBackupDir}/${environment}:${databaseContainerBackupDir} ${environment}" host="${dockerHost}" username="root" password="${sshPassword}" trust="true" />
+		<sshexec command="docker run --name=${environment} --restart=always --net=${networkName} -e &quot;MYSQL_DATABASE=dockerdefault&quot; -e &quot;MYSQL_USER=dockerdefault&quot; -e &quot;MYSQL_PASSWORD=${mysqlPassword}&quot; -d -v /etc/localtime:/etc/localtime:ro -v ${databaseHostBackupDir}/${environment}:${databaseContainerBackupDir} ${environment}" host="${dockerHost}" username="root" password="${sshPassword}" trust="true" />
 	</target>
 
 	<target name="buildSenchaApp" description="Builds the JS-Code">
