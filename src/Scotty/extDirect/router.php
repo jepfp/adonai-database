@@ -18,10 +18,11 @@ class BogusAction
 header('Content-type: text/javascript');
 
 $isUpload = false;
-if (isset($HTTP_RAW_POST_DATA)) {
+$data = tryToReadInputStreamAsJson();
+if ($data !== null) {
     // jep: for Content-Type: application/json
     header('Content-Type: text/javascript');
-    $data = json_decode($HTTP_RAW_POST_DATA);
+    //$data = json_decode(file_get_contents("php://input"));
 } else {
     // jep: for forms
     // note from http://www.php.net/manual/de/ini.core.php#ini.always-populate-raw-post-data
@@ -39,6 +40,11 @@ if (isset($HTTP_RAW_POST_DATA)) {
     } else {
         die('Invalid request.');
     }
+}
+
+function tryToReadInputStreamAsJson(){
+    $requestContent = file_get_contents("php://input");
+    return json_decode($requestContent);
 }
 
 function isFormRequest()

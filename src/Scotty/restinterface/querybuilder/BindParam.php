@@ -19,7 +19,7 @@ class BindParam
      *            b	corresponding variable is a blob and will be sent in packets
      * @param String $value            
      */
-    public function add($type, &$value)
+    public function add($type, $value)
     {
         $this->values[] = $value;
         $this->types .= $type;

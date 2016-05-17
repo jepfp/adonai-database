@@ -41,7 +41,11 @@ class NumberInBookReadQueryBuilder extends AbstractReadQueryBuilder
         foreach ($whereParam as $aParam) {
             $property = self::removeNamespaceFromFilterProperty($aParam->property);
             if ($property == "lied_id") {
-                $this->bindParam->add("i", $aParam->value);
+                $value = null;
+                if(isset($aParam->value)){
+                    $value = $aParam->value;
+                }
+                $this->bindParam->add("i", $value);
                 return;
             }
         }

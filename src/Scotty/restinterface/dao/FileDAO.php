@@ -58,7 +58,7 @@ class FileDAO extends AbstractDAO
     private function verifyFileSent()
     {
         if (! isset($_FILES[FileDAO::NAME_OF_HTML_INPUT_ELEMENT])) {
-            // If this exception occurs, maybe php is configured wrongly? Check
+            // If this exception occurs, maybe php is configured wrong? Check
             // http://stackoverflow.com/questions/9691057/php-apache-ajax-post-limit
             $ex = new DomainException('Es wurde keine hochgeladene Datei gefunden. Eventuell ist die Datei zu gross oder es liegt ein Server-Konfigurationsfehler vor.');
             throw $ex;

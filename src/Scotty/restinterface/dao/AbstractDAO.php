@@ -109,9 +109,9 @@ abstract class AbstractDAO
     {
         // override if needed
     }
-
+    
     // TODO: https://trello.com/c/Qjgy1bQz In case of an update: Validate save should work with the whole values and not just the changed ones
-    protected function validateSave($dto)
+    protected function validateSave($dto, $operation)
     {
         // override if needed
     }

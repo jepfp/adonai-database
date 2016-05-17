@@ -1,14 +1,7 @@
 <?php
 namespace Scotty\restinterface\querybuilder\update;
 
-use \Scotty\database\DatabaseConnector;
-use \Scotty\database\DatabaseException;
-use \Scotty\database\DbHelper;
-use \Scotty\restinterface\querybuilder\AssocBinder;
-use \Scotty\restinterface\querybuilder\AbstractQueryBuilder;
 use \Scotty\restinterface\querybuilder\BindParam;
-use Scotty\restinterface\DynamicClassResolver;
-use Scotty\restinterface\dto\AbstractDTO;
 use Scotty\restinterface\querybuilder\AbstractModificationQueryBuilder;
 
 class AbstractUpdateQueryBuilder extends AbstractModificationQueryBuilder

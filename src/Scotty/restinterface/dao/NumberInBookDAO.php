@@ -1,7 +1,6 @@
 <?php
 namespace Scotty\restinterface\dao;
 
-use Scotty\session\SessionInfoProvider;
 use Scotty\changebacktrack\ChangeBacktrack;
 use Scotty\database\DbHelper;
 use Scotty\restinterface\dto\DTOException;
