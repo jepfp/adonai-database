@@ -1,4 +1,4 @@
-<project name="Build and Deploy of Adoray Songserver" default="deploy">
+<project name="Build and Deploy of Adoray Songserver" default="deployLocal">
 	<description>Different deployment and build tasks</description>
 	<!-- Load property file -->
 	<property file="buildAndDeploy.properties" />
@@ -17,7 +17,6 @@
 		<echo>The current build and deploy configuration is:</echo>
 		<echo>sencha-exe:     ${sencha-exe}</echo>
 		<echo>buildDir:       ${buildDir}</echo>
-		<echo>dockerHost:     ${dockerHost}</echo>
 		<echo>environment:     ${environment}</echo>
 	</target>
 
@@ -29,34 +28,15 @@
 		<mkdir dir="${buildDir}/log" />
 	</target>
 
-	<target name="deploy" depends="deployLocal, putToDocker">
-		<echo>Deploying environment ${environment} to ${dockerHost} finished.</echo>
+	<target name="buildForDocker" depends="deployLocal, stageDockerBuild">
+		<!--<target name="buildForDocker" depends="stageDockerBuild">-->
+		<echo>Build of ${environment} finished and ready of taking.</echo>
 	</target>
 
-	<target name="redeploy" depends="backupMySqlDatabaseFromRunningContainer, stopRunningContainer, removeContainer, deploy">
-		<echo>Redeploying environment ${environment} to ${dockerHost} finished.</echo>
-	</target>
-
-	<target name="putToDocker" depends="copyToDockerHost, buildDockerImageOnDockerHost, runDockerImage">
-		<echo>Deploying to ${dockerHost} finished.</echo>
-	</target>
-
-	<target name="stopRunningContainer">
-		<input message="Do you really want to stop ${environment} (y/n)?" validargs="y,n" addproperty="reallyStopInput" />
-		<condition property="doAbort">
-			<equals arg1="n" arg2="${reallyStopInput}" />
-		</condition>
-		<fail if="doAbort">Build aborted by user.</fail>
-		<sshexec command="docker stop ${environment}" host="${dockerHost}" username="root" password="${sshPassword}" trust="true" />
-	</target>
-
-	<target name="removeContainer">
-		<input message="Do you really want to remove ${environment} and its data (y/n)?" validargs="y,n" addproperty="reallyRemoveInput" />
-		<condition property="doAbort">
-			<equals arg1="n" arg2="${reallyRemoveInput}" />
-		</condition>
-		<fail if="doAbort">Build aborted by user.</fail>
-		<sshexec command="docker rm ${environment}" host="${dockerHost}" username="root" password="${sshPassword}" trust="true" />
+	<target name="stageDockerBuild">
+		<copy todir="${buildDir}/dockerStage/www">
+			<fileset dir="${buildDir}/all" />
+		</copy>
 	</target>
 
 	<target name="deployLocal" depends="info, cleanBuildFolder, buildSenchaApp, build, overwriteBuildConfiguration">
@@ -108,49 +88,6 @@
 		<copy todir="${buildDir}/all" overwrite="true">
 			<fileset dir="deploy/configurations/${environment}" />
 		</copy>
-	</target>
-
-	<target name="copyToDockerHost">
-		<echo>Deleting directory ${dockerImageWorkspace}/www at ${dockerHost}</echo>
-		<sshexec command="rm -rf ${dockerImageWorkspace}/www &amp;&amp; mkdir ${dockerImageWorkspace}/www" host="${dockerHost}" username="root" password="${sshPassword}" trust="true" />
-		<echo>Zipping ${buildDir}/all to ${zipLocation}.</echo>
-		<zip destfile="${zipLocation}" basedir="${buildDir}/all" />
-		<echo>Copying to docker host ${dockerHost} ${dockerImageWorkspace}/www</echo>
-		<scp todir="root:${sshPassword}@${dockerHost}:${dockerImageWorkspace}/www" trust="true">
-			<fileset file="${zipLocation}" />
-		</scp>
-		<echo>Unzipping ${dockerImageWorkspace}/www/${zipFilename} to ${dockerImageWorkspace}/www and deleting zip...</echo>
-		<sshexec command="(unzip -d ${dockerImageWorkspace}/www ${dockerImageWorkspace}/www/${zipFilename}; rm ${dockerImageWorkspace}/www/${zipFilename})" host="${dockerHost}" username="root" password="${sshPassword}" trust="true" />
-		
-	</target>
-
-	<target name="buildDockerImageOnDockerHost">
-		<echo>Creating the following image at ${dockerHost}: ${environment}</echo>
-		<sshexec command="(cd ${dockerImageWorkspace}; git pull)" host="${dockerHost}" username="root" password="${sshPassword}" trust="true" />
-		<sshexec command="docker build -t ${environment} ${dockerImageWorkspace}" host="${dockerHost}" username="root" password="${sshPassword}" trust="true" />
-	</target>
-
-	<target name="getCurrentIpOfRunningEnvironment">
-		<echo>Getting ip of running docker containter: ${environment}</echo>
-		<sshexec outputproperty="ipOfRunningEnvironment" command="echo `docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ${environment}`  | tr -d '\n'" host="${dockerHost}" username="root" password="${sshPassword}" trust="true" />
-		<echo>IP of ${environment} is ${ipOfRunningEnvironment}.</echo>
-	</target>
-
-	<target name="loadMySqlDumpIntoContainer" depends="getCurrentIpOfRunningEnvironment">
-		<echo>Loading dump from ${databaseRestoreDir}/${environment} into ${environment}</echo>
-		<sshexec command="mysql -e &quot;source ${databaseRestoreDir}/${environment}.sql&quot; --user=dockerdefault --password=${mysqlPassword} --host=${ipOfRunningEnvironment} dockerdefault" host="${dockerHost}" username="root" password="${sshPassword}" trust="true" />
-	</target>
-
-	<target name="backupMySqlDatabaseFromRunningContainer" depends="getCurrentIpOfRunningEnvironment">
-		<echo>Backing up ${environment}</echo>
-		<sshexec command="docker exec -t ${environment} /mysqlBackup/mysqlBackup.sh" host="${dockerHost}" username="root" password="${sshPassword}" trust="true" />
-	</target>
-
-	<target name="runDockerImage">
-		<echo>Assuring database backup existance for container: ${databaseHostBackupDir}/${environment}</echo>
-		<sshexec command="mkdir -p ${databaseHostBackupDir}/${environment}" host="${dockerHost}" username="root" password="${sshPassword}" trust="true" />
-		<echo>Running docker image ${environment}</echo>
-		<sshexec command="docker run --name=${environment} --restart=always --net=${networkName} -e &quot;MYSQL_DATABASE=dockerdefault&quot; -e &quot;MYSQL_USER=dockerdefault&quot; -e &quot;MYSQL_PASSWORD=${mysqlPassword}&quot; -d -v /etc/localtime:/etc/localtime:ro -v ${databaseHostBackupDir}/${environment}:${databaseContainerBackupDir} ${environment}" host="${dockerHost}" username="root" password="${sshPassword}" trust="true" />
 	</target>
 
 	<target name="buildSenchaApp" description="Builds the JS-Code">

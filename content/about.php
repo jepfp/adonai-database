@@ -2,13 +2,14 @@
 <table>
 <tr>
 <td>Version:</td>
-<td>6.0.0 / Januar 16</td>
+<td>6.1.1 / Juni 16</td>
 </tr>
 <tr>
 <td>Entwicklung:</td>
 <td>Philipp, Adoray Luzern<br>
 Simon, Adoray Luzern<br>
 Jean-Marie, Adoray Schweiz<br>
+Lukas, Adoray Schwyz<br>
 Adriano, Adoray Aarau</td>
 </tr>
 <tr>

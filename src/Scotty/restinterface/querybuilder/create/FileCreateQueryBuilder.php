@@ -6,7 +6,7 @@ use Scotty\changebacktrack\ChangeBacktrack;
 class FileCreateQueryBuilder extends AbstractCreateQueryBuilder
 {
 
-    const MAX_SIZE_IN_BYTES_OF_A_PARAM_TO_BE_LOGGED = 2000;
+    const MAX_SIZE_IN_BYTES_OF_A_PARAM_TO_BE_LOGGED = 300;
 
     protected function logStatement($query, $params)
     {
@@ -24,8 +24,8 @@ class FileCreateQueryBuilder extends AbstractCreateQueryBuilder
             return $params;
         }
         foreach ($params as $p) {
-            if (mb_strlen($p) > self::MAX_SIZE_IN_BYTES_OF_A_PARAM_TO_BE_LOGGED) {
-                $cuttedParams[] = mb_strcut($p, 0, self::MAX_SIZE_IN_BYTES_OF_A_PARAM_TO_BE_LOGGED) . "[CUTTED FOR LOGGING BY SCOTTY]";
+            if (strlen($p) > self::MAX_SIZE_IN_BYTES_OF_A_PARAM_TO_BE_LOGGED) {
+                $cuttedParams[] = "[CUTTED PARAM > 300 Bytes FOR LOGGING BY SCOTTY]";
             } else {
                 $cuttedParams[] = $p;
             }
