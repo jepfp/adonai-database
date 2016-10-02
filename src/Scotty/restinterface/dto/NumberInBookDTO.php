@@ -9,7 +9,8 @@ class NumberInBookDTO extends AbstractDTO
         $this->fields = array(
             Field::create("Liednr", array(), array(
                 $this->notNullOrEmpty(),
-                $this->noSpaces()
+                $this->noSpaces(),
+                $this->songNrMustStartWithNumberIfNotEmpty()
             )),
             Field::create("lied_id", array(), array(
                 $this->notNullOrEmpty()

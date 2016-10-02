@@ -176,4 +176,12 @@ class AbstractDTO
             }
         };
     }
+    
+    protected function songNrMustStartWithNumberIfNotEmpty(){
+        return function($input){
+            if(strlen($input) > 0 && preg_match("/^[0-9].*/", $input) !== 1){
+                throw new DTOException("Die Liednummer muss mit einer Zahl beginnen.<br /><br />Beispiel: Die Eingabe 'LU29' ist ungültig. Damit du das Lied 29 im Ordner mit dem Kürzel 'LU' erfassen kannst, trage die Nummer im entsprechenden Liederbuch ohne 'LU' ein.");
+            }
+        };
+    }
 }
