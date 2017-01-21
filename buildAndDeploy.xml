@@ -4,7 +4,7 @@
 	<property file="buildAndDeploy.properties" />
 
 	<!-- The following properties can be overridden by buildAndDeploy.properties -->
-	<property name="sencha-exe" value="C:\Users\Philipp\bin\Sencha\Cmd\5.1.3.61\sencha.exe" />
+	<property name="sencha-exe" value="C:\Users\Philipp\bin\Sencha\Cmd\6.2.1.29\sencha.exe" />
 	<property name="buildMode" value="production" />
 	<property name="buildDir" value="build" />
 	<property name="environment" value="localBuild" />
@@ -92,7 +92,7 @@
 
 	<target name="buildSenchaApp" description="Builds the JS-Code">
 		<echo>Building Sencha App</echo>
-		<echo>IMPORTANT: Make sure sencha Cmd 5.1.3.61 and Ruby 1.9.3 are installed and that ruby is available through the systems path.</echo>
+		<echo>IMPORTANT: Make sure sencha Cmd 6.2.1.29 and Ruby 1.9.3 are installed and that ruby is available through the systems path.</echo>
 		<exec executable="${sencha-exe}">
 			<arg line="app build ${buildMode}" />
 		</exec>
