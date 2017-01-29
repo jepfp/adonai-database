@@ -4,10 +4,9 @@ require_once 'src/bootstrap.php';
 <!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport"
-	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=10, user-scalable=yes">
 <title><?php
 echo $projectConfiguration->getProjectTitle();
 echo " (" . $projectConfiguration->getProjectName() . ")";
@@ -41,7 +40,7 @@ SCOTTY_CLIENT_CONFIGURATION = <?php echo $projectConfiguration->getClientConfigu
 </style>
 <script src="src/ext-direct-api.php"></script>
 
-<script id="microloader" type="text/javascript" src="bootstrap.js"></script>
+<script id="microloader" data-app="4535064e-a94c-4d8f-a350-27bf10b54277" type="text/javascript" src="bootstrap.js"></script>
 
 
 <link rel="stylesheet" type="text/css" href="resources/css/style.css" />
