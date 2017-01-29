@@ -46,8 +46,6 @@ Ext.define('Songserver.view.auth.LoginForm', {
 	}
     }, {
 	text : 'Anmelden',
-	formBind : true, // only enabled when form valid
-	disabled : true,
 	handler : function() {
 	    this.up('form').doLogin();
 	}
