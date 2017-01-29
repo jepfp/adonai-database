@@ -4,14 +4,14 @@
 ## LOCAL BUILD ##
 # If all deployments are commented out then the localDeployment is done.
 
+##PRODUCTIVE SYSTEM scotty-adoray-prod
+#environment=scotty-adoray-prod
 
-## DOCKER ##
-dockerHost=
-sshPassword=
-dockerImageWorkspace=/media/data/docker/docker-scotty
-databaseRestoreDir=/media/data/database/restore
-databaseHostBackupDir=/media/data/database/backup
-databaseContainerBackupDir=/backup/mysql
-##PRODUCTIVE SYSTEM project-customer-type
-environment=
-mysqlPassword=
+# scotty-adoray-demo
+environment=scotty-adoray-demo
+
+## scotty-adoray-inttest
+#environment=scotty-adoray-inttest
+
+##PRODUCTIVE SYSTEM scotty-tarbes-prod
+#environment=scotty-tarbes-prod
