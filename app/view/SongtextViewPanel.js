@@ -39,7 +39,7 @@ Ext.define('Songserver.view.SongtextViewPanel', {
 		padding : '10px'
 	    },
 	    style : {
-		margin : '5px',
+		margin : '5px'
 	    },
 	    minHeight : 158,
 	    dockedItems : [ {
