@@ -35,20 +35,19 @@ Ext.define('Songserver.view.SongtextViewPanel', {
 	Ext.apply(this, {
 	    title : 'Strophe',
 	    preventHeader : true,
-	    frame : true,
 	    bodyStyle : {
 		padding : '10px'
 	    },
 	    style : {
-		margin : '5px'
+		margin : '5px',
 	    },
+	    minHeight : 158,
 	    dockedItems : [ {
 		xtype : 'toolbar',
 		dock : 'left',
 		style : {
 		    backgroundColor : '#f5f5f5'
 		},
-		padding: '3',
 		itemId : "tbar",
 		items : this.getToolbarConfiguration()
 	    } ]

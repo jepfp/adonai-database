@@ -136,7 +136,7 @@ Ext.define('Songserver.view.SongPropertiesPanel', {
 		    scope : this
 		}, {
 		    text : 'Änderungen verwerfen',
-		    width : 150,
+		    width : 170,
 		    handler : this.resetChanges,
 		    scope : this
 		} ]
@@ -151,8 +151,7 @@ Ext.define('Songserver.view.SongPropertiesPanel', {
 	    Songserver.model.Lied.load(this.songId, {
 		scope : this,
 		failure : function(record, operation) {
-		    Ext.Msg.alert("Fehler beim Laden", "Das Lied konnte nicht geladen werden. "
-			    + "Bitte informiere den Website-Verantwortlichen über diesen Fehler.");
+		    Ext.Msg.alert("Fehler beim Laden", "Das Lied konnte nicht geladen werden. " + "Bitte informiere den Website-Verantwortlichen über diesen Fehler.");
 		},
 		success : function(record, operation) {
 		    this.onSongLoaded(record);
@@ -200,19 +199,26 @@ Ext.define('Songserver.view.SongPropertiesPanel', {
 	this.songbookGrid = Ext.create('Ext.grid.Panel', {
 	    // preventHeader : true,
 	    store : bookentriesStore,
-	    columns : [ {
-		header : 'Kürzel',
-		dataIndex : 'mnemonic'
-	    }, {
-		header : 'Nummer',
-		dataIndex : 'Liednr',
-		editor : {}
-	    }, {
-		header : 'Liederbuch',
-		dataIndex : 'Buchname',
-		flex : 1
-	    } ],
-	    height : 178,
+	    columns : {
+		defaults : {
+		    // Workaround for 6.2.0:
+		    // https://www.sencha.com/forum/showthread.php?325776-Upgrading-from-6-0-2-to-6-2-0-has-made-all-our-grids-right-align/
+		    align : 'left'
+		},
+		items : [ {
+		    header : 'Kürzel',
+		    dataIndex : 'mnemonic'
+		}, {
+		    header : 'Nummer',
+		    dataIndex : 'Liednr',
+		    editor : {}
+		}, {
+		    header : 'Liederbuch',
+		    dataIndex : 'Buchname',
+		    flex : 1
+		} ]
+	    },
+	    height : 276,
 	    flex : 1,
 	    padding : '0px 0px 0px 5px',
 	    autoLoad : 'true',
@@ -252,7 +258,6 @@ Ext.define('Songserver.view.SongPropertiesPanel', {
 	var form = this.getForm();
 	var record = form.getRecord();
 	this.song.set(form.getValues());
-
 
 	this.song.save({
 	    success : function(record, operation) {

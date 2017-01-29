@@ -158,7 +158,14 @@ Ext.define('Songserver.view.LiedView', {
 		    }
 		} ]
 	    },
-	    columns : this.tableViews[store.currentTableView],
+	    columns : {
+		defaults : {
+		    // Workaround for 6.2.0:
+		    // https://www.sencha.com/forum/showthread.php?325776-Upgrading-from-6-0-2-to-6-2-0-has-made-all-our-grids-right-align/
+		    align : 'left'
+		},
+		items : this.tableViews[store.currentTableView]
+	    },
 	    plugins : [ Ext.create('Ext.grid.plugin.CellEditing', {
 		clicksToEdit : 1,
 		listeners : {

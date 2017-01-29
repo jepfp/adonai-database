@@ -59,7 +59,6 @@ Ext.define('Songserver.view.SongContentContainerPanel', {
 	    items : [ {
 		itemId : 'addRefrain',
 		xtype : 'button',
-		toggle : true,
 		icon : 'resources/images/silk/icons/add.png',
 		text : 'Refrain hinzufügen',
 		listeners : {
@@ -77,7 +76,6 @@ Ext.define('Songserver.view.SongContentContainerPanel', {
 	verseStore.each(function(aVerse, index, allRecords) {
 	    this.createVersePanel(aVerse);
 	}, this);
-	this.child("#verses").add(versePanels);
     },
 
     createRefrainPanels : function() {
@@ -86,7 +84,6 @@ Ext.define('Songserver.view.SongContentContainerPanel', {
 	store.each(function(record, index, allRecords) {
 	    refrainPanels.push(this.createRefrainPanel(record));
 	}, this);
-	this.child("#refrains").add(refrainPanels);
     },
 
     /**

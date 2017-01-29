@@ -29,7 +29,7 @@ Ext.define('Songserver.view.Navigation', {
 		    name : 'buchSelection',
 		    xtype : 'combobox',
 		    padding : 8,
-		    width : 284,
+		    width : 274,
 		    valueField : 'id',
 		    displayField : 'Buchname',
 		    emptyText : 'Liederbuch wählen...',
