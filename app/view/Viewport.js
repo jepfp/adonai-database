@@ -1,11 +1,9 @@
 // create namespace
 Ext.namespace('Songserver');
 
-// The following libraries are not required by the Songserver code but
-// maybe required by ext and not declared. That's why we declare them here.
-Ext.require("Ext.layout.container.Border");
-Ext.require("Ext.grid.plugin.CellEditing");
-Ext.require("Ext.layout.component.FieldSet");
+// Workaround for bug with 6.2.0 (layout class is not available in production /
+// testing mode.
+Ext.require("Ext.layout.container.boxOverflow.Menu");
 
 Ext.define('Songserver.view.Viewport', {
     extend : 'Ext.container.Viewport',

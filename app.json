@@ -407,6 +407,9 @@
     
     "output": {
         "base": "${workspace.build.dir}/${build.environment}/${app.name}",
+        "page": {
+     		"path": "index.php"
+     	},
         "appCache": {
             "enable": false
         }
@@ -444,7 +447,7 @@
          * List of items in the CACHE MANIFEST section
          */
         "cache": [
-            "index.html"
+            "index.php"
         ],
         /**
          * List of items in the NETWORK section
