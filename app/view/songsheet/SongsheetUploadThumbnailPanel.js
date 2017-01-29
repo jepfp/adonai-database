@@ -13,6 +13,7 @@ Ext.define('Songserver.view.songsheet.SongsheetUploadThumbnailPanel', {
     items : [ {
 	xtype : 'container',
 	items : [ {
+	    itemId : 'fileUpload',
 	    bodyCls : 'uploadDrop',
 	    xtype : 'filefield',
 	    buttonOnly : true,
@@ -20,7 +21,8 @@ Ext.define('Songserver.view.songsheet.SongsheetUploadThumbnailPanel', {
 	    name : 'file',
 	    buttonText : 'PDF-Noten hochladen...',
 	    listeners : {
-		'change' : 'onChange'
+		'change' : 'onChange',
+		'afterrender' : 'onAfterrender'
 	    }
 	} ]
     } ],
@@ -38,6 +40,15 @@ Ext.define('Songserver.view.songsheet.SongsheetUploadThumbnailPanel', {
 	    failure : this.onFormSubmitFailure,
 	    scope : this
 	});
+    },
+
+    onAfterrender : function(fb, eOpts) {
+	var songPanel = this.up("songserver-songPanel");
+	if (songPanel.isNewUnsafedSong()) {
+	    fb.setDisabled(true);
+	} else {
+	    fb.setDisabled(false);
+	}
     },
 
     determineLiedId : function() {

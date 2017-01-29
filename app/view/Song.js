@@ -22,7 +22,7 @@ Ext.define('Songserver.view.Song', {
      * @type Songserver.view.SongtextViewPanel
      */
     holdingLockPanel : null,
-    
+
     fileStore : null,
 
     verseStore : null,
@@ -33,8 +33,6 @@ Ext.define('Songserver.view.Song', {
 	overflowX : "hidden",
 	overflowY : "scroll"
     },
-
-    // scrollable: true,
 
     layout : {
 	type : 'anchor',
@@ -97,9 +95,13 @@ Ext.define('Songserver.view.Song', {
 	}, this);
 
 	// if the user wants to add a new song...
-	if (!this.songId) {
+	if (this.isNewUnsafedSong()) {
 	    this.prepareFormForAddingNewItem();
 	}
+    },
+
+    isNewUnsafedSong : function() {
+	return !this.songId;
     },
 
     /**
@@ -177,7 +179,7 @@ Ext.define('Songserver.view.Song', {
 	this.child("#messageBar").add("<div class='footerErrorMessage'>" + text + "</div>");
 	this.hideInfoMessageTask.delay(seconds);
     },
-    
+
     showSaveErrorMessage : function(message) {
 	this.displayErrorMessage("Fehler beim Speichern.");
 	Ext.Msg.show({
@@ -253,5 +255,6 @@ Ext.define('Songserver.view.Song', {
 	this.songId = song.get("id");
 	this.down("#addVerse").setDisabled(false);
 	this.down("#addRefrain").setDisabled(false);
+	this.down("#fileUpload").setDisabled(false);
     }
 });
