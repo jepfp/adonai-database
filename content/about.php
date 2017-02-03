@@ -2,7 +2,7 @@
 <table>
 <tr>
 <td>Version:</td>
-<td>6.2.0 / Januar 17</td>
+<td>6.2.1 / Februar 17</td>
 </tr>
 <tr>
 <td>Entwicklung:</td>
