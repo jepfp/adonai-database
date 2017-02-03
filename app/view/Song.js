@@ -255,6 +255,9 @@ Ext.define('Songserver.view.Song', {
 	this.songId = song.get("id");
 	this.down("#addVerse").setDisabled(false);
 	this.down("#addRefrain").setDisabled(false);
-	this.down("#fileUpload").setDisabled(false);
+	var fileUploadField = this.down("#fileUpload");
+	if (fileUploadField != null) {
+	    fileUploadField.setDisabled(false);
+	}
     }
 });
