@@ -184,4 +184,12 @@ class AbstractDTO
             }
         };
     }
+    
+    protected function songNrMustNotStartWithALeadingZero(){
+        return function($input){
+            if(strlen($input) > 0 && strpos($input, "0") === 0){
+                throw new DTOException("Die Liednummer darf nicht mit einer 0 beginnen.<br /><br />Beispiel: Die Eingabe '029' ist ungültig.");
+            }
+        };
+    }
 }
