@@ -29,6 +29,10 @@ Ext.define('Songserver.view.auth.LoginForm', {
 	vtype : 'email',
 	listeners : {
 	    afterrender : function(field) {
+		//allow autocomplete so that previously entered e-mail addresses show up
+		field.inputEl.set({
+                    autocomplete: 'on'
+                });
 		field.focus();
 	    }
 	}
