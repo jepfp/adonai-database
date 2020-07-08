@@ -104,7 +104,7 @@ class ManageUser
 
     private function logMessage($message, $e)
     {
-        $dbLogger = \Logger::getLogger("dbLogger");
+        $dbLogger = \Logger::getLogger("main");
         $dbLogger->error($message, $e);
     }
 }
