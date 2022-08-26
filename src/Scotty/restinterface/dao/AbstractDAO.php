@@ -1,17 +1,18 @@
 <?php
+
 namespace Scotty\restinterface\dao;
 
-use \Scotty\restinterface\Request;
-use \Scotty\restinterface\Response;
-use \Scotty\database\DatabaseConnector;
-use \Scotty\database\DatabaseException;
-use \Scotty\security\SecurityException;
-use \Scotty\security\SecInfoProvider;
-use Scotty\restinterface\querybuilder\AssocBinder;
+use Scotty\database\DatabaseConnector;
+use Scotty\database\DatabaseException;
 use Scotty\database\DbHelper;
-use Scotty\restinterface\dto\DTOException;
-use Scotty\restinterface\DAOFactory;
 use Scotty\exception\DomainException;
+use Scotty\restinterface\DAOFactory;
+use Scotty\restinterface\dto\DTOException;
+use Scotty\restinterface\Request;
+use Scotty\restinterface\Response;
+use Scotty\security\SecInfoProvider;
+use Scotty\security\SecurityException;
+use Scotty\restinterface\querybuilder\AssocBinder;
 
 abstract class AbstractDAO
 {
@@ -35,14 +36,14 @@ abstract class AbstractDAO
     /**
      * Dispatch request to appropriate controller-action by convention according to the HTTP method.
      *
-     * @param Request $request            
+     * @param Request $request
      */
     public function dispatch($request)
     {
         $this->request = $request;
-        
+
         $res = new Response();
-        
+
         try {
             $this->checkIfUserIsLoggedIn();
             switch ($this->request->method) {
@@ -68,7 +69,7 @@ abstract class AbstractDAO
         } catch (\RuntimeException $ex) {
             $res = $this->handleException($ex);
         }
-        
+
         return $res;
     }
 
@@ -77,13 +78,19 @@ abstract class AbstractDAO
         SecInfoProvider::throwErrorIfNotLoggedIn();
     }
 
-    private function read(&$res)
+    private function read(Response &$res)
     {
         $CRUDOperation = "read";
         $fullyQualifiedQueryBuilderName = $this->determineQueryBuilderName($CRUDOperation);
         $this->instantiateQueryBuilder($fullyQualifiedQueryBuilderName, $CRUDOperation);
         $this->onBeforeExecuteRead();
-        $this->executeStatement($this->queryBuilder, $res);
+        $this->executeReadStatement($this->queryBuilder, $res);
+        $this->onAfterReadQuery($res);
+    }
+
+    protected function onAfterReadQuery(Response $res)
+    {
+        // override if needed
     }
 
     private function create(&$res)
@@ -93,7 +100,7 @@ abstract class AbstractDAO
         $this->onBeforeBuildCreateQuery();
         $this->instantiateQueryBuilder($fullyQualifiedQueryBuilderName, $CRUDOperation);
         $this->validateSave($this->queryBuilder->getDto(), $CRUDOperation);
-        $db = $this->executeStatement($this->queryBuilder, $res);
+        $db = $this->executeManipulationStatement($this->queryBuilder, $res);
         $insertedId = $db->insert_id;
         $this->logger->debug("New record with id " . $insertedId . " inserted.");
         $this->onAfterCreate($insertedId);
@@ -109,7 +116,7 @@ abstract class AbstractDAO
     {
         // override if needed
     }
-    
+
     // TODO: https://trello.com/c/Qjgy1bQz In case of an update: Validate save should work with the whole values and not just the changed ones
     protected function validateSave($dto, $operation)
     {
@@ -132,7 +139,7 @@ abstract class AbstractDAO
         $fullyQualifiedQueryBuilderName = $this->determineQueryBuilderName($CRUDOperation);
         $this->instantiateQueryBuilder($fullyQualifiedQueryBuilderName, $CRUDOperation);
         $this->validateSave($this->queryBuilder->getDto(), $CRUDOperation);
-        $db = $this->executeStatement($this->queryBuilder, $res);
+        $this->executeManipulationStatement($this->queryBuilder, $res);
         $updatedId = $this->request->id;
         $this->logger->debug("Record with id " . $updatedId . " updated.");
         $this->onAfterUpdate($updatedId);
@@ -150,7 +157,7 @@ abstract class AbstractDAO
         $fullyQualifiedQueryBuilderName = $this->determineQueryBuilderName($CRUDOperation);
         $this->instantiateQueryBuilder($fullyQualifiedQueryBuilderName, $CRUDOperation);
         $this->onBeforeDelete($this->request->id);
-        $this->executeStatement($this->queryBuilder, $res);
+        $this->executeManipulationStatement($this->queryBuilder, $res);
         if ($res->totalCount != 1) {
             throw new \RuntimeException("Deleting of " . $this->request->id . " failed.");
         }
@@ -183,7 +190,14 @@ abstract class AbstractDAO
         }
     }
 
-    private function executeStatement($queryBuilder, $res)
+    private function executeReadStatement($queryBuilder, Response $res)
+    {
+        $statement = $this->executeStatement($queryBuilder);
+        $res->data = $this->fetchAndTransformResult($statement);
+        $res->totalCount = $queryBuilder->determineTotalCountAndClose($statement);
+    }
+
+    private function executeStatement($queryBuilder)
     {
         $db = $this->db;
         $statement = $queryBuilder->build($db);
@@ -195,12 +209,14 @@ abstract class AbstractDAO
             throw new DatabaseException($message);
         }
         $statement->execute();
-        // store_result: http://php.net/manual/de/mysqli-result.num-rows.php#105289
-        // Without store_result, Unaxus server returned 0 for num_rows inside determineTotalCountAndClose. On the
-        // local testing environment it worked always. Buffered queries should actually already be the default setting.
-        $statement->store_result();
         DbHelper::throwExceptionOnStatementError($statement);
-        $res->data = $this->fetchAndTransformResult($statement);
+        return $statement;
+    }
+
+    private function executeManipulationStatement($queryBuilder, $res)
+    {
+        $db = $this->db;
+        $statement = $this->executeStatement($queryBuilder);
         $res->totalCount = $queryBuilder->determineTotalCountAndClose($statement);
         return $db;
     }

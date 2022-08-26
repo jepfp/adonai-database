@@ -14,6 +14,7 @@ class Response
     
     public function __construct()
     {
+        $this->data = [];
         $this->type = "response";
         $this->success = true;
         $this->message = "Success";

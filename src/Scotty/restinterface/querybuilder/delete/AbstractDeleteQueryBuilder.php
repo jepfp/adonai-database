@@ -41,7 +41,6 @@ abstract class AbstractDeleteQueryBuilder extends AbstractQueryBuilder
         $query .= $this->buildWhere();
         $statement = $db->prepare($query);
         DbHelper::throwExceptionOnError($statement, $db, $query);
-        $this->logger->trace("Built query: " . $query);
         $this->logStatement($query, null);
         return $statement;
     }

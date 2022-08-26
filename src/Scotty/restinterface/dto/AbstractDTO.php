@@ -146,7 +146,7 @@ class AbstractDTO
      */
     private function isFieldInRequestParams($field)
     {
-        return array_key_exists($field->getName(), $this->requestParams);
+        return property_exists($this->requestParams, $field->getName());
     }
 
     /**

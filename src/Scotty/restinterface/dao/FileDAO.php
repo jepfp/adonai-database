@@ -1,11 +1,11 @@
 <?php
+
 namespace Scotty\restinterface\dao;
 
+use Scotty\exception\DomainException;
 use Scotty\file\FileHelper;
 use Scotty\file\FileMetadataHelper;
-use Scotty\restinterface\dto\DTOException;
-use Scotty\restinterface\dto\Scotty\restinterface\dto;
-use Scotty\exception\DomainException;
+use Scotty\restinterface\Response;
 
 class FileDAO extends AbstractDAO
 {
@@ -32,10 +32,11 @@ class FileDAO extends AbstractDAO
         }
     }
 
-    protected function transformResult($row)
+    protected function onAfterReadQuery(Response $res)
     {
-        $row["builtFilename"] = FileHelper::buildFilenameByFileId($row["id"]) . "." . $row["filetype"];
-        return $row;
+        $firstResult = $res->data[0];
+        $firstResult["builtFilename"] = FileHelper::buildFilenameByFileId($firstResult["id"]) . "." . $firstResult["filetype"];
+        $res->data[0] = $firstResult;
     }
 
     protected function onBeforeBuildCreateQuery()
@@ -57,14 +58,14 @@ class FileDAO extends AbstractDAO
 
     private function verifyFileSent()
     {
-        if (! isset($_FILES[FileDAO::NAME_OF_HTML_INPUT_ELEMENT])) {
+        if (!isset($_FILES[FileDAO::NAME_OF_HTML_INPUT_ELEMENT])) {
             // If this exception occurs, maybe php is configured wrong? Check
             // http://stackoverflow.com/questions/9691057/php-apache-ajax-post-limit
             $ex = new DomainException('Es wurde keine hochgeladene Datei gefunden. Eventuell ist die Datei zu gross oder es liegt ein Server-Konfigurationsfehler vor.');
             throw $ex;
         }
     }
-    
+
     // Note: This method is not tested with an int test, because post_max_size is caught before.
     private function verifiyMaxFileSize()
     {
@@ -73,7 +74,7 @@ class FileDAO extends AbstractDAO
             throw new DomainException("Die Datei ist zu gross.");
         }
     }
-    
+
     // Note: This method is not tested with an int test, because it cannot be faked.
     private function verifyNoUploadError()
     {
