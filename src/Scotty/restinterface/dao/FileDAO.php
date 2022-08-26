@@ -2,6 +2,7 @@
 
 namespace Scotty\restinterface\dao;
 
+use Scotty\changebacktrack\ChangeBacktrack;
 use Scotty\exception\DomainException;
 use Scotty\file\FileHelper;
 use Scotty\file\FileMetadataHelper;
@@ -45,6 +46,7 @@ class FileDAO extends AbstractDAO
         $liedId = $this->validateAndGetLiedId();
         $this->verifyNoOtherSourcePdfExists($liedId);
         $fileMetadataId = $this->createFileMetadataEntryForNewFile($liedId);
+        ChangeBacktrack::updateBacktrackOnLiedByChildTable("filemetadata", $fileMetadataId);
         $this->replaceLiedIdByFileMetadataIdInParams($fileMetadataId);
     }
 
