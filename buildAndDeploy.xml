@@ -4,7 +4,7 @@
 	<property file="buildAndDeploy.properties" />
 
 	<!-- The following properties can be overridden by buildAndDeploy.properties -->
-	<property name="sencha-exe" value="sencha" />
+	<property name="sencha-exe" value="C:\Users\phili\bin\Sencha\Cmd\6.2.2.36\sencha.exe" />
 	<property name="buildMode" value="production" />
 	<property name="buildDir" value="build" />
 	<property name="environment" value="localBuild" />
