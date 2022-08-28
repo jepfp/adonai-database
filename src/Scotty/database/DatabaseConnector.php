@@ -13,7 +13,7 @@ class DatabaseConnector
 	{
 		$projectConfiguration = ProjectConfiguration::getInstance();
 		$dbConf = $projectConfiguration->getDbConfiguration();
-		$this->db = new \mysqli('localhost', $dbConf['user'], $dbConf['password'], $dbConf['schema']);
+		$this->db = new \mysqli('127.0.0.1', $dbConf['user'], $dbConf['password'], $dbConf['schema']);
 
 		$this->db->set_charset("utf8");
 		if ($this->db->connect_error) {

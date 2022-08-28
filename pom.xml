@@ -1,0 +1,200 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>ch.adoray</groupId>
+    <artifactId>scotty</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>Scotty Application</name>
+    <parent>
+        <groupId>ch.jep.docker</groupId>
+        <artifactId>docker-commons</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+    <properties>
+        <!-- Used for the maven ressource plugin to copy resources-->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>docker-build/www</directory>
+                            <includes>
+                                <include>**/*</include>
+                            </includes>
+                        </fileset>
+                    </filesets>
+                </configuration>
+            </plugin>
+            <!--            <plugin>-->
+            <!--                <artifactId>exec-maven-plugin</artifactId>-->
+            <!--                <groupId>org.codehaus.mojo</groupId>-->
+            <!--                <executions>-->
+            <!--                    <execution>-->
+            <!--                        <id>npm run build</id>-->
+            <!--                        <phase>compile</phase>-->
+            <!--                        <goals>-->
+            <!--                            <goal>exec</goal>-->
+            <!--                        </goals>-->
+            <!--                        <configuration>-->
+            <!--                            <executable>"C:\Program Files\nodejs\npm.cmd"</executable>-->
+            <!--                            <arguments>-->
+            <!--                                <argument>run</argument>-->
+            <!--                                <argument>build</argument>-->
+            <!--                            </arguments>-->
+            <!--                        </configuration>-->
+            <!--                    </execution>-->
+            <!--                </executions>-->
+            <!--            </plugin>-->
+
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <!-- here the phase you need -->
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <nonFilteredFileExtensions>
+                                <nonFilteredFileExtension>sqlite</nonFilteredFileExtension>
+                            </nonFilteredFileExtensions>
+                            <outputDirectory>${basedir}/docker-build/www</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>build/dockerStage/www</directory>
+                                    <filtering>true</filtering>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>io.fabric8</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <configuration>
+                    <sourceDirectory>docker-build</sourceDirectory>
+                    <images>
+                        <image>
+                            <alias>${containerName}</alias>
+                            <name>${containerName}</name>
+                            <build>
+                                <dockerFileDir>./</dockerFileDir>
+                            </build>
+                            <run>
+                                <namingStrategy>alias</namingStrategy>
+                                <network>
+                                    <mode>custom</mode>
+                                    <name>dmznetwork</name>
+                                </network>
+                                <env>
+                                    <MYSQL_PASSWORD>sumsang100</MYSQL_PASSWORD>
+                                </env>
+                                <memory>750000000</memory>
+                                <memorySwap>-1</memorySwap>
+                                <restartPolicy>
+                                    <name>always</name>
+                                </restartPolicy>
+                                <log>
+                                    <prefix>WF</prefix>
+                                    <date>none</date>
+                                    <color>cyan</color>
+                                </log>
+                            </run>
+                        </image>
+                    </images>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>docker:build</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>build</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>docker:start</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>start</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+    <profiles>
+        <profile>
+            <id>beta</id>
+            <properties>
+                <containerName>scotty-adoray-demo</containerName>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <groupId>org.codehaus.mojo</groupId>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>prod</id>
+            <properties>
+                <containerName>scotty-adoray-prod</containerName>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <configuration>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>inttest</id>
+            <properties>
+                <containerName>scotty-adoray-inttest</containerName>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <configuration>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>io.fabric8</groupId>
+                        <artifactId>docker-maven-plugin</artifactId>
+                        <configuration>
+                            <images>
+                                <image>
+                                    <run>
+                                        <ports>
+                                            <port>80:80</port>
+                                            <port>3306:3306</port>
+                                        </ports>
+                                    </run>
+                                </image>
+                            </images>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>

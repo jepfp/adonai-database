@@ -2,8 +2,6 @@
 namespace Scotty\user;
 
 use \Scotty\database\DatabaseConnector;
-use Scotty\mailing\Scotty\mailing;
-use Scotty\mailing\MailSenderFactory;
 
 class ManageUser
 {
@@ -32,7 +30,6 @@ class ManageUser
         }
         
         if ($this->insertUserIntoDatabase($email, $password, $firstname, $lastname, $adoray)) {
-            $this->sendMail($email, $firstname, $lastname, $adoray);
             return true;
         }
         
@@ -87,19 +84,6 @@ class ManageUser
         $statement->execute();
         $statement->fetch();
         return ($amount > 0);
-    }
-
-    private function sendMail($email, $firstname, $lastname, $adoray)
-    {
-        $mailSender = MailSenderFactory::createMailSender();
-        try {
-            $nachricht = "Neue Registration auf der Liederdatenbank.\r\n";
-            $nachricht .= $firstname . " " . $lastname . " (" . $email . ")";
-            $mailSender->sendMail('philippjenni@bluemail.ch', 'Neue Registration', $nachricht);
-        } catch (\Exception $e) {
-            $this->logMessage('Failed to send email.', $e);
-            throw new \RuntimeException("Die Registrierung konnte abgeschlossen werden. Beim Senden der automatischen Anforderung zur Freischaltung des Accounts ist aber ein Problem aufgetreten. Bitte informiere lieder@adoray.ch");
-        }
     }
 
     private function logMessage($message, $e)

@@ -1,4 +1,23 @@
-# MyApp
+# Adonai Database / Scotty
+
+
+## Deployment
+
+1. Make sure, you set the right environment in `buildAndDeploy.xml`
+2. Run the ant task `buildForDocker` in `buildAndDeploy.xml`
+3. Build and deploy the app with Maven:
+```
+mvn clean docker:stop install -P localhost,inttest
+mvn clean docker:stop install -P netcup-emma,beta
+mvn clean docker:stop install -P netcup-emma,prod
+```
+
+
+
+
+
+
+# MyApp (Sencha Stuff)
 
 This folder is primarily a container for the top-level pieces of the application.
 While you can remove some files and folders that this application does not use,
